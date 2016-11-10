@@ -27,3 +27,6 @@ else:unix: LIBS += -L$$PWD/libworld.so/ -lworld
 
 INCLUDEPATH += $$PWD/libworld.so
 DEPENDPATH += $$PWD/libworld.so
+
+RESOURCES += \
+    resource.qrc
