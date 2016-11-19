@@ -20,8 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(scene);
 
     World *myWorld = new World();
-    std::vector<std::unique_ptr<Tile>> tiles = myWorld->createWorld("://resources/worldmap4.png");
-    std::vector<std::unique_ptr<Enemy>> enemys = myWorld->getEnemies(10);
+    std::vector<std::unique_ptr<Tile>> tiles = myWorld->createWorld("://resources/maze1.png");
+    std::vector<std::unique_ptr<Enemy>> enemies = myWorld->getEnemies(10);
     std::vector<std::unique_ptr<Tile>> healthpacks = myWorld->getHealthPacks(6);
     std::unique_ptr<Protagonist> pro = myWorld->getProtagonist();
 
@@ -34,11 +34,27 @@ MainWindow::MainWindow(QWidget *parent) :
         scene->addRect(x, y, 1, 1, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
     }
 
+    QImage image("://resources/Pixel-mario.gif");
+    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    item->setScale(0.03);
+    item->setPos(pro->getXPos(),pro->getYPos());
+    scene->addItem(item);
+
     for(auto& healthpack: healthpacks){
         int x = healthpack->getXPos();
         int y = healthpack->getYPos();
 
         QImage image("://resources/Supermushroom.png");
+        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+        item->setScale(0.1);
+        item->setPos(x,y);
+        scene->addItem(item);
+    }
+    for(auto& enemy: enemies){
+        int x = enemy->getXPos();
+        int y = enemy->getYPos();
+
+        QImage image("://resources/goomba.gif");
         QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
         item->setScale(0.1);
         item->setPos(x,y);
