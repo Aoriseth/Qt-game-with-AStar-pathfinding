@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "world.h"
-#include "world_global.h"
+#include "lib/world.h"
+#include "lib/world_global.h"
 
 int main(int argc, char *argv[])
 {

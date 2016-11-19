@@ -16,8 +16,8 @@ SOURCES += main.cpp\
         mainwindow.cpp
 
 HEADERS  += mainwindow.h \
-    world.h \
-    world_global.h
+    lib\world.h \
+    lib\world_global.h
 
 FORMS    += mainwindow.ui
 
@@ -30,3 +30,17 @@ DEPENDPATH += $$PWD/libworld.so
 
 RESOURCES += \
     resource.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/release/ -lworld
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/debug/ -lworld
+else:unix: LIBS += -L$$PWD/lib/ -lworld
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/release/ -lworld
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/debug/ -lworld
+else:unix: LIBS += -L$$PWD/lib/ -lworld
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
