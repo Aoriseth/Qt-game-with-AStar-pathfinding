@@ -2,8 +2,10 @@
     <qresource prefix="/">
         <file>resources/maze1.png</file>
         <file>resources/maze3.png</file>
-        <file>resources/maze2(1).png</file>
+        <file>resources/maze2.png</file>
         <file>resources/worldmap4.png</file>
         <file>resources/Supermushroom.png</file>
+        <file>resources/goomba.gif</file>
+        <file>resources/Pixel-mario.gif</file>
     </qresource>
 </RCC>
