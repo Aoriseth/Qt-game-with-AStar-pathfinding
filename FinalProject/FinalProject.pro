@@ -17,7 +17,9 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     lib\world.h \
-    lib\world_global.h
+    lib\world_global.h \
+    lib/world.h \
+    lib/world_global.h
 
 FORMS    += mainwindow.ui
 
