@@ -20,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(scene);
 
     World *myWorld = new World();
-    std::vector<std::unique_ptr<Tile>> tiles = myWorld->createWorld("://resources/maze1.png");
+    QString path = "://resources/worldmap4_resize.png";
+    std::vector<std::unique_ptr<Tile>> tiles = myWorld->createWorld(path);
     std::vector<std::unique_ptr<Enemy>> enemies = myWorld->getEnemies(10);
     std::vector<std::unique_ptr<Tile>> healthpacks = myWorld->getHealthPacks(6);
     std::unique_ptr<Protagonist> pro = myWorld->getProtagonist();
