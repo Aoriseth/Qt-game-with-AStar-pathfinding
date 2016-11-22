@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QImage image("://resources/Pixel-mario.gif");
     QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    item->setScale(0.03);
+    item->setScale(0.01);
     item->setPos(pro->getXPos(),pro->getYPos());
     scene->addItem(item);
 
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         QImage image("://resources/Supermushroom.png");
         QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        item->setScale(0.1);
+        item->setScale(0.05);
         item->setPos(x,y);
         scene->addItem(item);
     }
@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         QImage image("://resources/goomba.gif");
         QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        item->setScale(0.1);
+        item->setScale(0.05);
         item->setPos(x,y);
         scene->addItem(item);
     }
