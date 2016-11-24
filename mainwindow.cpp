@@ -12,6 +12,7 @@
 #include <QGraphicsPixmapItem>
 #include "node.h"
 #include <vector>
+#include <iostream>
 
 void addItemToScene(QImage image, int x, int y);
 QGraphicsScene * scene;
@@ -60,7 +61,34 @@ MainWindow::MainWindow(QWidget *parent) :
         addItemToScene(image, x, y);
     }
 
+    //find my path here
+    std::vector<node> currentNodes;
+    auto ptr1 = std::make_shared<Tile>(std::move(*tiles[0]));
+    node myNode1(ptr1,nullptr); //Starting point
+    //currentNodes.push_back(myNode1);
+    std::cout<<"Node1---XPos: " << myNode1.getPos()->getXPos()<<" YPos: " << myNode1.getPos()->getYPos();
+    std::cout<<" Value: " << myNode1.getPos()->getValue()<<std::endl;
 
+    auto pre2 = std::make_shared<node>(myNode1);
+    auto ptr2 = std::make_shared<Tile>(std::move(*tiles[1]));
+    node myNode2(ptr2,pre2);
+    currentNodes.push_back(myNode2);
+    std::cout<<"Node2---XPos: " << myNode2.getPos()->getXPos()<<" YPos: " << myNode2.getPos()->getYPos();
+    std::cout<<" Value: " << myNode2.getPos()->getValue()<<std::endl;
+
+    auto pre3 = std::make_shared<node>(myNode2);
+    auto ptr3 = std::make_shared<Tile>(std::move(*tiles[5]));
+    node myNode3(ptr3,pre3);
+    currentNodes.push_back(myNode3);
+    std::cout<<"Node3---XPos: " << myNode3.getPos()->getXPos()<<" YPos: " << myNode3.getPos()->getYPos();
+    std::cout<<" Value: " << myNode3.getPos()->getValue()<<std::endl;
+
+    auto pre4 = std::make_shared<node>(myNode3);
+    auto ptr4 = std::make_shared<Tile>(std::move(*tiles[7]));
+    node myNode4(ptr4,pre4);
+    currentNodes.push_back(myNode4);
+    std::cout<<"Node3---XPos: " << myNode4.getPos()->getXPos()<<" YPos: " << myNode4.getPos()->getYPos();
+    std::cout<<" Value: " << myNode4.getPos()->getValue()<<std::endl;
 
 }
 
