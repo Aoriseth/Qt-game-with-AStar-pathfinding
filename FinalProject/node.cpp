@@ -1,18 +1,18 @@
 #include "node.h"
 
-node::node(std::shared_ptr<Tile> pos, std::shared_ptr<Tile> pre)
+node::node(std::shared_ptr<Tile> pos, std::shared_ptr<node> pre)
 {
     this->pos = pos;
     this->pre = pre;
 }
 
 
-std::shared_ptr<Tile> node::getPre() const
+std::shared_ptr<node> node::getPre() const
 {
     return pre;
 }
 
-void node::setPre(const std::shared_ptr<Tile> &value)
+void node::setPre(const std::shared_ptr<node> &value)
 {
     pre = value;
 }
