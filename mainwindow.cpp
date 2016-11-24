@@ -10,13 +10,18 @@
 #include <iostream>
 #include <math.h>
 #include <QGraphicsPixmapItem>
+#include "node.h"
+#include <vector>
+
+void addItemToScene(QImage image, int x, int y);
+QGraphicsScene * scene;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QGraphicsScene * scene = new QGraphicsScene(this);
+    scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->fitInView(0,0,256/5,256/5,Qt::KeepAspectRatio);
 
@@ -45,26 +50,27 @@ MainWindow::MainWindow(QWidget *parent) :
     for(auto& healthpack: healthpacks){
         int x = healthpack->getXPos();
         int y = healthpack->getYPos();
-
         QImage image("://resources/Supermushroom.png");
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        item->setScale(1);
-        item->setPos(256*x,256*y);
-        scene->addItem(item);
+        addItemToScene(image, x, y);
     }
     for(auto& enemy: enemies){
         int x = enemy->getXPos();
         int y = enemy->getYPos();
-
         QImage image("://resources/goomba.gif");
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        item->setScale(1);
-        item->setPos(256*x,256*y);
-        scene->addItem(item);
+        addItemToScene(image, x, y);
     }
 
 
+
 }
+
+void addItemToScene(QImage image, int x, int y){
+    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    item->setScale(1);
+    item->setPos(256*x,256*y);
+    scene->addItem(item);
+}
+
 
 MainWindow::~MainWindow()
 {

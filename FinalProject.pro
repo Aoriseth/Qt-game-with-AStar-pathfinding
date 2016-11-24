@@ -13,13 +13,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    node.cpp
 
 HEADERS  += mainwindow.h \
     lib\world.h \
     lib\world_global.h \
     lib/world.h \
-    lib/world_global.h
+    lib/world_global.h \
+    node.h
 
 FORMS    += mainwindow.ui
 
