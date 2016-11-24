@@ -6,7 +6,7 @@
         <file>resources/worldmap4.png</file>
         <file>resources/Supermushroom.png</file>
         <file>resources/goomba.gif</file>
-        <file>resources/Pixel-mario.gif</file>
         <file>resources/worldmap4_resize.png</file>
+        <file>resources/Pixel-mario.png</file>
     </qresource>
 </RCC>
