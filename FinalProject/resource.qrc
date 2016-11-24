@@ -8,5 +8,6 @@
         <file>resources/goomba.gif</file>
         <file>resources/worldmap4_resize.png</file>
         <file>resources/Pixel-mario.png</file>
+        <file>resources/maze_5_5.png</file>
     </qresource>
 </RCC>

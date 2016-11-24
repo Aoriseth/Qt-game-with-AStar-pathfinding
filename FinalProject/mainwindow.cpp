@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QGraphicsScene * scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
+    ui->graphicsView->fitInView(0,0,256/5,256/5,Qt::KeepAspectRatio);
 
     World *myWorld = new World();
     QString path = "://resources/maze_5_5.png";
@@ -61,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
         item->setPos(256*x,256*y);
         scene->addItem(item);
     }
+
+
 }
 
 MainWindow::~MainWindow()
