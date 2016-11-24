@@ -1,8 +1,8 @@
 #include "node.h"
 
-node::node(std::shared_ptr<Tile> pos, std::shared_ptr<node> pre)
+node::node(std::shared_ptr<Tile> tile, std::shared_ptr<node> pre)
 {
-    this->pos = pos;
+    this->tile = tile;
     this->pre = pre;
 }
 
@@ -17,12 +17,22 @@ void node::setPre(const std::shared_ptr<node> &value)
     pre = value;
 }
 
-std::shared_ptr<Tile> node::getPos() const
+std::shared_ptr<Tile> node::getTile() const
 {
-    return pos;
+    return tile;
 }
 
-void node::setPos(const std::shared_ptr<Tile> &value)
+void node::setTile(const std::shared_ptr<Tile> &value)
 {
-    pos = value;
+    tile = value;
+}
+
+bool node::getIsVisited() const
+{
+    return isVisited;
+}
+
+void node::setIsVisited(bool value)
+{
+    isVisited = value;
 }
