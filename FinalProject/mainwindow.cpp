@@ -16,6 +16,9 @@
 #include <QString>
 #include <QListIterator>
 #include <QQueue>
+#include <QDebug>
+#include <QSet>
+#include <algorithm>
 
 QGraphicsScene * scene;
 
@@ -27,6 +30,7 @@ std::vector<std::unique_ptr<Tile>> healthpacks;
 std::unique_ptr<Protagonist> pro;
 
 QQueue<node> currentNodes;
+QSet<int> myIndexes;
 
 void addItemToScene(QImage image, int x, int y);
 bool findMyPath();
@@ -74,14 +78,18 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     auto pos1 = std::make_shared<Tile>(std::move(*(tiles[0])));
+    myIndexes.insert(0);
     node myNode1(pos1,nullptr); //Starting point
     currentNodes.enqueue(myNode1);
 //    std::cout<<"Node1---XPos: " << myNode1.getPos()->getXPos()<<" YPos: " << myNode1.getPos()->getYPos();
 //    std::cout<<" Value: " << myNode1.getPos()->getValue()<<std::endl;
 
-    while(findMyPath()){
-        std::cout<< "Path found !!!!!"<<std::endl;
+    while(!findMyPath()){
+        currentNodes.dequeue();
+        qDebug()<< "Path not found !!!!!"<<" Size = "<<currentNodes.size();
     }
+    qDebug()<< "Path found !!!!!";
+
 
 }
 
@@ -95,25 +103,33 @@ void addItemToScene(QImage image, int x, int y){
 bool findMyPath(){
     QListIterator<node> i(currentNodes);
     while(i.hasNext()) {
-        auto tile = (i.next()).getTile();
-        if((tile->getXPos()>=5) && (tile->getYPos()>=5)){
+        const node myNode = i.next();
+        auto tile = myNode.getTile();
+        if((tile->getXPos()>=4) && (tile->getYPos()>=4)){
             return true;
         }else{
-            if(tile->getXPos()<5){
+            if(tile->getXPos()<4){
                 int index = 5*(tile->getYPos()) + tile->getXPos() + 1;
-                auto pre4 = std::make_shared<node>(i.next());//Something went wrong here
-                auto pos4 = std::make_shared<Tile>(std::move(*tiles[index]));
-                node myxNode(pos4,pre4);
-                currentNodes.enqueue(myxNode);
+                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                    auto pre4 = std::make_shared<node>(myNode);
+                    auto pos4 = std::make_shared<Tile>(std::move(*tiles[index]));
+                    node myxNode(pos4,pre4);
+                    currentNodes.enqueue(myxNode);
+                    myIndexes.insert(index);
+                }
+
             }
-            if(tile->getYPos()<5){
+            if(tile->getYPos()<4){
                 int index = (tile->getYPos() +1)*5 + tile->getXPos();
-                auto pre4 = std::make_shared<node>(i.next());
-                auto pos4 = std::make_shared<Tile>(std::move(*tiles[index]));
-                node myyNode(pos4,pre4);
-                currentNodes.enqueue(myyNode);
+                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                    auto pre4 = std::make_shared<node>(myNode);
+                    auto pos4 = std::make_shared<Tile>(std::move(*tiles[index]));
+                    node myyNode(pos4,pre4);
+                    currentNodes.enqueue(myyNode);
+                    myIndexes.insert(index);
+                }
             }
-            currentNodes.dequeue();
+
         }
     }
     return false;
