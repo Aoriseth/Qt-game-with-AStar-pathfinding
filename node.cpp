@@ -27,12 +27,3 @@ void node::setTile(const std::shared_ptr<Tile> &value)
     tile = value;
 }
 
-bool node::getIsVisited() const
-{
-    return isVisited;
-}
-
-void node::setIsVisited(bool value)
-{
-    isVisited = value;
-}
