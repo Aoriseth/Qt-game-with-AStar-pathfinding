@@ -86,7 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     while(!findMyPath()){
         currentNodes.dequeue();
-        qDebug()<< "Path not found !!!!!"<<" Size = "<<currentNodes.size();
+        qDebug()<< "Path not found !!!!!"<<" Queue Size = "<<currentNodes.size();
     }
     qDebug()<< "Path found !!!!!";
 
