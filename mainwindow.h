@@ -14,12 +14,14 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    Ui::MainWindow *ui;
 
 private:
-    Ui::MainWindow *ui;
+
 
 private slots:
     void play_clicked();
+    void OpenMap();
 };
 
 #endif // MAINWINDOW_H
