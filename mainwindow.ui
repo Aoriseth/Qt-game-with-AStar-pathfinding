@@ -77,5 +77,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>play_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>583</x>
+     <y>561</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>601</x>
+     <y>578</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>play_clicked()</slot>
+ </slots>
 </ui>
