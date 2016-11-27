@@ -37,6 +37,8 @@ QQueue<node> currentNodes;
 QStack<std::shared_ptr<Tile>> route;
 QSet<int> myIndexes;
 QGraphicsPixmapItem* mario;
+auto xmax = 0;
+auto ymax = 0;
 
 void addItemToScene(QImage image, int x, int y);
 bool findMyPath(int x,int y);
@@ -93,7 +95,7 @@ bool findMyPath(int x,int y){
             return true;
         }else{
 
-                if(tile->getXPos()<4){
+                if(tile->getXPos()<xmax){
                     int index = 5*(tile->getYPos()) + tile->getXPos() + 1;
                     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
                         auto pre = std::make_shared<node>(myNode);
@@ -117,7 +119,7 @@ bool findMyPath(int x,int y){
                         }
                     }
                 }
-                if(tile->getYPos()<4){
+                if(tile->getYPos()<ymax){
                     int index = (tile->getYPos() +1)*5 + tile->getXPos();
                     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
                         auto pre = std::make_shared<node>(myNode);
@@ -179,8 +181,7 @@ void MainWindow::OpenMap()
     healthpacks = myWorld->getHealthPacks(2);
     pro = myWorld->getProtagonist();
 
-    auto xmax = 0;
-    auto ymax = 0;
+
     for(auto& tile: tiles){
         int x = tile->getXPos();
         if (x>xmax){
