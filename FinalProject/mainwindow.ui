@@ -37,7 +37,7 @@
      <x>0</x>
      <y>0</y>
      <width>1168</width>
-     <height>26</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -94,8 +94,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionOpen_map</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>OpenMap()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>583</x>
+     <y>306</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>play_clicked()</slot>
+  <slot>OpenMap()</slot>
  </slots>
 </ui>

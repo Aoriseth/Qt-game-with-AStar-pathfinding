@@ -22,6 +22,7 @@
 #include <QStack>
 #include <chrono>
 #include <thread>
+#include <QFileDialog>
 
 QGraphicsScene * scene;
 
@@ -44,54 +45,23 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-    ui->graphicsView->fitInView(0,0,256/5,256/5,Qt::KeepAspectRatio);
 
-    tiles = myWorld->createWorld(path);
-    enemies = myWorld->getEnemies(2);
-    healthpacks = myWorld->getHealthPacks(2);
-    pro = myWorld->getProtagonist();
+}
 
-    for(auto& tile: tiles){
-        int x = tile->getXPos();
-        int y = tile->getYPos();
-        float value = tile->getValue();
-        if(std::isinf(value)) value= 255.0;
-        else value = 255.0-value*255.0;
-        scene->addRect(256*x, 256*y, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
-    }
+void addItemToScene(QImage image, int x, int y){
+    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    item->setScale(1);
+    item->setPos(256*x,256*y);
+    scene->addItem(item);
+}
+
+void drawScene(){
 
 
-    QImage image(":/resources/Pixel-mario.png");
-    mario = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    mario->setZValue(3);
-    mario->setScale(1);
-    mario->setPos(pro->getXPos(),pro->getYPos());
-    scene->addItem(mario);
-
-    for(auto& healthpack: healthpacks){
-        int x = healthpack->getXPos();
-        int y = healthpack->getYPos();
-        QImage image1(":/resources/Supermushroom.png");
-        addItemToScene(image1, x, y);
-    }
-    for(auto& enemy: enemies){
-        int x = enemy->getXPos();
-        int y = enemy->getYPos();
-        QImage image2(":/resources/goomba.gif");
-        addItemToScene(image2, x, y);
-    }
-
-    auto pos1 = std::make_shared<Tile>(std::move(*(tiles[0])));
-    myIndexes.insert(0);
-    node myNode1(pos1,nullptr); //Starting point
-    currentNodes.enqueue(myNode1);
-//    std::cout<<"Node1---XPos: " << myNode1.getPos()->getXPos()<<" YPos: " << myNode1.getPos()->getYPos();
-//    std::cout<<" Value: " << myNode1.getPos()->getValue()<<std::endl;
-
-    scene->addRect(256*0, 256*4, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
     while((!findMyPath(0,4)) &&(currentNodes.size())){
         //currentNodes.dequeue();
         qDebug()<< "Path not found yet!"<<" Queue Size = "<<currentNodes.size();
@@ -109,15 +79,10 @@ MainWindow::MainWindow(QWidget *parent) :
         destination=*(destination.getPre());
         qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
     }
-
 }
 
-void addItemToScene(QImage image, int x, int y){
-    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    item->setScale(1);
-    item->setPos(256*x,256*y);
-    scene->addItem(item);
-}
+
+
 
 bool findMyPath(int x,int y){
     QListIterator<node> i(currentNodes);
@@ -191,11 +156,79 @@ MainWindow::~MainWindow()
 
 void MainWindow::play_clicked()
 {
+    drawScene();
     while(route.size()){
         auto tile = route.pop();
         mario->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
         ui->graphicsView->viewport()->repaint();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
+
+}
+void MainWindow::OpenMap()
+{
+
+
+    scene->clear();
+    scene->setSceneRect(scene->itemsBoundingRect());
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Select map"));
+    path = fileName;
+
+    tiles = myWorld->createWorld(path);
+    enemies = myWorld->getEnemies(2);
+    healthpacks = myWorld->getHealthPacks(2);
+    pro = myWorld->getProtagonist();
+
+    auto xmax = 0;
+    auto ymax = 0;
+    for(auto& tile: tiles){
+        int x = tile->getXPos();
+        if (x>xmax){
+            xmax=x;
+        }
+        int y = tile->getYPos();
+        if (y>ymax){
+            ymax=y;
+
+        }
+        float value = tile->getValue();
+        if(std::isinf(value)) value= 255.0;
+        else value = 255.0-value*255.0;
+        scene->addRect(256*x, 256*y, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
+    }
+    qDebug()<<"ymax is "<<ymax;
+    qDebug()<<"xmax is "<<xmax;
+
+    ui->graphicsView->fitInView(0,0,350*xmax,350*ymax,Qt::KeepAspectRatio);
+
+    QImage image(":/resources/Pixel-mario.png");
+    mario = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    mario->setZValue(3);
+    mario->setScale(1);
+    mario->setPos(pro->getXPos(),pro->getYPos());
+    scene->addItem(mario);
+
+    for(auto& healthpack: healthpacks){
+        int x = healthpack->getXPos();
+        int y = healthpack->getYPos();
+        QImage image1(":/resources/Supermushroom.png");
+        addItemToScene(image1, x, y);
+    }
+    for(auto& enemy: enemies){
+        int x = enemy->getXPos();
+        int y = enemy->getYPos();
+        QImage image2(":/resources/goomba.gif");
+        addItemToScene(image2, x, y);
+    }
+
+    auto pos1 = std::make_shared<Tile>(std::move(*(tiles[0])));
+    myIndexes.insert(0);
+    node myNode1(pos1,nullptr); //Starting point
+    currentNodes.enqueue(myNode1);
+//    std::cout<<"Node1---XPos: " << myNode1.getPos()->getXPos()<<" YPos: " << myNode1.getPos()->getYPos();
+//    std::cout<<" Value: " << myNode1.getPos()->getValue()<<std::endl;
+
+    auto item = scene->addRect(256*0, 256*4, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
+    item->setFlag(QGraphicsItem::ItemIsSelectable, true);
 
 }
