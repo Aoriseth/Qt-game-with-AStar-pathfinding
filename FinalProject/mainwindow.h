@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    void play_clicked();
 };
 
 #endif // MAINWINDOW_H

@@ -19,6 +19,9 @@
 #include <QDebug>
 #include <QSet>
 #include <algorithm>
+#include <QStack>
+#include <chrono>
+#include <thread>
 
 QGraphicsScene * scene;
 
@@ -30,10 +33,12 @@ std::vector<std::unique_ptr<Tile>> healthpacks;
 std::unique_ptr<Protagonist> pro;
 
 QQueue<node> currentNodes;
+QStack<std::shared_ptr<Tile>> route;
 QSet<int> myIndexes;
+QGraphicsPixmapItem* mario;
 
 void addItemToScene(QImage image, int x, int y);
-bool findMyPath();
+bool findMyPath(int x,int y);
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -58,11 +63,13 @@ MainWindow::MainWindow(QWidget *parent) :
         scene->addRect(256*x, 256*y, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
     }
 
+
     QImage image(":/resources/Pixel-mario.png");
-    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    item->setScale(1);
-    item->setPos(pro->getXPos(),pro->getYPos());
-    scene->addItem(item);
+    mario = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    mario->setZValue(3);
+    mario->setScale(1);
+    mario->setPos(pro->getXPos(),pro->getYPos());
+    scene->addItem(mario);
 
     for(auto& healthpack: healthpacks){
         int x = healthpack->getXPos();
@@ -84,12 +91,24 @@ MainWindow::MainWindow(QWidget *parent) :
 //    std::cout<<"Node1---XPos: " << myNode1.getPos()->getXPos()<<" YPos: " << myNode1.getPos()->getYPos();
 //    std::cout<<" Value: " << myNode1.getPos()->getValue()<<std::endl;
 
-    while(!findMyPath()){
-        currentNodes.dequeue();
-        qDebug()<< "Path not found !!!!!"<<" Queue Size = "<<currentNodes.size();
+    scene->addRect(256*0, 256*4, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
+    while((!findMyPath(0,4)) &&(currentNodes.size())){
+        //currentNodes.dequeue();
+        qDebug()<< "Path not found yet!"<<" Queue Size = "<<currentNodes.size();
     }
-    qDebug()<< "Path found !!!!!";
+    if(currentNodes.size()){
+        qDebug()<< "Path found !!!!!";
+    }else{
+        qDebug()<< "Path is not found in the end!!!!!";
+    }
 
+
+    node destination = currentNodes.head();
+    for(;destination.getPre()!=nullptr;){
+        route.push(destination.getTile());
+        destination=*(destination.getPre());
+        qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
+    }
 
 }
 
@@ -100,36 +119,66 @@ void addItemToScene(QImage image, int x, int y){
     scene->addItem(item);
 }
 
-bool findMyPath(){
+bool findMyPath(int x,int y){
     QListIterator<node> i(currentNodes);
     while(i.hasNext()) {
         const node myNode = i.next();
         auto tile = myNode.getTile();
-        if((tile->getXPos()>=4) && (tile->getYPos()>=4)){
+        if((tile->getXPos()==x) && (tile->getYPos()==y)){
             return true;
         }else{
-            if(tile->getXPos()<4){
-                int index = 5*(tile->getYPos()) + tile->getXPos() + 1;
-                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
-                    auto pre4 = std::make_shared<node>(myNode);
-                    auto pos4 = std::make_shared<Tile>(std::move(*tiles[index]));
-                    node myxNode(pos4,pre4);
-                    currentNodes.enqueue(myxNode);
-                    myIndexes.insert(index);
+
+                if(tile->getXPos()<4){
+                    int index = 5*(tile->getYPos()) + tile->getXPos() + 1;
+                    if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        if(!(std::isinf(tiles[index]->getValue()))){
+                            node myxNode(pos,pre);
+                            currentNodes.enqueue(myxNode);
+                            myIndexes.insert(index);
+                        }
+                    }
+                }
+                if(tile->getXPos()>0){
+                    auto index = 5*(tile->getYPos()) + tile->getXPos() - 1;
+                    if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        if(!(std::isinf(tiles[index]->getValue()))){
+                            node myxNode(pos,pre);
+                            currentNodes.enqueue(myxNode);
+                            myIndexes.insert(index);
+                        }
+                    }
+                }
+                if(tile->getYPos()<4){
+                    int index = (tile->getYPos() +1)*5 + tile->getXPos();
+                    if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        if(!(std::isinf(tiles[index]->getValue()))){
+                            node myxNode(pos,pre);
+                            currentNodes.enqueue(myxNode);
+                            myIndexes.insert(index);
+                        }
+                    }
+                }
+                if(tile->getYPos()>0){
+                    int index = (tile->getYPos() -1)*5 + tile->getXPos();
+                    if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        if(!(std::isinf(tiles[index]->getValue()))){
+                            node myxNode(pos,pre);
+                            currentNodes.enqueue(myxNode);
+                            myIndexes.insert(index);
+                        }
+                    }
                 }
 
-            }
-            if(tile->getYPos()<4){
-                int index = (tile->getYPos() +1)*5 + tile->getXPos();
-                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
-                    auto pre4 = std::make_shared<node>(myNode);
-                    auto pos4 = std::make_shared<Tile>(std::move(*tiles[index]));
-                    node myyNode(pos4,pre4);
-                    currentNodes.enqueue(myyNode);
-                    myIndexes.insert(index);
-                }
-            }
 
+            currentNodes.dequeue();
         }
     }
     return false;
@@ -138,4 +187,15 @@ bool findMyPath(){
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::play_clicked()
+{
+    while(route.size()){
+        auto tile = route.pop();
+        mario->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
+        ui->graphicsView->viewport()->repaint();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+
 }
