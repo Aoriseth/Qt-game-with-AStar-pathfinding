@@ -70,17 +70,18 @@ void drawScene(){
     }
     if(currentNodes.size()){
         qDebug()<< "Path found !!!!!";
+        node destination = currentNodes.head();
+        for(;destination.getPre()!=nullptr;){
+            route.push(destination.getTile());
+            destination=*(destination.getPre());
+            qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
+        }
     }else{
         qDebug()<< "Path is not found in the end!!!!!";
     }
 
 
-    node destination = currentNodes.head();
-    for(;destination.getPre()!=nullptr;){
-        route.push(destination.getTile());
-        destination=*(destination.getPre());
-        qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
-    }
+
 }
 
 
@@ -96,7 +97,7 @@ bool findMyPath(int x,int y){
         }else{
 
                 if(tile->getXPos()<xmax){
-                    int index = 5*(tile->getYPos()) + tile->getXPos() + 1;
+                    int index = (xmax+1)*(tile->getYPos()) + tile->getXPos() + 1;
                     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
@@ -108,7 +109,7 @@ bool findMyPath(int x,int y){
                     }
                 }
                 if(tile->getXPos()>0){
-                    auto index = 5*(tile->getYPos()) + tile->getXPos() - 1;
+                    auto index = (xmax+1)*(tile->getYPos()) + tile->getXPos() - 1;
                     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
@@ -120,7 +121,7 @@ bool findMyPath(int x,int y){
                     }
                 }
                 if(tile->getYPos()<ymax){
-                    int index = (tile->getYPos() +1)*5 + tile->getXPos();
+                    int index = (tile->getYPos() +1)*(xmax+1) + tile->getXPos();
                     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
@@ -132,7 +133,7 @@ bool findMyPath(int x,int y){
                     }
                 }
                 if(tile->getYPos()>0){
-                    int index = (tile->getYPos() -1)*5 + tile->getXPos();
+                    int index = (tile->getYPos() -1)*(xmax+1) + tile->getXPos();
                     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
@@ -163,7 +164,7 @@ void MainWindow::play_clicked()
         auto tile = route.pop();
         mario->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
         ui->graphicsView->viewport()->repaint();
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
 }
