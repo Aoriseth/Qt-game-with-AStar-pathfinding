@@ -49,8 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(scene);
 
 }
 
@@ -172,8 +170,10 @@ void MainWindow::OpenMap()
 {
 
 
-    scene->clear();
-    scene->setSceneRect(scene->itemsBoundingRect());
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+//    scene->clear();
+//    scene->setSceneRect(scene->itemsBoundingRect());
     QString fileName = QFileDialog::getOpenFileName(this,tr("Select map"));
     path = fileName;
 
@@ -182,7 +182,7 @@ void MainWindow::OpenMap()
     healthpacks = myWorld->getHealthPacks(2);
     pro = myWorld->getProtagonist();
 
-
+    xmax=0;ymax=0;
     for(auto& tile: tiles){
         int x = tile->getXPos();
         if (x>xmax){
