@@ -1,28 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "world.h"
-#include "world_global.h"
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QFrame>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <iostream>
-#include <math.h>
-#include <QGraphicsPixmapItem>
-#include "node.h"
-#include <vector>
-#include <iostream>
-#include <QString>
-#include <QListIterator>
-#include <QQueue>
-#include <QDebug>
-#include <QSet>
-#include <algorithm>
-#include <QStack>
-#include <chrono>
-#include <thread>
-#include <QFileDialog>
+
 
 QGraphicsScene * scene;
 
@@ -37,11 +15,6 @@ QQueue<node> currentNodes;
 QStack<std::shared_ptr<Tile>> route;
 QSet<int> myIndexes;
 QGraphicsPixmapItem* mario;
-auto xmax = 0;
-auto ymax = 0;
-
-void addItemToScene(QImage image, int x, int y);
-bool findMyPath(int x,int y);
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -49,17 +22,19 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    ymax = 0;
+    xmax= 0;
 
 }
 
-void addItemToScene(QImage image, int x, int y){
+void MainWindow::addItemToScene(QImage image, int x, int y){
     QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
     item->setScale(1);
     item->setPos(256*x,256*y);
     scene->addItem(item);
 }
 
-void drawScene(){
+void MainWindow::drawScene(){
 
 
     while((!findMyPath(0,4)) &&(currentNodes.size())){
@@ -85,7 +60,7 @@ void drawScene(){
 
 
 
-bool findMyPath(int x,int y){
+bool MainWindow::findMyPath(int x,int y){
     QListIterator<node> i(currentNodes);
     while(i.hasNext()) {
         const node myNode = i.next();
