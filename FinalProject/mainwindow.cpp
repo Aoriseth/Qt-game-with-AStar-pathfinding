@@ -168,7 +168,9 @@ void MainWindow::play_clicked()
 }
 void MainWindow::OpenMap()
 {
-
+    currentNodes.clear();
+    route.clear();
+    myIndexes.clear();
 
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
