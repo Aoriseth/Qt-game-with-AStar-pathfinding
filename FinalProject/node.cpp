@@ -27,12 +27,12 @@ void node::setTile(const std::shared_ptr<Tile> &value)
     tile = value;
 }
 
-int node::getDistance() const
+double node::getDistance() const
 {
     return distance;
 }
 
-void node::setDistance(int value)
+void node::setDistance(double value)
 {
     distance = value;
 }

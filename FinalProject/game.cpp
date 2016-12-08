@@ -83,7 +83,7 @@ bool game::bestFirst(int x, int y)
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                         node myxNode(pos,pre);
-                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
@@ -99,7 +99,7 @@ bool game::bestFirst(int x, int y)
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                         node myxNode(pos,pre);
-                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode);qDebug()<<"x-:Add new node with index:"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
@@ -115,7 +115,7 @@ bool game::bestFirst(int x, int y)
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                         node myxNode(pos,pre);
-                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode);qDebug()<<"y+:Add new node with index"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
@@ -131,7 +131,7 @@ bool game::bestFirst(int x, int y)
                         auto pre = std::make_shared<node>(myNode);
                         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                         node myxNode(pos,pre);
-                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode);qDebug()<<"y-:Add new node with index"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
@@ -143,7 +143,12 @@ bool game::bestFirst(int x, int y)
             qDebug()<<"Size:"<<availableNodes.size();
         }while(availableNodes.size()!=0);
 
-        return false;
+    return false;
+}
+
+bool game::dijkstra(int x, int y)
+{
+
 }
 
 

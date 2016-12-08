@@ -23,6 +23,7 @@ public:
     std::vector<std::unique_ptr<Tile>> healthpacks;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);
+    bool dijkstra(int x,int y);
     void clearLists();
     QQueue<node> currentNodes;
     std::vector<node> availableNodes;
