@@ -71,9 +71,98 @@ bool game::breadthFirst(int x,int y){
     return false;
 }
 
+bool game::bestFirst(int x, int y)
+{
+    do{
+            node myNode = getTheClosestNode();
+            auto myTile = myNode.getTile();
+            if(myTile->getXPos()<xmax){
+                int index = (xmax+1)*(myTile->getYPos()) + myTile->getXPos() + 1;
+                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                    if(!(std::isinf(tiles[index]->getValue()))){
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        node myxNode(pos,pre);
+                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        myxNode.setDistance(distance);
+                        availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
+                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        if(distance==0)
+                            return true;
+                    }
+                }
+            }
+            if(myTile->getXPos()>0){
+                int index = (xmax+1)*(myTile->getYPos()) + myTile->getXPos() - 1;
+                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                    if(!(std::isinf(tiles[index]->getValue()))){
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        node myxNode(pos,pre);
+                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        myxNode.setDistance(distance);
+                        availableNodes.push_back(myxNode);qDebug()<<"x-:Add new node with index:"<<index;
+                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        if(distance==0)
+                            return true;
+                    }
+                }
+            }
+            if(myTile->getYPos()<ymax){
+                int index = (myTile->getYPos() +1)*(xmax+1) + myTile->getXPos();
+                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                    if(!(std::isinf(tiles[index]->getValue()))){
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        node myxNode(pos,pre);
+                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        myxNode.setDistance(distance);
+                        availableNodes.push_back(myxNode);qDebug()<<"y+:Add new node with index"<<index;
+                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        if(distance==0)
+                            return true;
+                    }
+                }
+            }
+            if(myTile->getYPos()>0){
+                int index = (myTile->getYPos() -1)*(xmax+1) + myTile->getXPos();
+                if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
+                    if(!(std::isinf(tiles[index]->getValue()))){
+                        auto pre = std::make_shared<node>(myNode);
+                        auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
+                        node myxNode(pos,pre);
+                        int distance =(int)(pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2));
+                        myxNode.setDistance(distance);
+                        availableNodes.push_back(myxNode);qDebug()<<"y-:Add new node with index"<<index;
+                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        if(distance==0)
+                            return true;
+                    }
+                }
+            }
+            qDebug()<<"Size:"<<availableNodes.size();
+        }while(availableNodes.size()!=0);
+
+        return false;
+}
+
+
+
+node game::getTheClosestNode(){
+    //find the node closted to des
+    //remove the node from queue
+    //return that node
+    std::vector<node>::iterator result;
+    result = std::min_element(availableNodes.begin(), availableNodes.end(), abs_compare);
+    node closestNode =*result;
+    availableNodes.erase(result);
+    return closestNode;
+}
+
 void game::clearLists()
 {
     currentNodes.clear();
+    availableNodes.clear();
     route.clear();
     myIndexes.clear();
 }
@@ -84,7 +173,7 @@ void game::setDestination(int x, int y){
 
 }
 
-bool game::calcPath(){
+bool game::calcPath_BreadthFirst(){
 
     // as long as algorithm didn't reach destination and there are still nodes print path not found yet
     while((!breadthFirst(xDest,yDest)) &&(currentNodes.size())){
@@ -109,6 +198,23 @@ bool game::calcPath(){
         return false;
     }
     return true;
+}
+
+bool game::calcPath_BestFirst()
+{
+    if(bestFirst(xDest,yDest)){
+        qDebug()<< "Path found !!!!!";
+        node destination = availableNodes[availableNodes.size()-1];
+        for(;destination.getPre()!=nullptr;){
+            route.push(destination.getTile());
+            destination=*(destination.getPre());
+            qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
+        }
+        return true;
+    }else{
+        qDebug()<< "BestFirst:Path is not found in the end!!!!!";
+        return false;
+    }
 }
 
 void game::loadWorld(QString path, QGraphicsScene * scene){
@@ -143,7 +249,8 @@ void game::setStart(int x, int y){
 
     clearLists();
     auto pos1 = std::make_shared<Tile>(std::move(*(protagonist)));
-    myIndexes.insert(0);
+    myIndexes.insert((xmax+1)*y+x);
     node myNode1(pos1,nullptr); //Starting point
     currentNodes.enqueue(myNode1);
+    availableNodes.push_back(myNode1);
 }

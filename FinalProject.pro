@@ -14,14 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    node.cpp
+    node.cpp \
+    game.cpp
 
 HEADERS  += mainwindow.h \
     lib\world.h \
     lib\world_global.h \
     lib/world.h \
     lib/world_global.h \
-    node.h
+    node.h \
+    game.h
 
 FORMS    += mainwindow.ui
 

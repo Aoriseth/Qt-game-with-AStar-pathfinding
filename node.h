@@ -16,9 +16,13 @@ public:
     void setTile(const std::shared_ptr<Tile> &value);
 
 
+    int getDistance() const;
+    void setDistance(int value);
+
 private:
     std::shared_ptr<Tile> tile;
     std::shared_ptr<node> pre;
+    int distance = 5000;
 };
 
 #endif // NODE_H

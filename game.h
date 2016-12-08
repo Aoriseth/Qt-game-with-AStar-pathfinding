@@ -22,12 +22,15 @@ public:
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::vector<std::unique_ptr<Tile>> healthpacks;
     bool breadthFirst(int x,int y);
+    bool bestFirst(int x,int y);
     void clearLists();
     QQueue<node> currentNodes;
+    std::vector<node> availableNodes;
     int ymax;
     int xmax;
     QSet<int> myIndexes;
-    bool calcPath();
+    bool calcPath_BreadthFirst();
+    bool calcPath_BestFirst();
     QStack<std::shared_ptr<Tile>> route;
     void loadWorld(QString path,QGraphicsScene * scene);
     World *myWorld = new World();
@@ -39,6 +42,11 @@ public:
 private:
 
 
+    static bool abs_compare(node a, node b)
+    {
+        return (a.getDistance() < b.getDistance());
+    }
+    node getTheClosestNode();
 };
 
 #endif // GAME_H
