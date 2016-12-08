@@ -17,14 +17,12 @@
 #include <iostream>
 #include <QString>
 #include <QListIterator>
-#include <QQueue>
 #include <QDebug>
-#include <QSet>
 #include <algorithm>
-#include <QStack>
 #include <chrono>
 #include <thread>
 #include <QFileDialog>
+#include "game.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,17 +36,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     Ui::MainWindow *ui;
-
     bool findMyPath(int x, int y);
-    void drawScene();
+    void pathTrace();
     void addItemToScene(QImage image, int x, int y);
+    void indicateDestination(int x, int y);
+
 private:
-    int xmax;
-    int ymax;
+    game logic;
+    void refreshScene();
+    QGraphicsPixmapItem* protagonistView;
+    void showProtagonist();
+    void showHealthpacks();
+    void showEnemies();
 
 private slots:
     void play_clicked();
     void OpenMap();
+    void readDestination();
 };
 
 #endif // MAINWINDOW_H
