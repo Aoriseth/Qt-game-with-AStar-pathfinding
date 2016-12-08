@@ -3,6 +3,7 @@
 #include "lib/world.h"
 #include "lib/world_global.h"
 #include <memory>
+#include <limits>
 
 class node
 {
@@ -16,13 +17,13 @@ public:
     void setTile(const std::shared_ptr<Tile> &value);
 
 
-    int getDistance() const;
-    void setDistance(int value);
+    double getDistance() const;
+    void setDistance(double value);
 
 private:
     std::shared_ptr<Tile> tile;
     std::shared_ptr<node> pre;
-    int distance = 5000;
+    double distance = std::numeric_limits<double>::infinity();
 };
 
 #endif // NODE_H
