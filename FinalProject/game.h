@@ -13,7 +13,6 @@
 #include <QGraphicsScene>
 
 
-
 class game
 {
 public:
@@ -27,11 +26,14 @@ public:
     void clearLists();
     QQueue<node> currentNodes;
     std::vector<node> availableNodes;
+    std::vector<node> sptNodes;//shortest path tree
+    int weight = 1;
     int ymax;
     int xmax;
     QSet<int> myIndexes;
     bool calcPath_BreadthFirst();
     bool calcPath_BestFirst();
+    bool calcPath_Dijkstra();
     QStack<std::shared_ptr<Tile>> route;
     void loadWorld(QString path,QGraphicsScene * scene);
     World *myWorld = new World();
@@ -40,14 +42,17 @@ public:
     int xDest;
     int yDest;
     void setDestination(int x, int y);
+    int getWeight() const;
+    void setWeight(int value);
+
 private:
 
 
-    static bool abs_compare(node a, node b)
+    static bool dist_compare(node a, node b)
     {
         return (a.getDistance() < b.getDistance());
     }
-    node getTheClosestNode();
+    node getNodeWithMinDistance();
 };
 
 #endif // GAME_H

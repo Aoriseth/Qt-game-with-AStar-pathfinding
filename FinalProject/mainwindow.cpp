@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::play_clicked()
 {
-    if(logic.calcPath_BestFirst()){
+    if(logic.calcPath_Dijkstra()){
         while(logic.route.size()){
             auto tile = logic.route.pop();
             protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
