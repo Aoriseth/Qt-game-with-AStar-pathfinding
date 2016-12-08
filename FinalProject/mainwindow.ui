@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1168</width>
-    <height>613</height>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,13 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>play</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -22,12 +29,22 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>play</string>
-      </property>
-     </widget>
+    <item row="2" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="lineEditX"/>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEditY"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>Set Destination</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -110,9 +127,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>readDestination()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1034</x>
+     <y>634</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>865</x>
+     <y>659</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>play_clicked()</slot>
   <slot>OpenMap()</slot>
+  <slot>readDestination()</slot>
  </slots>
 </ui>
