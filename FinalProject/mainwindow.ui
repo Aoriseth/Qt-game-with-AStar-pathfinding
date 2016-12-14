@@ -32,6 +32,25 @@
     <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QComboBox" name="comboBox">
+        <item>
+         <property name="text">
+          <string>A*</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Breadth-First</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Best-First</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
        <widget class="QLineEdit" name="lineEditX"/>
       </item>
       <item>
@@ -45,6 +64,9 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="3" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2"/>
     </item>
    </layout>
   </widget>
