@@ -28,7 +28,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::play_clicked()
 {
-    if(logic.calcPath_Dijkstra()){
+    auto finished = false;
+
+    // Check the chosen algorithm
+    switch (ui->comboBox->currentIndex()) {
+    case 0:
+        finished = logic.calcPath_Dijkstra();
+        break;
+    case 1:
+        finished = logic.calcPath_BreadthFirst();
+        break;
+    case 2:
+        finished = logic.calcPath_BestFirst();
+        break;
+    default:
+        break;
+    }
+
+    // Move the protagonist based on the calculated path
+    if(finished){
         while(logic.route.size()){
             auto tile = logic.route.pop();
             protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
@@ -39,6 +57,9 @@ void MainWindow::play_clicked()
     }else{
         logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
     }
+
+
+
 }
 
 void MainWindow::refreshScene(){
@@ -116,7 +137,6 @@ void MainWindow::OpenMap()
 
 void MainWindow::readDestination()
 {
-
     auto x = ui->lineEditX->text();
     logic.xDest = x.split(" ")[0].toInt();
     auto y = ui->lineEditY->text();
