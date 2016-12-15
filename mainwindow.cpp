@@ -33,6 +33,7 @@ void MainWindow::play_clicked()
     // Check the chosen algorithm
     switch (ui->comboBox->currentIndex()) {
     case 0:
+        logic.setWeight(10);
         finished = logic.calcPath_Dijkstra();
         break;
     case 1:

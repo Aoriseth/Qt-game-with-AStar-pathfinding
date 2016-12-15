@@ -162,7 +162,7 @@ bool game::dijkstra(int x, int y)
                 auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                 node myxNode(pos,pre);
                 if(std::isinf(pos->getValue()) == false){
-                    double distance = myTile->getValue() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
+                    double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
                 availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
@@ -176,7 +176,7 @@ bool game::dijkstra(int x, int y)
                 auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                 node myxNode(pos,pre);
                 if(std::isinf(pos->getValue()) == false){
-                    double distance = myTile->getValue() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
+                    double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
                 availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
@@ -190,7 +190,7 @@ bool game::dijkstra(int x, int y)
                 auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                 node myxNode(pos,pre);
                 if(std::isinf(pos->getValue()) == false){
-                    double distance = myTile->getValue() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
+                    double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
                 availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
@@ -204,7 +204,7 @@ bool game::dijkstra(int x, int y)
                 auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
                 node myxNode(pos,pre);
                 if(std::isinf(pos->getValue()) == false){
-                    double distance = myTile->getValue() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
+                    double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
                 availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
