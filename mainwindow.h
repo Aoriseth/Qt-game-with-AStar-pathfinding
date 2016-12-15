@@ -53,6 +53,7 @@ private slots:
     void play_clicked();
     void OpenMap();
     void readDestination();
+    void ItemSelected();
 };
 
 #endif // MAINWINDOW_H

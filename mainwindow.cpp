@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     game logic();
     ui->setupUi(this);
+
 }
 
 void MainWindow::addItemToScene(QImage image, int x, int y){
@@ -65,6 +66,7 @@ void MainWindow::play_clicked()
 
 void MainWindow::refreshScene(){
     scene = new QGraphicsScene(this);
+    connect(scene, SIGNAL(selectionChanged()), this, SLOT(ItemSelected()));
     ui->graphicsView->setScene(scene);
 
     //scene->setSceneRect(scene->itemsBoundingRect());
@@ -130,7 +132,6 @@ void MainWindow::OpenMap()
 
     destView = scene->addRect(256*logic.xDest, 256*logic.yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
 
-
     //indicateDestination(logic.xDest, logic.yDest);
     //item->setFlag(QGraphicsItem::ItemIsSelectable, true);
 
@@ -145,5 +146,24 @@ void MainWindow::readDestination()
     qDebug() << "xdest = " << logic.xDest << " and ydest = " << logic.yDest;
     qDebug() << logic.currentNodes.size();
     indicateDestination(logic.xDest, logic.yDest);
+
+}
+
+void MainWindow::ItemSelected()
+{
+
+    qDebug() << "Selection changed";
+    auto selected = scene->selectedItems();
+    auto x = 0;
+    auto y = 0;
+    if (!selected.empty()){
+        qDebug() << selected;
+        x = selected[0]->x()/256;
+        y = selected[0]->y()/256;
+    }
+
+    logic.xDest = x;
+    logic.yDest = y;
+    indicateDestination(x,y);
 
 }

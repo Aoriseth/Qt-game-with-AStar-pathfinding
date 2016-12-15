@@ -248,6 +248,14 @@ void game::setWeight(int value)
     weight = value;
 }
 
+std::shared_ptr<Tile> game::getTile(int x, int y)
+{
+    int index = xmax*x+y;
+    auto tile = std::make_shared<Tile>(std::move(*tiles[index]));
+    return tile;
+
+}
+
 void game::setDestination(int x, int y){
     xDest = x;
     yDest = y;
@@ -335,7 +343,9 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
         float value = tile->getValue();
         if(std::isinf(value)) value= 255.0;
         else value = 255.0-value*255.0;
-        scene->addRect(256*x, 256*y, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
+        auto item = scene->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
+        item->setPos(256*x,256*y);
+        item->setFlag(QGraphicsItem::ItemIsSelectable, true);
     }
     qDebug()<<"ymax is "<<ymax;
     qDebug()<<"xmax is "<<xmax;
