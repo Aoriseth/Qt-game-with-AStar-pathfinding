@@ -40,7 +40,7 @@ public:
     void pathTrace();
     void addItemToScene(QImage image, int x, int y);
     void indicateDestination(int x, int y);
-
+    void updateStats();
 private:
     game logic;
     void refreshScene();
@@ -48,6 +48,7 @@ private:
     void showProtagonist();
     void showHealthpacks();
     void showEnemies();
+    bool mapLoaded=false;
 
 private slots:
     void play_clicked();

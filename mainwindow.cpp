@@ -29,6 +29,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::play_clicked()
 {
+
+    if(!mapLoaded){
+        return;
+    }
+
     auto finished = false;
 
     // Check the chosen algorithm
@@ -53,6 +58,8 @@ void MainWindow::play_clicked()
             auto tile = logic.route.pop();
             protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
             ui->graphicsView->viewport()->repaint();
+            logic.protagonist->setEnergy(logic.protagonist->getEnergy()-1);
+            updateStats();
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         logic.setStart(logic.xDest,logic.yDest);
@@ -104,8 +111,17 @@ void MainWindow::indicateDestination(int x, int y){
     ui->graphicsView->viewport()->repaint();
 }
 
+void MainWindow::updateStats(){
+    ui->energyBar->setValue(logic.protagonist->getEnergy());
+    ui->healthBar->setValue(logic.protagonist->getHealth());
+    qDebug()<<"Health is "<<logic.protagonist->getEnergy();
+
+}
+
+
 void MainWindow::OpenMap()
 {
+    mapLoaded = true;
     //clear logic lists and refresh the scene
     logic.clearLists();
     refreshScene();
@@ -132,6 +148,7 @@ void MainWindow::OpenMap()
 
     destView = scene->addRect(256*logic.xDest, 256*logic.yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
 
+    updateStats();
     //indicateDestination(logic.xDest, logic.yDest);
     //item->setFlag(QGraphicsItem::ItemIsSelectable, true);
 
@@ -140,12 +157,12 @@ void MainWindow::OpenMap()
 void MainWindow::ItemSelected()
 {
 
+    // Change destination to selected tileView
     qDebug() << "Selection changed";
     auto selected = scene->selectedItems();
     auto x = 0;
     auto y = 0;
     if (!selected.empty()){
-        qDebug() << selected;
         x = selected[0]->x()/256;
         y = selected[0]->y()/256;
     }
