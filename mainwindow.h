@@ -38,8 +38,11 @@ public:
     Ui::MainWindow *ui;
     bool findMyPath(int x, int y);
     void pathTrace();
-    void addItemToScene(QImage image, int x, int y);
+    void addItemToScene(QGraphicsPixmapItem* item, int x, int y);
     void indicateDestination(int x, int y);
+    std::vector<QGraphicsPixmapItem*> enemyItems;
+    std::vector<QGraphicsPixmapItem*> healthpackItems;
+
     void updateStats();
 private:
     game logic;
@@ -52,6 +55,7 @@ private:
 
 private slots:
     void play_clicked();
+    void execute_strategy();
     void OpenMap();
     void ItemSelected();
 };

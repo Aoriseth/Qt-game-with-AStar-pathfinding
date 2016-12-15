@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
-void MainWindow::addItemToScene(QImage image, int x, int y){
-    QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+void MainWindow::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
+    //auto item = std::make_shared<QGraphicsPixmapItem>(new QGraphicsPixmapItem(QPixmap::fromImage(image)));
     item->setScale(1);
     item->setPos(256*x,256*y);
     scene->addItem(item);
@@ -66,6 +66,40 @@ void MainWindow::play_clicked()
     }else{
         logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
     }
+}
+
+void MainWindow::execute_strategy()
+{
+    auto finished = false;
+
+    // Check the chosen algorithm
+    switch (ui->comboBox->currentIndex()) {
+    case 0:
+        logic.setWeight(10);
+        finished = logic.calcPath_Dijkstra();
+        break;
+    case 1:
+        finished = logic.calcPath_BreadthFirst();
+        break;
+    case 2:
+        finished = logic.calcPath_BestFirst();
+        break;
+    default:
+        break;
+    }
+
+    // Move the protagonist based on the calculated path
+    if(finished){
+        while(logic.route.size()){
+            auto tile = logic.route.pop();
+            protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
+            ui->graphicsView->viewport()->repaint();
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        logic.setStart(logic.xDest,logic.yDest);
+    }else{
+        logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
+    }
 
 
 
@@ -92,8 +126,10 @@ void MainWindow::showHealthpacks(){
     for(auto& healthpack: logic.healthpacks){
         int x = healthpack->getXPos();
         int y = healthpack->getYPos();
-        QImage image1(":/resources/Supermushroom.png");
-        addItemToScene(image1, x, y);
+        QImage image(":/resources/Supermushroom.png");
+        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+        addItemToScene(item, x, y);
+        healthpackItems.push_back(item);
     }
 }
 
@@ -101,8 +137,10 @@ void MainWindow::showEnemies(){
     for(auto& enemy: logic.enemies){
         int x = enemy->getXPos();
         int y = enemy->getYPos();
-        QImage image2(":/resources/goomba.gif");
-        addItemToScene(image2, x, y);
+        QImage image(":/resources/goomba.gif");
+        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+        addItemToScene(item, x, y);
+        enemyItems.push_back(item);
     }
 }
 
