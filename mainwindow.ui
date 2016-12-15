@@ -50,19 +50,6 @@
         </item>
        </widget>
       </item>
-      <item>
-       <widget class="QLineEdit" name="lineEditX"/>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="lineEditY"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_2">
-        <property name="text">
-         <string>Set Destination</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -146,27 +133,10 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>readDestination()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1034</x>
-     <y>634</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>865</x>
-     <y>659</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
   <slot>play_clicked()</slot>
   <slot>OpenMap()</slot>
-  <slot>readDestination()</slot>
   <slot>ItemSelected()</slot>
  </slots>
 </ui>
