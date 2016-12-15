@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QStack>
 #include <QGraphicsScene>
+#include <QGraphicsItem>
 
 
 class game
@@ -44,6 +45,7 @@ public:
     void setDestination(int x, int y);
     int getWeight() const;
     void setWeight(int value);
+    std::shared_ptr<Tile> getTile(int x,int y);
 
 private:
 
