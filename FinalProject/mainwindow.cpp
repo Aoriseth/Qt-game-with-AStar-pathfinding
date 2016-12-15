@@ -137,18 +137,6 @@ void MainWindow::OpenMap()
 
 }
 
-void MainWindow::readDestination()
-{
-    auto x = ui->lineEditX->text();
-    logic.xDest = x.split(" ")[0].toInt();
-    auto y = ui->lineEditY->text();
-    logic.yDest = y.split(" ")[0].toInt();
-    qDebug() << "xdest = " << logic.xDest << " and ydest = " << logic.yDest;
-    qDebug() << logic.currentNodes.size();
-    indicateDestination(logic.xDest, logic.yDest);
-
-}
-
 void MainWindow::ItemSelected()
 {
 
