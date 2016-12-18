@@ -58,7 +58,8 @@ void MainWindow::play_clicked()
             auto tile = logic.route.pop();
             protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
             ui->graphicsView->viewport()->repaint();
-            logic.protagonist->setEnergy(logic.protagonist->getEnergy()-1);
+            float newEnergy = logic.protagonist->getEnergy()-1 - logic.getWeight()*(1-tile->getValue());
+            logic.protagonist->setEnergy(newEnergy);
             updateStats();
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
@@ -68,40 +69,58 @@ void MainWindow::play_clicked()
     }
 }
 
+
 void MainWindow::execute_strategy()
 {
-    auto finished = false;
-
-    // Check the chosen algorithm
-    switch (ui->comboBox->currentIndex()) {
-    case 0:
-        logic.setWeight(10);
-        finished = logic.calcPath_Dijkstra();
-        break;
-    case 1:
-        finished = logic.calcPath_BreadthFirst();
-        break;
-    case 2:
-        finished = logic.calcPath_BestFirst();
-        break;
-    default:
-        break;
-    }
-
-    // Move the protagonist based on the calculated path
-    if(finished){
-        while(logic.route.size()){
-            auto tile = logic.route.pop();
-            protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
-            ui->graphicsView->viewport()->repaint();
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    logic.protagonist->setEnergy(100);
+    while(logic.enemies.size()){
+        auto finished = false;
+        Enemy closestEnemy = logic.getClosestEnemy();
+        logic.setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
+        // Check the chosen algorithm
+        switch (ui->comboBox->currentIndex()) {
+        case 0:
+            logic.setWeight(10);
+            finished = logic.calcPath_Dijkstra();
+            break;
+        case 1:
+            finished = logic.calcPath_BreadthFirst();
+            break;
+        case 2:
+            finished = logic.calcPath_BestFirst();
+            break;
+        default:
+            break;
         }
-        logic.setStart(logic.xDest,logic.yDest);
-    }else{
-        logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
+
+        float requiredEnergy = logic.getMoveCost();//TODO need create step variable after calcPath
+        if(requiredEnergy>logic.protagonist->getEnergy()){
+            qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
+            return; //quit the loop
+        }else{
+            logic.protagonist->setEnergy(100);
+            logic.setMoveCost(0.0f);
+        }
+
+        // Move the protagonist based on the calculated path
+        if(finished){   
+            while(logic.route.size()){
+                auto tile = logic.route.pop();
+                protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
+                ui->graphicsView->viewport()->repaint();
+                float newEnergy = logic.protagonist->getEnergy()-1 - logic.getWeight()*(1-tile->getValue());
+                logic.protagonist->setEnergy(newEnergy);
+                updateStats();
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            qDebug()<<"Succeed to kill an enemy!";
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            logic.setStart(logic.xDest,logic.yDest);
+        }else{
+            logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
+        }
     }
-
-
+    qDebug()<<"Game Win! All the enemies are defeated!";
 
 }
 
@@ -152,7 +171,7 @@ void MainWindow::indicateDestination(int x, int y){
 void MainWindow::updateStats(){
     ui->energyBar->setValue(logic.protagonist->getEnergy());
     ui->healthBar->setValue(logic.protagonist->getHealth());
-    qDebug()<<"Health is "<<logic.protagonist->getEnergy();
+    qDebug()<<"Energy is "<<logic.protagonist->getEnergy();
 
 }
 

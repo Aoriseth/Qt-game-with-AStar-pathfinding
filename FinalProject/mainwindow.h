@@ -52,6 +52,18 @@ private:
     void showHealthpacks();
     void showEnemies();
     bool mapLoaded=false;
+    //static bool dist_compare(std::unique_ptr<Enemy> &a, std::unique_ptr<Enemy> &b);
+    Tile killEnemy();
+//    struct doCompare : std::binary_function<Tile, Tile, bool>
+//       {
+//           doCompare( const MainWindow& win ) : _MainWindow(win) { }
+//           const MainWindow& _MainWindow;
+
+//           bool operator()( const Tile & a, const Tile & b  )
+//           {
+//               return _MainWindow.dist_compare(a, b);
+//           }
+//       };
 
 private slots:
     void play_clicked();
