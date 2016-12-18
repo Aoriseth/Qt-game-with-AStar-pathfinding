@@ -85,7 +85,7 @@ bool game::bestFirst(int x, int y)
                         node myxNode(pos,pre);
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
-                        availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
+                        availableNodes.push_back(myxNode); //qDebug()<<"x+:Add new node with index:"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
@@ -101,7 +101,7 @@ bool game::bestFirst(int x, int y)
                         node myxNode(pos,pre);
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
-                        availableNodes.push_back(myxNode);qDebug()<<"x-:Add new node with index:"<<index;
+                        availableNodes.push_back(myxNode);//qDebug()<<"x-:Add new node with index:"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
@@ -117,7 +117,7 @@ bool game::bestFirst(int x, int y)
                         node myxNode(pos,pre);
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
-                        availableNodes.push_back(myxNode);qDebug()<<"y+:Add new node with index"<<index;
+                        availableNodes.push_back(myxNode);//qDebug()<<"y+:Add new node with index"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
@@ -133,7 +133,7 @@ bool game::bestFirst(int x, int y)
                         node myxNode(pos,pre);
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
-                        availableNodes.push_back(myxNode);qDebug()<<"y-:Add new node with index"<<index;
+                        availableNodes.push_back(myxNode);//qDebug()<<"y-:Add new node with index"<<index;
                         myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
@@ -165,7 +165,7 @@ bool game::dijkstra(int x, int y)
                     double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
-                availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
+                availableNodes.push_back(myxNode); //qDebug()<<"x+:Add new node with index:"<<index;
                 myIndexes.insert(index);
             }
         }
@@ -179,7 +179,7 @@ bool game::dijkstra(int x, int y)
                     double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
-                availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
+                availableNodes.push_back(myxNode); //qDebug()<<"x+:Add new node with index:"<<index;
                 myIndexes.insert(index);
             }
         }
@@ -193,7 +193,7 @@ bool game::dijkstra(int x, int y)
                     double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
-                availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
+                availableNodes.push_back(myxNode); //qDebug()<<"x+:Add new node with index:"<<index;
                 myIndexes.insert(index);
             }
         }
@@ -207,7 +207,7 @@ bool game::dijkstra(int x, int y)
                     double distance = myNode.getDistance() + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
                     myxNode.setDistance(distance);
                 }//else distance is infinity by default
-                availableNodes.push_back(myxNode); qDebug()<<"x+:Add new node with index:"<<index;
+                availableNodes.push_back(myxNode); //qDebug()<<"x+:Add new node with index:"<<index;
                 myIndexes.insert(index);
             }
         }
@@ -216,14 +216,40 @@ bool game::dijkstra(int x, int y)
     return false;//Not found if code goes outside of loop;
 }
 
+Enemy game::getClosestEnemy(){
+    double min_dis = 10000;
+    auto result = enemies.begin();
+    for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
+        double my_dis = pow((protagonist->getXPos() - (*it)->getXPos()),2)+
+                pow(((protagonist->getYPos()) - (*it)->getYPos()),2);
+        if(my_dis<min_dis){
+            min_dis = my_dis;
+            result = it;
+        }
+    }
 
+    Enemy closestEnemy = **result;
+    enemies.erase(result);
+    return closestEnemy;
+
+}
+
+float game::getMoveCost() const
+{
+    return moveCost;
+}
+
+void game::setMoveCost(float value)
+{
+    moveCost = value;
+}
 
 node game::getNodeWithMinDistance(){
     //find the node closted to des
     //remove the node from queue
     //return that node
     std::vector<node>::iterator result;
-    result = std::min_element(availableNodes.begin(), availableNodes.end(), dist_compare);
+    result = std::min_element(availableNodes.begin(), availableNodes.end(), node_compare);
     node NodeWithMinDistance =*result;
     availableNodes.erase(result);
     return NodeWithMinDistance;
@@ -276,6 +302,7 @@ bool game::calcPath_BreadthFirst(){
         qDebug()<< "Path found !!!!!";
         node destination = currentNodes.head();
         for(;destination.getPre()!=nullptr;){
+            moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
             destination=*(destination.getPre());
             qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
@@ -295,6 +322,7 @@ bool game::calcPath_BestFirst()
         qDebug()<< "Path found !!!!!";
         node destination = availableNodes[availableNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
+            moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
             destination=*(destination.getPre());
             qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
@@ -312,6 +340,7 @@ bool game::calcPath_Dijkstra()
         qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
+            moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
             destination=*(destination.getPre());
             qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();

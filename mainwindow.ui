@@ -15,13 +15,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>play</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -69,7 +62,7 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QComboBox" name="comboBox">
@@ -92,6 +85,20 @@
       </item>
      </layout>
     </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Normal_Play</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="text">
+       <string>Strategy_Play</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -100,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>1168</width>
-     <height>33</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -148,8 +155,8 @@
    <slot>play_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>583</x>
-     <y>561</y>
+     <x>596</x>
+     <y>959</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -173,10 +180,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>execute_strategy()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>743</x>
+     <y>903</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>752</x>
+     <y>1073</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>play_clicked()</slot>
   <slot>OpenMap()</slot>
   <slot>ItemSelected()</slot>
+  <slot>execute_strategy()</slot>
  </slots>
 </ui>
