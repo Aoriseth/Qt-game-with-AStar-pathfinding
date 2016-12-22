@@ -238,6 +238,40 @@ std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
     return result;
 }
 
+bool game::isAllDefeated()
+{
+    bool flag = true;
+    for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
+        if(!((*it)->getDefeated())){
+            flag = false;
+        }
+    }
+    return flag;
+}
+
+Tile game::getClosestHealthpack()
+{
+    float min_cost = 10000;
+    auto result = healthpacks.begin();
+    for(std::vector<std::unique_ptr<Tile>>::iterator it = healthpacks.begin(); it != healthpacks.end(); ++it){
+        setDestination((*it)->getXPos(),(*it)->getYPos());
+        bool finished  = calcPath_Dijkstra();
+        if(finished){  //path found, health is reachable
+            float my_cost = getMoveCost();
+            if(my_cost<min_cost){
+                min_cost = my_cost;
+                result = it;
+            }
+            //clear memory created by finding the closet enemy
+            setStart(protagonist->getXPos(),protagonist->getYPos());
+            setMoveCost(0.0f);
+        }
+    }
+    Tile healthpack = **result;
+    healthpacks.erase(result);
+    return healthpack;
+}
+
 float game::getMoveCost() const
 {
     return moveCost;
@@ -303,7 +337,7 @@ bool game::calcPath_BreadthFirst(){
     // if there are no nodes left -> a path is found
     // reverse through build link and determine path for animation
     if(currentNodes.size()){
-        qDebug()<< "Path found !!!!!";
+        //qDebug()<< "Path found !!!!!";
         node destination = currentNodes.head();
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
@@ -323,7 +357,7 @@ bool game::calcPath_BreadthFirst(){
 bool game::calcPath_BestFirst()
 {
     if(bestFirst(xDest,yDest)){
-        qDebug()<< "Path found !!!!!";
+        //qDebug()<< "Path found !!!!!";
         node destination = availableNodes[availableNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
@@ -341,7 +375,7 @@ bool game::calcPath_BestFirst()
 bool game::calcPath_Dijkstra()
 {
     if(dijkstra(xDest,yDest)){
-        qDebug()<< "Path found !!!!!";
+        //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
