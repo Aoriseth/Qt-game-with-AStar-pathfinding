@@ -77,22 +77,8 @@ void MainWindow::execute_strategy()
         auto finished = false;
         Enemy closestEnemy = logic.getClosestEnemy();
         logic.setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
-        // Check the chosen algorithm
-        switch (ui->comboBox->currentIndex()) {
-        case 0:
-            logic.setWeight(10);
-            finished = logic.calcPath_Dijkstra();
-            break;
-        case 1:
-            finished = logic.calcPath_BreadthFirst();
-            break;
-        case 2:
-            finished = logic.calcPath_BestFirst();
-            break;
-        default:
-            break;
-        }
-
+        logic.setWeight(10);
+        finished = logic.calcPath_Dijkstra();
         float requiredEnergy = logic.getMoveCost();//TODO need create step variable after calcPath
         if(requiredEnergy>logic.protagonist->getEnergy()){
             qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
@@ -120,6 +106,8 @@ void MainWindow::execute_strategy()
             logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
         }
     }
+    logic.setDestination(0,0);
+    indicateDestination(0,0);
     qDebug()<<"Game Win! All the enemies are defeated!";
 
 }

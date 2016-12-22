@@ -217,20 +217,24 @@ bool game::dijkstra(int x, int y)
 }
 
 Enemy game::getClosestEnemy(){
-    double min_dis = 10000;
+    float min_cost = 10000;
     auto result = enemies.begin();
     for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
-        double my_dis = pow((protagonist->getXPos() - (*it)->getXPos()),2)+
-                pow(((protagonist->getYPos()) - (*it)->getYPos()),2);
-        if(my_dis<min_dis){
-            min_dis = my_dis;
+        setDestination((*it)->getXPos(),(*it)->getYPos());
+        calcPath_Dijkstra();
+        float my_cost = getMoveCost();
+        if(my_cost<min_cost){
+            min_cost = my_cost;
             result = it;
         }
     }
-
-    Enemy closestEnemy = **result;
+    //clear memory created by finding the closet enemy
+    sptNodes.clear();
+    availableNodes.clear();
+    myIndexes.clear();
+    //remove the enemy from my list
     enemies.erase(result);
-    return closestEnemy;
+    return **result;
 
 }
 
@@ -347,15 +351,15 @@ bool game::calcPath_Dijkstra()
         }
         return true;
     }else{
-        qDebug()<< "BestFirst:Path is not found in the end!!!!!";
+        qDebug()<< "Dijkstra:Path is not found in the end!!!!!";
         return false;
     }
 }
 
 void game::loadWorld(QString path, QGraphicsScene * scene){
     tiles = myWorld->createWorld(path);
-    enemies = myWorld->getEnemies(2);
-    healthpacks = myWorld->getHealthPacks(2);
+    enemies = myWorld->getEnemies(5);
+    healthpacks = myWorld->getHealthPacks(5);
     protagonist = myWorld->getProtagonist();
 
     xmax=0;ymax=0;
