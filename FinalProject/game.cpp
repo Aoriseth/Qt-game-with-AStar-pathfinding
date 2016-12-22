@@ -140,7 +140,7 @@ bool game::bestFirst(int x, int y)
                     }
                 }
             }
-            qDebug()<<"Size:"<<availableNodes.size();
+            //qDebug()<<"Size:"<<availableNodes.size();
         }while(availableNodes.size()!=0);
 
     return false;
@@ -211,7 +211,7 @@ bool game::dijkstra(int x, int y)
                 myIndexes.insert(index);
             }
         }
-        qDebug()<<"AvailableNodes Size:"<<availableNodes.size();
+        //qDebug()<<"AvailableNodes Size:"<<availableNodes.size();
     }while(availableNodes.size()!=0);
     return false;//Not found if code goes outside of loop;
 }
@@ -220,21 +220,23 @@ Enemy game::getClosestEnemy(){
     float min_cost = 10000;
     auto result = enemies.begin();
     for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
-        setDestination((*it)->getXPos(),(*it)->getYPos());
+        setDestination((*it)->getXPos(),(*it)->getYPos());qDebug()<<"calcPath_Dijkstra";
         calcPath_Dijkstra();
         float my_cost = getMoveCost();
         if(my_cost<min_cost){
             min_cost = my_cost;
             result = it;
         }
+        //clear memory created by finding the closet enemy
+        setStart(protagonist->getXPos(),protagonist->getYPos());
+        setMoveCost(0.0f);
     }
-    //clear memory created by finding the closet enemy
-    sptNodes.clear();
-    availableNodes.clear();
-    myIndexes.clear();
+    qDebug()<<"Find closest enemy";
+
     //remove the enemy from my list
+    Enemy resultenemy = **result;
     enemies.erase(result);
-    return **result;
+    return resultenemy;
 
 }
 
@@ -309,7 +311,7 @@ bool game::calcPath_BreadthFirst(){
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
             destination=*(destination.getPre());
-            qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
+            //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
 
 
         }
@@ -329,7 +331,7 @@ bool game::calcPath_BestFirst()
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
             destination=*(destination.getPre());
-            qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
+            //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
         return true;
     }else{
@@ -347,7 +349,7 @@ bool game::calcPath_Dijkstra()
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
             destination=*(destination.getPre());
-            qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
+            //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
         return true;
     }else{
