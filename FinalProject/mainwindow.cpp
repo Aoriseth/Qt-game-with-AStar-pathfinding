@@ -75,21 +75,31 @@ void MainWindow::execute_strategy()
     logic.protagonist->setEnergy(100);
     while(logic.enemies.size()){
         auto finished = false;
-        Enemy closestEnemy = logic.getClosestEnemy();
-        logic.setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
-        logic.setWeight(10);
-        finished = logic.calcPath_Dijkstra();
-        float requiredEnergy = logic.getMoveCost();//TODO need create step variable after calcPath
-        if(requiredEnergy>logic.protagonist->getEnergy()){
-            qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
-            return; //quit the loop
+        auto it = logic.getClosestEnemy();
+        Enemy closestEnemy = **it;
+        if((*it)->getValue()>logic.protagonist->getHealth()){
+            qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
+            return;
         }else{
-            logic.protagonist->setEnergy(100);
-            logic.setMoveCost(0.0f);
-        }
 
-        // Move the protagonist based on the calculated path
-        if(finished){   
+            (*it)->setDefeated(true); //mark this enemy as defeated
+        }
+        logic.setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
+        logic.setWeight(5);
+        finished = logic.calcPath_Dijkstra();   
+        if(finished){  //Path found
+            float requiredEnergy = logic.getMoveCost();
+            if(requiredEnergy>logic.protagonist->getEnergy()){
+                qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
+                return; //quit the loop
+            }else{
+                float newHealth = logic.protagonist->getHealth()-closestEnemy.getValue();
+                logic.protagonist->setHealth(newHealth);
+                qDebug()<<"Health is "<<logic.protagonist->getHealth();
+                logic.protagonist->setEnergy(100);
+                logic.setMoveCost(0.0f);
+            }
+            // Move the protagonist based on the calculated path
             while(logic.route.size()){
                 auto tile = logic.route.pop();
                 protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
@@ -102,7 +112,7 @@ void MainWindow::execute_strategy()
             qDebug()<<"Succeed to kill an enemy!";
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             logic.setStart(logic.xDest,logic.yDest);
-        }else{
+        }else{  //Path not found
             logic.setStart(logic.protagonist->getXPos(),logic.protagonist->getYPos());
         }
     }
