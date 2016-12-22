@@ -231,8 +231,6 @@ Enemy game::getClosestEnemy(){
         setStart(protagonist->getXPos(),protagonist->getYPos());
         setMoveCost(0.0f);
     }
-    qDebug()<<"Find closest enemy";
-
     //remove the enemy from my list
     Enemy resultenemy = **result;
     enemies.erase(result);
