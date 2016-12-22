@@ -47,6 +47,8 @@ public:
     void setWeight(int value);
     std::shared_ptr<Tile> getTile(int x,int y);
     std::vector<std::unique_ptr<Enemy>>::iterator getClosestEnemy();
+    bool isAllDefeated();
+    Tile getClosestHealthpack();
     float moveCost = 0.0f;
 
     float getMoveCost() const;

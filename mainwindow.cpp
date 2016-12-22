@@ -73,17 +73,58 @@ void MainWindow::play_clicked()
 void MainWindow::execute_strategy()
 {
     logic.protagonist->setEnergy(100);
-    while(logic.enemies.size()){
+    while(!logic.isAllDefeated()){ //check if all enemies are deafeated
         auto finished = false;
         auto it = logic.getClosestEnemy();
         Enemy closestEnemy = **it;
         if((*it)->getValue()>logic.protagonist->getHealth()){
             qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
-            return;
-        }else{
+            if(logic.healthpacks.size()==0){
+                qDebug()<<"Quit: NO healthpack left!";
+                return;
+            }
+            Tile healthpack = logic.getClosestHealthpack();
+            logic.setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
+            logic.setWeight(5);
+            bool find = logic.calcPath_Dijkstra();
+            if(find){
+                float requiredEnergy = logic.getMoveCost();
+                if(requiredEnergy>logic.protagonist->getEnergy()){
+                    qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
+                    return; //quit the loop
+                }else{
+                    float newHealth = logic.protagonist->getHealth()+10.0*healthpack.getValue();
+                    if(newHealth > 100) newHealth = 100;
+                    logic.protagonist->setHealth(newHealth);
+                    logic.setMoveCost(0.0f);
+                    // Move the protagonist based on the calculated path
+                    while(logic.route.size()){qDebug()<<"Go to Healthpack!";
+                        auto tile = logic.route.pop();
+                        protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
+                        ui->graphicsView->viewport()->repaint();
+                        float newEnergy = logic.protagonist->getEnergy()-1 - logic.getWeight()*(1-tile->getValue());
+                        logic.protagonist->setEnergy(newEnergy);
+                        updateStats();
+                        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                    }
+                    qDebug()<<"Succeed to get a healthpack!";
+                    qDebug()<<"New Health is "<<logic.protagonist->getHealth();
+                    logic.setStart(logic.xDest,logic.yDest);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                    auto it = logic.getClosestEnemy();
+                    closestEnemy = **it;
+                    if((*it)->getValue()>logic.protagonist->getHealth()){
+                        qDebug()<<"Strength of the enemy is " << (*it)->getValue();
+                        qDebug()<<"Quit: Health is still not enough to defeat an enemy!!!";
+                        return; //stop this strategy
+                    }
+                    qDebug()<<"Health is now enough to defeat an enemy!!!";
+                }
 
-            (*it)->setDefeated(true); //mark this enemy as defeated
+            }
         }
+        (*it)->setDefeated(true); //mark this enemy as defeated
+
         logic.setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
         logic.setWeight(5);
         finished = logic.calcPath_Dijkstra();   
