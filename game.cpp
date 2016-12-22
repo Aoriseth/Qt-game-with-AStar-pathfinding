@@ -216,26 +216,26 @@ bool game::dijkstra(int x, int y)
     return false;//Not found if code goes outside of loop;
 }
 
-Enemy game::getClosestEnemy(){
+std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
     float min_cost = 10000;
     auto result = enemies.begin();
     for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
-        setDestination((*it)->getXPos(),(*it)->getYPos());qDebug()<<"calcPath_Dijkstra";
-        calcPath_Dijkstra();
-        float my_cost = getMoveCost();
-        if(my_cost<min_cost){
-            min_cost = my_cost;
-            result = it;
+        if(!((*it)->getDefeated())){  //only check those undefeated enemies.
+            setDestination((*it)->getXPos(),(*it)->getYPos());
+            bool finished  = calcPath_Dijkstra();
+            if(finished){  //path found, enemy is reachable
+                float my_cost = getMoveCost();
+                if(my_cost<min_cost){
+                    min_cost = my_cost;
+                    result = it;
+                }
+                //clear memory created by finding the closet enemy
+                setStart(protagonist->getXPos(),protagonist->getYPos());
+                setMoveCost(0.0f);
+            }
         }
-        //clear memory created by finding the closet enemy
-        setStart(protagonist->getXPos(),protagonist->getYPos());
-        setMoveCost(0.0f);
     }
-    //remove the enemy from my list
-    Enemy resultenemy = **result;
-    enemies.erase(result);
-    return resultenemy;
-
+    return result;
 }
 
 float game::getMoveCost() const

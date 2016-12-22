@@ -46,7 +46,7 @@ public:
     int getWeight() const;
     void setWeight(int value);
     std::shared_ptr<Tile> getTile(int x,int y);
-    Enemy getClosestEnemy();
+    std::vector<std::unique_ptr<Enemy>>::iterator getClosestEnemy();
     float moveCost = 0.0f;
 
     float getMoveCost() const;
