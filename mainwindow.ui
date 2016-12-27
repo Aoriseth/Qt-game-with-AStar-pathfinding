@@ -135,6 +135,7 @@
     </property>
     <addaction name="actionOpen_map"/>
     <addaction name="actionSave_result"/>
+    <addaction name="actionReload_map"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -161,6 +162,11 @@
   <action name="actionSave_result">
    <property name="text">
     <string>Save result</string>
+   </property>
+  </action>
+  <action name="actionReload_map">
+   <property name="text">
+    <string>Reload map</string>
    </property>
   </action>
  </widget>
@@ -215,11 +221,28 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionReload_map</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ReloadMap()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>583</x>
+     <y>519</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>gotoDestination()</slot>
   <slot>OpenMap()</slot>
   <slot>ItemSelected()</slot>
   <slot>executeStrategy()</slot>
+  <slot>ReloadMap()</slot>
  </slots>
 </ui>

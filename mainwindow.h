@@ -45,6 +45,8 @@ private:
     bool mapLoaded=false;
     Tile killEnemy();
 
+    void mapLoad();
+
 private slots:
     void updateStats(float energy, float health);
     void gotoDestination();
@@ -52,6 +54,7 @@ private slots:
     void OpenMap();
     void ItemSelected(int x, int y);
     void updatePosition(int x, int y);
+    void ReloadMap();
 };
 
 #endif // MAINWINDOW_H
