@@ -234,6 +234,7 @@ std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
                 setMoveCost(0.0f);
             }
         }
+        screen->clearPath();
     }
     return result;
 }
@@ -266,6 +267,7 @@ Tile game::getClosestHealthpack()
             setStart(protagonist->getXPos(),protagonist->getYPos());
             setMoveCost(0.0f);
         }
+        screen->clearPath();
     }
     Tile healthpack = **result;
     healthpacks.erase(result);
@@ -347,7 +349,7 @@ bool game::calcPath_BreadthFirst(){
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
-
+            screen->addPathStep(destination.getTile()->getXPos(),destination.getTile()->getYPos());
             destination=*(destination.getPre());
             //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
 
@@ -368,6 +370,7 @@ bool game::calcPath_BestFirst()
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
+            screen->addPathStep(destination.getTile()->getXPos(),destination.getTile()->getYPos());
             destination=*(destination.getPre());
             //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
@@ -380,12 +383,14 @@ bool game::calcPath_BestFirst()
 
 bool game::calcPath_AStar()
 {
+
     if(dijkstra(xDest,yDest)){
         //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
+            screen->addPathStep(destination.getTile()->getXPos(),destination.getTile()->getYPos());
             destination=*(destination.getPre());
             //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
