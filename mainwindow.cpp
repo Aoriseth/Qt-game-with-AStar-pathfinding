@@ -83,12 +83,6 @@ void MainWindow::executeStrategy()
                     logic->setMoveCost(0.0f);
                     // Move the protagonist based on the calculated path
                     logic->MoveProtagonist();
-//                    while(logic->route.size()){qDebug()<<"Go to Healthpack!";
-//                        auto tile = logic->route.pop();
-//                        screen->setProtagonistPosition((tile->getXPos()),(tile->getYPos()));
-//                        float newEnergy = logic->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
-//                        logic->setEnergy(newEnergy);
-//                    }
                     qDebug()<<"Succeed to get a healthpack!";
                     qDebug()<<"New Health is "<<logic->getHealth();
                     logic->setStart(logic->xDest,logic->yDest);
@@ -123,13 +117,6 @@ void MainWindow::executeStrategy()
             }
             // Move the protagonist based on the calculated path
             logic->MoveProtagonist();
-//            while(logic->route.size()){
-//                auto tile = logic->route.pop();
-//                screen->setProtagonistPosition((tile->getXPos()),(tile->getYPos()));
-//                ui->graphicsView->viewport()->repaint();
-//                float newEnergy = logic->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
-//                logic->setEnergy(newEnergy);
-//            }
             qDebug()<<"Succeed to kill an enemy!";
             logic->setStart(logic->xDest,logic->yDest);
         }else{  //Path not found
