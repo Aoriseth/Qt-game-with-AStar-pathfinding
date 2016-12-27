@@ -61,7 +61,7 @@ void MainWindow::executeStrategy()
         auto finished = false;
         auto it = logic->getClosestEnemy();
         Enemy closestEnemy = **it;
-        if((*it)->getValue()>logic->getHealth()){
+        while((*it)->getValue()>logic->getHealth()){
             qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
             if(logic->healthpacks.size()==0){
                 qDebug()<<"Quit: NO healthpack left!";
@@ -86,14 +86,16 @@ void MainWindow::executeStrategy()
                     qDebug()<<"Succeed to get a healthpack!";
                     qDebug()<<"New Health is "<<logic->getHealth();
                     logic->setStart(logic->xDest,logic->yDest);
-                    auto it = logic->getClosestEnemy();
+                    it = logic->getClosestEnemy();
                     closestEnemy = **it;
-                    if((*it)->getValue()>logic->getHealth()){
-                        qDebug()<<"Strength of the enemy is " << (*it)->getValue();
-                        qDebug()<<"Quit: Health is still not enough to defeat an enemy!!!";
-                        return; //stop this strategy
-                    }
-                    qDebug()<<"Health is now enough to defeat an enemy!!!";
+//                    auto it = logic->getClosestEnemy();
+//                    closestEnemy = **it;
+//                    if((*it)->getValue()>logic->getHealth()){
+//                        qDebug()<<"Strength of the enemy is " << (*it)->getValue();
+//                        qDebug()<<"Quit: Health is still not enough to defeat an enemy!!!";
+//                        return; //stop this strategy
+//                    }
+//                    qDebug()<<"Health is now enough to defeat an enemy!!!";
                 }
 
             }
