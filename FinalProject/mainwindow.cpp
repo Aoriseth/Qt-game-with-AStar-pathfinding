@@ -54,79 +54,33 @@ void MainWindow::gotoDestination()
 
 void MainWindow::executeStrategy()
 {
-
+    QElapsedTimer timer;
+    timer.start();
     int weight = ui->lineEdit->text().toInt();
+    logic->setWeight(weight);
     if(!mapLoaded){return;} // Don't play if there is no map loaded
 //    logic->strat();
-
-//    return;
     while(!logic->isAllDefeated()){ //check if all enemies are defeated
-        auto finished = false;
-        auto it = logic->getClosestEnemy();
-        Enemy closestEnemy = **it;
-        while((*it)->getValue()>logic->getHealth()){
+        while(!(logic->isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
             qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
             if(logic->healthpacks.size()==0){
                 qDebug()<<"Quit: NO healthpack left!";
                 return;
             }
-            std::vector<std::unique_ptr<Tile>>::iterator healthpack = logic->getClosestHealthpack();
-            logic->setDestination((*healthpack)->getXPos(),(*healthpack)->getYPos());
-            logic->setWeight(weight);
-            bool find = logic->calcPath_AStar();
-            if(find){
-                float requiredEnergy = logic->getMoveCost();
-                if(requiredEnergy>logic->getEnergy()){
-                    qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
-                    return; //quit the loop
-                }else{
-                    float newHealth = logic->getHealth()+10.0*(*healthpack)->getValue();
-                    if(newHealth > 100) newHealth = 100;
-                    logic->setHealth(newHealth);
-                    logic->setMoveCost(0.0f);
-                    // Move the protagonist based on the calculated path
-                    logic->MoveProtagonist();
-                    qDebug()<<"Succeed to get a healthpack!";
-                    logic->removeHealthpack(*healthpack);
-                    qDebug()<<"New Health is "<<logic->getHealth();
-                    logic->setStart(logic->xDest,logic->yDest);
-                    it = logic->getClosestEnemy();
-                    closestEnemy = **it;
-                }
-
+            if(!logic->goForHealthpack()){
+                return; //quite the loop
             }
         }
-//        (*it)->setDefeated(true); //mark this enemy as defeated
-        logic->killEnemy(*it);
-
-        logic->setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
-        logic->setWeight(weight);
-        finished = logic->calcPath_AStar();
-        if(finished){  //Path found
-            float requiredEnergy = logic->getMoveCost();
-            if(requiredEnergy>logic->getEnergy()){
-                qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
-                return; //quit the loop
-            }else{
-                float newHealth = logic->getHealth()-closestEnemy.getValue();
-                logic->setHealth(newHealth);
-                qDebug()<<"Health is "<<logic->getHealth();
-                logic->setEnergy(100);
-                logic->setMoveCost(0.0f);
-            }
-            // Move the protagonist based on the calculated path
-            logic->MoveProtagonist();
-            qDebug()<<"Succeed to kill an enemy!";
-            logic->setStart(logic->xDest,logic->yDest);
-        }else{  //Path not found
-            logic->setStart(logic->getProtagonistX(),logic->getProtagonistY());
+        if(!logic->goForEnemy()){
+            return; //quite the loop
         }
+
     }
     logic->setDestination(0,0);
     indicateDestination(0,0);
     qDebug()<<"Game Win! All the enemies are defeated!";
     screen->clearPath();
-
+    qDebug() << "The run_strategy operation took" << timer.elapsed() << "milliseconds";
 }
 
 void MainWindow::refreshScene(){

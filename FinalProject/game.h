@@ -74,6 +74,9 @@ public:
     Protagonist *getProtagonist();
     QGraphicsPixmapItem* worldView;
     void removeHealthpack(std::unique_ptr<Tile> &healthpack);
+    bool goForHealthpack();
+    bool isDefeatable();
+    bool goForEnemy();
 
 private:
 

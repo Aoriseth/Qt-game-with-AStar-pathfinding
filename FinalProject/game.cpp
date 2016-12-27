@@ -546,9 +546,96 @@ void game::removeHealthpack(std::unique_ptr<Tile>& healthpack)
     emit healthpackUsed(pos);
 }
 
+bool game::goForHealthpack()
+{
+    std::vector<std::unique_ptr<Tile>>::iterator healthpack = getClosestHealthpack();
+    setDestination((*healthpack)->getXPos(),(*healthpack)->getYPos());
+    setWeight(weight);
+    bool find = calcPath_AStar();
+    if(find){
+        float requiredEnergy = getMoveCost();
+        if(requiredEnergy>getEnergy()){
+            qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
+            return false; //quit the loop
+        }else{
+            float newHealth = getHealth()+5.0*(*healthpack)->getValue(); //multiply by a factor of 5
+            if(newHealth > 100) newHealth = 100;
+            setHealth(newHealth);
+            setMoveCost(0.0f);
+            // Move the protagonist based on the calculated path
+            MoveProtagonist();
+            qDebug()<<"Succeed to get a healthpack!";
+            removeHealthpack(*healthpack);
+            qDebug()<<"New Health is "<<getHealth();
+            setStart(xDest,yDest);
+            return true;
+        }
+
+    }else{
+        qDebug()<<"Healthpack is not found!";
+        return false;
+    }
+}
+
+bool game::isDefeatable()
+{
+    for(auto it = enemies.begin(); it != enemies.end(); ++it){
+        if(!(*it)->getDefeated()){  //when a enemy is not defeated
+            if((*it)->getValue() < getHealth()){ //when a enemy has a strength smaller than pro's health
+                //qDebug()<<"At least one enemy is defeatable with strength: "<<(*it)->getValue();
+                return true;
+            }
+        }
+    } //qDebug()<<"NO enemy can be defeated!";
+    return false;
+}
+
+bool game::goForEnemy()
+{
+    auto it = getClosestEnemy();  //calculate the path and get the closest enemy
+    Enemy closestEnemy = **it;
+    //After the check that there is at least one defeatable enemy, which reduce the calls of getClosestEnemy();
+    //the closestEnemy could still be undefeatable
+    while(closestEnemy.getValue()>getHealth()){
+        qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
+        if(healthpacks.size()==0){
+            qDebug()<<"Quit: NO healthpack left!";
+            return false;
+        }
+        if(!goForHealthpack()){
+            return false; //quite the loop
+        }
+    }
+    setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
+    bool finished = false;
+    finished = calcPath_AStar();
+    if(finished){  //Path found
+        float requiredEnergy = getMoveCost();
+        if(requiredEnergy>getEnergy()){
+            qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
+            return false; //quit the loop
+        }else{
+            float newHealth = getHealth()-closestEnemy.getValue();
+            setHealth(newHealth);
+            setEnergy(100);
+            setMoveCost(0.0f);
+        }
+        // Move the protagonist based on the calculated path
+        MoveProtagonist();
+        killEnemy(*it);
+        qDebug()<<"Succeed to kill an enemy!";
+        qDebug()<<"New health is "<<getHealth();
+        setStart(xDest,yDest);
+        return true;
+    }else{  //Path not found
+        setStart(getProtagonistX(),getProtagonistY());
+        return false;
+    }
+}
+
 void game::killEnemy(std::unique_ptr<Enemy>& destroyee)
 {
-    destroyee->setDefeated(true);
+    destroyee->setDefeated(true); //mark this enemy as defeated
     int pos = find(enemies.begin(), enemies.end(), destroyee) - enemies.begin();
     emit enemyKilled(pos);
 }
