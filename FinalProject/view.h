@@ -34,6 +34,8 @@ private:
     std::vector<QGraphicsPixmapItem*> healthpackItems;
 signals:
     void updatePath();
+private slots:
+    void updateEnemy(int pos);
 };
 
 #endif // VIEW_H

@@ -54,9 +54,12 @@ void MainWindow::gotoDestination()
 
 void MainWindow::executeStrategy()
 {
+
     int weight = ui->lineEdit->text().toInt();
     if(!mapLoaded){return;} // Don't play if there is no map loaded
+//    logic->strat();
 
+//    return;
     while(!logic->isAllDefeated()){ //check if all enemies are defeated
         auto finished = false;
         auto it = logic->getClosestEnemy();
@@ -88,19 +91,12 @@ void MainWindow::executeStrategy()
                     logic->setStart(logic->xDest,logic->yDest);
                     it = logic->getClosestEnemy();
                     closestEnemy = **it;
-//                    auto it = logic->getClosestEnemy();
-//                    closestEnemy = **it;
-//                    if((*it)->getValue()>logic->getHealth()){
-//                        qDebug()<<"Strength of the enemy is " << (*it)->getValue();
-//                        qDebug()<<"Quit: Health is still not enough to defeat an enemy!!!";
-//                        return; //stop this strategy
-//                    }
-//                    qDebug()<<"Health is now enough to defeat an enemy!!!";
                 }
 
             }
         }
-        (*it)->setDefeated(true); //mark this enemy as defeated
+//        (*it)->setDefeated(true); //mark this enemy as defeated
+        logic->killEnemy(*it);
 
         logic->setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
         logic->setWeight(weight);

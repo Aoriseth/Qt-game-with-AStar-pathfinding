@@ -14,5 +14,6 @@
         <file>resources/map_5_5_c.png</file>
         <file>resources/map_10_10.png</file>
         <file>resources/map_20_20.png</file>
+        <file>resources/goomba_dead.gif</file>
     </qresource>
 </RCC>

@@ -15,6 +15,8 @@
 #include "mainwindow.h"
 #include "view.h"
 #include <QObject>
+#include <limits>
+
 
 
 class game: public QObject
@@ -30,8 +32,9 @@ public:
     std::vector<std::unique_ptr<Tile>> healthpacks;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);
-    bool dijkstra(int x,int y);
+    bool AStar(int x,int y);
     void clearLists();
+    void strat();
 
     int weight = 1;
     int ymax;
@@ -55,6 +58,7 @@ public:
     std::vector<std::unique_ptr<Enemy>>::iterator getClosestEnemy();
     bool isAllDefeated();
     Tile getClosestHealthpack();
+    void killEnemy(std::unique_ptr<Enemy> &destroyee);
     float moveCost = 0.0f;
 
     float getMoveCost() const;
@@ -82,6 +86,7 @@ private:
     node getNodeWithMinDistance();
 
 signals:
+    void enemyKilled(int pos);
     void changeStats(float energy, float health);
 };
 
