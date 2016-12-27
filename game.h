@@ -12,6 +12,8 @@
 #include <QStack>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include "mainwindow.h"
+#include "view.h"
 
 
 class game
@@ -45,6 +47,8 @@ public:
     void setDestination(int x, int y);
     int getWeight() const;
     void setWeight(int value);
+    void setView(view* test);
+    view* screen;
     std::shared_ptr<Tile> getTile(int x,int y);
     std::vector<std::unique_ptr<Enemy>>::iterator getClosestEnemy();
     bool isAllDefeated();

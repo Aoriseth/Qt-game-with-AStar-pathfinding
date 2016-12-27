@@ -312,6 +312,11 @@ void game::setWeight(int value)
     weight = value;
 }
 
+void game::setView(view* test)
+{
+    screen = test;
+}
+
 std::shared_ptr<Tile> game::getTile(int x, int y)
 {
     int index = xmax*x+y;

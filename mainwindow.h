@@ -23,6 +23,9 @@
 #include <thread>
 #include <QFileDialog>
 #include "game.h"
+#include "view.h"
+
+class game;
 
 namespace Ui {
 class MainWindow;
@@ -42,10 +45,14 @@ public:
     void indicateDestination(int x, int y);
     std::vector<QGraphicsPixmapItem*> enemyItems;
     std::vector<QGraphicsPixmapItem*> healthpackItems;
-
+    void setLogic(game* pass);
+    void setView(view* pass);
     void updateStats();
+    void MoveProtagonist();
+
 private:
-    game logic;
+    game* logic;
+    view* screen;
     void refreshScene();
     QGraphicsPixmapItem* protagonistView;
     void showProtagonist();
