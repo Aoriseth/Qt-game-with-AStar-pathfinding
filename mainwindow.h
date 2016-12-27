@@ -4,22 +4,9 @@
 #include <QMainWindow>
 #include "world.h"
 #include "world_global.h"
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QFrame>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <iostream>
-#include <math.h>
-#include <QGraphicsPixmapItem>
-#include "node.h"
 #include <vector>
 #include <iostream>
 #include <QString>
-#include <QListIterator>
-#include <QDebug>
-#include <algorithm>
-#include <chrono>
 #include <thread>
 #include <QFileDialog>
 #include "game.h"
@@ -51,6 +38,7 @@ public:
     void MoveProtagonist();
 
 private:
+    QString path;
     game* logic;
     view* screen;
     void refreshScene();

@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 
-QString path = ":/resources/maze_5_5.png";
+
 QGraphicsItem * destView;
 
 MainWindow::MainWindow(QWidget *parent) :
