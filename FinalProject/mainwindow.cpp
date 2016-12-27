@@ -69,7 +69,7 @@ void MainWindow::executeStrategy()
                 return;
             }
             Tile healthpack = logic->getClosestHealthpack();
-            logic->setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
+            logic->setDestination(healthpack.getXPos(),healthpack.getYPos());
             logic->setWeight(5);
             bool find = logic->calcPath_AStar();
             if(find){
