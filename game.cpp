@@ -251,7 +251,7 @@ bool game::isAllDefeated()
     return flag;
 }
 
-Tile game::getClosestHealthpack()
+std::vector<std::unique_ptr<Tile>>::iterator game::getClosestHealthpack()
 {
     float min_cost = 10000;
     auto result = healthpacks.begin();
@@ -270,16 +270,9 @@ Tile game::getClosestHealthpack()
         }
         screen->clearPath();
     }
-    Tile healthpack = **result;
-    healthpacks.erase(result);
-    return healthpack;
-}
 
-void game::killEnemy(std::unique_ptr<Enemy>& destroyee)
-{
-    destroyee->setDefeated(true);
-    int pos = find(enemies.begin(), enemies.end(), destroyee) - enemies.begin();
-    emit enemyKilled(pos);
+    //healthpacks.erase(result);
+    return result;
 }
 
 float game::getMoveCost() const
@@ -547,4 +540,16 @@ Protagonist* game::getProtagonist()
     return protagonist.get();
 }
 
+void game::removeHealthpack(std::unique_ptr<Tile>& healthpack)
+{
+    int pos = find(healthpacks.begin(), healthpacks.end(), healthpack) - healthpacks.begin();
+    emit healthpackUsed(pos);
+}
+
+void game::killEnemy(std::unique_ptr<Enemy>& destroyee)
+{
+    destroyee->setDefeated(true);
+    int pos = find(enemies.begin(), enemies.end(), destroyee) - enemies.begin();
+    emit enemyKilled(pos);
+}
 

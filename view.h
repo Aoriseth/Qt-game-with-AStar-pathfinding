@@ -27,6 +27,7 @@ public:
     void showHealthpacks();
     void showProtagonist();
     void setProtagonistPosition(int x, int y);
+    void clearLists();
 
 private:
     QGraphicsPixmapItem* protagonistView;
@@ -36,6 +37,7 @@ signals:
     void updatePath();
 private slots:
     void updateEnemy(int pos);
+    void removeHealthpack(int pos);
 };
 
 #endif // VIEW_H

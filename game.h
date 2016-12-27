@@ -57,7 +57,7 @@ public:
     std::shared_ptr<Tile> getTile(int x,int y);
     std::vector<std::unique_ptr<Enemy>>::iterator getClosestEnemy();
     bool isAllDefeated();
-    Tile getClosestHealthpack();
+    std::vector<std::unique_ptr<Tile>>::iterator getClosestHealthpack();
     void killEnemy(std::unique_ptr<Enemy> &destroyee);
     float moveCost = 0.0f;
 
@@ -73,6 +73,7 @@ public:
     float getHealth();
     Protagonist *getProtagonist();
     QGraphicsPixmapItem* worldView;
+    void removeHealthpack(std::unique_ptr<Tile> &healthpack);
 
 private:
 
@@ -87,6 +88,7 @@ private:
 
 signals:
     void enemyKilled(int pos);
+    void healthpackUsed(int pos);
     void changeStats(float energy, float health);
 };
 
