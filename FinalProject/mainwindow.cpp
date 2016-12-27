@@ -9,9 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-
-
+        ui->setupUi(this);
 
 }
 
@@ -56,6 +54,7 @@ void MainWindow::gotoDestination()
 
 void MainWindow::executeStrategy()
 {
+    int weight = ui->lineEdit->text().toInt();
     if(!mapLoaded){return;} // Don't play if there is no map loaded
 
     while(!logic->isAllDefeated()){ //check if all enemies are defeated
@@ -70,7 +69,7 @@ void MainWindow::executeStrategy()
             }
             Tile healthpack = logic->getClosestHealthpack();
             logic->setDestination(healthpack.getXPos(),healthpack.getYPos());
-            logic->setWeight(5);
+            logic->setWeight(weight);
             bool find = logic->calcPath_AStar();
             if(find){
                 float requiredEnergy = logic->getMoveCost();
@@ -108,7 +107,7 @@ void MainWindow::executeStrategy()
         (*it)->setDefeated(true); //mark this enemy as defeated
 
         logic->setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
-        logic->setWeight(5);
+        logic->setWeight(weight);
         finished = logic->calcPath_AStar();
         if(finished){  //Path found
             float requiredEnergy = logic->getMoveCost();
@@ -174,15 +173,14 @@ void MainWindow::updateStats(float energy, float health){
 }
 
 
-void MainWindow::OpenMap()
+void MainWindow::mapLoad()
 {
     mapLoaded = true;
     //clear logic lists and refresh the scene
     logic->clearLists();
     refreshScene();
-    connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float)));
-    //set path chosen by user
-    QString path = QFileDialog::getOpenFileName(this,tr("Select map"));
+    connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
+
 
     //loads world into scene
     logic->loadWorld(path,screen->sceneView);
@@ -205,28 +203,20 @@ void MainWindow::OpenMap()
 
     screen->destView = screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
     screen->destView->setScale(0.00390625);
-    //indicateDestination(logic->xDest, logic->yDest);
-    //item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+}
+
+void MainWindow::OpenMap()
+{
+    path = QFileDialog::getOpenFileName(this,tr("Select map"));
+    mapLoad();
 
 }
 
 void MainWindow::ItemSelected(int x, int y)
 {
-
-    // Change destination to selected tileView
-//    qDebug() << "Selection changed";
-//    auto selected = screen->sceneView->selectedItems();
-//    auto x = 0;
-//    auto y = 0;
-//    if (!selected.empty()){
-//        x = selected[0]->x()/256;
-//        y = selected[0]->y()/256;
-//    }
-
     logic->xDest = x;
     logic->yDest = y;
     indicateDestination(x,y);
-
 }
 
 void MainWindow::updatePosition(int x, int y)
@@ -234,6 +224,11 @@ void MainWindow::updatePosition(int x, int y)
     screen->setProtagonistPosition(x,y);
     ui->graphicsView->viewport()->repaint();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}
+
+void MainWindow::ReloadMap()
+{
+    mapLoad();
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
