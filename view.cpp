@@ -11,6 +11,7 @@ void view::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
     //auto item = std::make_shared<QGraphicsPixmapItem>(new QGraphicsPixmapItem(QPixmap::fromImage(image)));
     item->setScale(0.00390625);
     item->setPos(x,y);
+    item->setZValue(2);
     sceneView->addItem(item);
 }
 
