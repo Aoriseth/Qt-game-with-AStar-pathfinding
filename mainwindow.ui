@@ -171,7 +171,7 @@
    <sender>pushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>play_clicked()</slot>
+   <slot>gotoDestination()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>596</x>
@@ -203,11 +203,11 @@
    <sender>pushButton_2</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>execute_strategy()</slot>
+   <slot>executeStrategy()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>743</x>
-     <y>903</y>
+     <x>1148</x>
+     <y>986</y>
     </hint>
     <hint type="destinationlabel">
      <x>752</x>
@@ -217,9 +217,9 @@
   </connection>
  </connections>
  <slots>
-  <slot>play_clicked()</slot>
+  <slot>gotoDestination()</slot>
   <slot>OpenMap()</slot>
   <slot>ItemSelected()</slot>
-  <slot>execute_strategy()</slot>
+  <slot>executeStrategy()</slot>
  </slots>
 </ui>

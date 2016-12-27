@@ -22,6 +22,9 @@ class game: public QObject
     Q_OBJECT
 public:
     game();
+    QQueue<node> currentNodes;
+    std::vector<node> availableNodes;
+    std::vector<node> sptNodes;//shortest path tree
     std::vector<std::unique_ptr<Tile>> tiles;
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::vector<std::unique_ptr<Tile>> healthpacks;
@@ -29,9 +32,7 @@ public:
     bool bestFirst(int x,int y);
     bool dijkstra(int x,int y);
     void clearLists();
-    QQueue<node> currentNodes;
-    std::vector<node> availableNodes;
-    std::vector<node> sptNodes;//shortest path tree
+
     int weight = 1;
     int ymax;
     int xmax;
@@ -67,8 +68,10 @@ public:
     float getEnergy();
     float getHealth();
     Protagonist *getProtagonist();
+    QGraphicsPixmapItem* worldView;
 
 private:
+
 
     std::unique_ptr<Protagonist> protagonist;
 

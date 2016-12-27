@@ -3,7 +3,7 @@
 
 
 
-QGraphicsItem * destView;
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,9 +20,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
-void MainWindow::play_clicked()
+void MainWindow::gotoDestination()
 {
     if(!mapLoaded){return;} // Don't play if there is no map loaded
     auto finished = false; // Set variable for checking if an algorithm successfully finished
@@ -56,10 +54,10 @@ void MainWindow::play_clicked()
     }
 }
 
-
-void MainWindow::execute_strategy()
+void MainWindow::executeStrategy()
 {
-//    logic->setEnergy(100);
+    if(!mapLoaded){return;} // Don't play if there is no map loaded
+
     while(!logic->isAllDefeated()){ //check if all enemies are defeated
         auto finished = false;
         auto it = logic->getClosestEnemy();
@@ -146,39 +144,15 @@ void MainWindow::execute_strategy()
 }
 
 void MainWindow::refreshScene(){
-    screen->scene = new QGraphicsScene(this);
-    connect(screen->scene, SIGNAL(selectionChanged()), this, SLOT(ItemSelected()));
-    ui->graphicsView->setScene(screen->scene);
+    screen->sceneView = new Scene(this);
+    connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
+    ui->graphicsView->setScene(screen->sceneView);
 
     //scene->setSceneRect(scene->itemsBoundingRect());
 }
 
-
-
-void MainWindow::showHealthpacks(){
-    for(auto& healthpack: logic->healthpacks){
-        int x = healthpack->getXPos();
-        int y = healthpack->getYPos();
-        QImage image(":/resources/Supermushroom.png");
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        screen->addItemToScene(item, x, y);
-        healthpackItems.push_back(item);
-    }
-}
-
-void MainWindow::showEnemies(){
-    for(auto& enemy: logic->enemies){
-        int x = enemy->getXPos();
-        int y = enemy->getYPos();
-        QImage image(":/resources/goomba.gif");
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        screen->addItemToScene(item, x, y);
-        enemyItems.push_back(item);
-    }
-}
-
 void MainWindow::indicateDestination(int x, int y){
-    destView->setPos(256*x,256*y);
+    screen->destView->setPos(x,y);
     ui->graphicsView->viewport()->repaint();
 }
 
@@ -190,11 +164,6 @@ void MainWindow::setLogic(game *test)
 void MainWindow::setView(view *pass)
 {
     screen = pass;
-}
-
-void MainWindow::initconnectors()
-{
-
 }
 
 void MainWindow::updateStats(float energy, float health){
@@ -216,16 +185,17 @@ void MainWindow::OpenMap()
     QString path = QFileDialog::getOpenFileName(this,tr("Select map"));
 
     //loads world into scene
-    logic->loadWorld(path,screen->scene);
+    logic->loadWorld(path,screen->sceneView);
 
     //fit scene into view
     ui->graphicsView->fitInView(0,0,350*logic->xmax,350*logic->ymax,Qt::KeepAspectRatio);
+    ui->graphicsView->fitInView(logic->worldView,Qt::KeepAspectRatio);
 
     // render various items into view
     screen->showProtagonist();
     connect(logic->getProtagonist(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
-    showHealthpacks();
-    showEnemies();
+    screen->showHealthpacks();
+    screen->showEnemies();
 
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
@@ -233,25 +203,25 @@ void MainWindow::OpenMap()
     //set the destination for the algorithm and make the Tile red
     logic->setDestination(0,0);
 
-    destView = screen->scene->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
-
+    screen->destView = screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
+    screen->destView->setScale(0.00390625);
     //indicateDestination(logic->xDest, logic->yDest);
     //item->setFlag(QGraphicsItem::ItemIsSelectable, true);
 
 }
 
-void MainWindow::ItemSelected()
+void MainWindow::ItemSelected(int x, int y)
 {
 
     // Change destination to selected tileView
-    qDebug() << "Selection changed";
-    auto selected = screen->scene->selectedItems();
-    auto x = 0;
-    auto y = 0;
-    if (!selected.empty()){
-        x = selected[0]->x()/256;
-        y = selected[0]->y()/256;
-    }
+//    qDebug() << "Selection changed";
+//    auto selected = screen->sceneView->selectedItems();
+//    auto x = 0;
+//    auto y = 0;
+//    if (!selected.empty()){
+//        x = selected[0]->x()/256;
+//        y = selected[0]->y()/256;
+//    }
 
     logic->xDest = x;
     logic->yDest = y;
@@ -264,4 +234,11 @@ void MainWindow::updatePosition(int x, int y)
     screen->setProtagonistPosition(x,y);
     ui->graphicsView->viewport()->repaint();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+   QMainWindow::resizeEvent(event);
+   if(!mapLoaded){return;}
+   ui->graphicsView->fitInView(logic->worldView,Qt::KeepAspectRatio);
 }

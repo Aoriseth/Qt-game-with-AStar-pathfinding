@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     logic->setView(screen);
     w.setLogic(logic);
     w.setView(screen);
-    w.initconnectors();
 
     w.show();
 
