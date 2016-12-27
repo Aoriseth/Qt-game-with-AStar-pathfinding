@@ -222,7 +222,7 @@ std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
     for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
         if(!((*it)->getDefeated())){  //only check those undefeated enemies.
             setDestination((*it)->getXPos(),(*it)->getYPos());
-            bool finished  = calcPath_Dijkstra();
+            bool finished  = calcPath_AStar();
             if(finished){  //path found, enemy is reachable
                 float my_cost = getMoveCost();
                 if(my_cost<min_cost){
@@ -255,7 +255,7 @@ Tile game::getClosestHealthpack()
     auto result = healthpacks.begin();
     for(std::vector<std::unique_ptr<Tile>>::iterator it = healthpacks.begin(); it != healthpacks.end(); ++it){
         setDestination((*it)->getXPos(),(*it)->getYPos());
-        bool finished  = calcPath_Dijkstra();
+        bool finished  = calcPath_AStar();
         if(finished){  //path found, health is reachable
             float my_cost = getMoveCost();
             if(my_cost<min_cost){
@@ -377,7 +377,7 @@ bool game::calcPath_BestFirst()
     }
 }
 
-bool game::calcPath_Dijkstra()
+bool game::calcPath_AStar()
 {
     if(dijkstra(xDest,yDest)){
         //qDebug()<< "Path found !!!!!";
@@ -400,6 +400,8 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     enemies = myWorld->getEnemies(5);
     healthpacks = myWorld->getHealthPacks(5);
     protagonist = myWorld->getProtagonist();
+    setHealth(100);
+    setEnergy(100);
 
     xmax=0;ymax=0;
     for(auto& tile: tiles){
@@ -434,4 +436,57 @@ void game::setStart(int x, int y){
     currentNodes.enqueue(myNode1);
     myNode1.setDistance(0);
     availableNodes.push_back(myNode1);
+}
+
+void game::MoveProtagonist()
+{
+    while(route.size()){
+        auto tile = route.pop();
+        protagonist->setXPos((tile->getXPos()));
+        protagonist->setYPos((tile->getYPos()));
+//        screen->protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
+//        ui->graphicsView->viewport()->repaint();
+        float newEnergy = protagonist->getEnergy()-1 - getWeight()*(1-tile->getValue());
+        protagonist->setEnergy(newEnergy);
+        emit changeStats(protagonist->getEnergy(),protagonist->getHealth());
+
+    }
+}
+
+int game::getProtagonistX()
+{
+    return protagonist->getXPos();
+}
+
+int game::getProtagonistY()
+{
+    return protagonist->getYPos();
+}
+
+void game::setEnergy(float passEnergy)
+{
+    protagonist->setEnergy(passEnergy);
+    emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
+}
+
+void game::setHealth(float passHealth)
+{
+    protagonist->setHealth(passHealth);
+    emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
+
+}
+
+float game::getEnergy()
+{
+    return protagonist->getEnergy();
+}
+
+float game::getHealth()
+{
+    return protagonist->getHealth();
+}
+
+Protagonist* game::getProtagonist()
+{
+    return protagonist.get();
 }

@@ -13,10 +13,11 @@ int main(int argc, char *argv[])
     view* screen = new view();
 
     logic->clearLists();
-
+    screen->setLogic(logic);
     logic->setView(screen);
     w.setLogic(logic);
     w.setView(screen);
+    w.initconnectors();
 
     w.show();
 
