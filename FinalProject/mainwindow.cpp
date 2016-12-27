@@ -70,8 +70,8 @@ void MainWindow::executeStrategy()
                 qDebug()<<"Quit: NO healthpack left!";
                 return;
             }
-            Tile healthpack = logic->getClosestHealthpack();
-            logic->setDestination(healthpack.getXPos(),healthpack.getYPos());
+            std::vector<std::unique_ptr<Tile>>::iterator healthpack = logic->getClosestHealthpack();
+            logic->setDestination((*healthpack)->getXPos(),(*healthpack)->getYPos());
             logic->setWeight(weight);
             bool find = logic->calcPath_AStar();
             if(find){
@@ -80,13 +80,14 @@ void MainWindow::executeStrategy()
                     qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
                     return; //quit the loop
                 }else{
-                    float newHealth = logic->getHealth()+10.0*healthpack.getValue();
+                    float newHealth = logic->getHealth()+10.0*(*healthpack)->getValue();
                     if(newHealth > 100) newHealth = 100;
                     logic->setHealth(newHealth);
                     logic->setMoveCost(0.0f);
                     // Move the protagonist based on the calculated path
                     logic->MoveProtagonist();
                     qDebug()<<"Succeed to get a healthpack!";
+                    logic->removeHealthpack(*healthpack);
                     qDebug()<<"New Health is "<<logic->getHealth();
                     logic->setStart(logic->xDest,logic->yDest);
                     it = logic->getClosestEnemy();
@@ -169,11 +170,13 @@ void MainWindow::mapLoad()
     mapLoaded = true;
     //clear logic lists and refresh the scene
     logic->clearLists();
+
     refreshScene();
     connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
     connect(screen, SIGNAL(updatePath()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
     //loads world into scene
+    screen->clearLists();
     logic->loadWorld(path,screen->sceneView);
 
     //fit scene into view

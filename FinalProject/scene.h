@@ -14,6 +14,7 @@ public:
     explicit Scene(QObject *parent = 0);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
+
 signals:
     void locationClicked(int x, int y);
 };
