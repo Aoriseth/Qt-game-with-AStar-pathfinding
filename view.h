@@ -15,6 +15,7 @@ public:
     Scene * sceneView;
     game* logic;
     QGraphicsItem * destView;
+    std::vector<QGraphicsItem*> pathView;
 
     void addItemToScene(QGraphicsPixmapItem *item, int x, int y);
     void setLogic(game* pass);

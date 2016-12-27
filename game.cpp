@@ -347,6 +347,7 @@ bool game::calcPath_BreadthFirst(){
         for(;destination.getPre()!=nullptr;){
             moveCost += 1+destination.getTile()->getValue();
             route.push(destination.getTile());
+
             destination=*(destination.getPre());
             //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
 
@@ -433,6 +434,7 @@ void game::setStart(int x, int y){
 
 void game::MoveProtagonist()
 {
+
     while(route.size()){
         auto tile = route.pop();
         protagonist->setXPos((tile->getXPos()));
