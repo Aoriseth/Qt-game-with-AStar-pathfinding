@@ -11,29 +11,29 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+
 }
-
-
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+
+
 void MainWindow::play_clicked()
 {
-
-    if(!mapLoaded){
-        return;
-    }
-
-    auto finished = false;
+    if(!mapLoaded){return;} // Don't play if there is no map loaded
+    auto finished = false; // Set variable for checking if an algorithm successfully finished
+    int weight = ui->lineEdit->text().toInt(); // read weight from textbox
+//    qDebug() << "weight is " << weight;
 
     // Check the chosen algorithm
     switch (ui->comboBox->currentIndex()) {
     case 0:
-        logic->setWeight(10);
-        finished = logic->calcPath_Dijkstra();
+        logic->setWeight(weight);
+        finished = logic->calcPath_AStar();
         break;
     case 1:
         finished = logic->calcPath_BreadthFirst();
@@ -42,35 +42,29 @@ void MainWindow::play_clicked()
         finished = logic->calcPath_BestFirst();
         break;
     default:
+        logic->setWeight(weight);
+        finished = logic->calcPath_AStar(); // default to AStar, should never happen
         break;
     }
 
     // Move the protagonist based on the calculated path
     if(finished){
-        while(logic->route.size()){
-            auto tile = logic->route.pop();
-            protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
-            ui->graphicsView->viewport()->repaint();
-            float newEnergy = logic->protagonist->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
-            logic->protagonist->setEnergy(newEnergy);
-            updateStats();
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
+        logic->MoveProtagonist();
         logic->setStart(logic->xDest,logic->yDest);
     }else{
-        logic->setStart(logic->protagonist->getXPos(),logic->protagonist->getYPos());
+        logic->setStart(logic->getProtagonistX(),logic->getProtagonistY());
     }
 }
 
 
 void MainWindow::execute_strategy()
 {
-    logic->protagonist->setEnergy(100);
-    while(!logic->isAllDefeated()){ //check if all enemies are deafeated
+//    logic->setEnergy(100);
+    while(!logic->isAllDefeated()){ //check if all enemies are defeated
         auto finished = false;
         auto it = logic->getClosestEnemy();
         Enemy closestEnemy = **it;
-        if((*it)->getValue()>logic->protagonist->getHealth()){
+        if((*it)->getValue()>logic->getHealth()){
             qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
             if(logic->healthpacks.size()==0){
                 qDebug()<<"Quit: NO healthpack left!";
@@ -79,34 +73,31 @@ void MainWindow::execute_strategy()
             Tile healthpack = logic->getClosestHealthpack();
             logic->setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
             logic->setWeight(5);
-            bool find = logic->calcPath_Dijkstra();
+            bool find = logic->calcPath_AStar();
             if(find){
                 float requiredEnergy = logic->getMoveCost();
-                if(requiredEnergy>logic->protagonist->getEnergy()){
+                if(requiredEnergy>logic->getEnergy()){
                     qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
                     return; //quit the loop
                 }else{
-                    float newHealth = logic->protagonist->getHealth()+10.0*healthpack.getValue();
+                    float newHealth = logic->getHealth()+10.0*healthpack.getValue();
                     if(newHealth > 100) newHealth = 100;
-                    logic->protagonist->setHealth(newHealth);
+                    logic->setHealth(newHealth);
                     logic->setMoveCost(0.0f);
                     // Move the protagonist based on the calculated path
-                    while(logic->route.size()){qDebug()<<"Go to Healthpack!";
-                        auto tile = logic->route.pop();
-                        protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
-                        ui->graphicsView->viewport()->repaint();
-                        float newEnergy = logic->protagonist->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
-                        logic->protagonist->setEnergy(newEnergy);
-                        updateStats();
-                        std::this_thread::sleep_for(std::chrono::milliseconds(500));
-                    }
+                    logic->MoveProtagonist();
+//                    while(logic->route.size()){qDebug()<<"Go to Healthpack!";
+//                        auto tile = logic->route.pop();
+//                        screen->setProtagonistPosition((tile->getXPos()),(tile->getYPos()));
+//                        float newEnergy = logic->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
+//                        logic->setEnergy(newEnergy);
+//                    }
                     qDebug()<<"Succeed to get a healthpack!";
-                    qDebug()<<"New Health is "<<logic->protagonist->getHealth();
+                    qDebug()<<"New Health is "<<logic->getHealth();
                     logic->setStart(logic->xDest,logic->yDest);
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     auto it = logic->getClosestEnemy();
                     closestEnemy = **it;
-                    if((*it)->getValue()>logic->protagonist->getHealth()){
+                    if((*it)->getValue()>logic->getHealth()){
                         qDebug()<<"Strength of the enemy is " << (*it)->getValue();
                         qDebug()<<"Quit: Health is still not enough to defeat an enemy!!!";
                         return; //stop this strategy
@@ -120,34 +111,32 @@ void MainWindow::execute_strategy()
 
         logic->setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
         logic->setWeight(5);
-        finished = logic->calcPath_Dijkstra();
+        finished = logic->calcPath_AStar();
         if(finished){  //Path found
             float requiredEnergy = logic->getMoveCost();
-            if(requiredEnergy>logic->protagonist->getEnergy()){
+            if(requiredEnergy>logic->getEnergy()){
                 qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
                 return; //quit the loop
             }else{
-                float newHealth = logic->protagonist->getHealth()-closestEnemy.getValue();
-                logic->protagonist->setHealth(newHealth);
-                qDebug()<<"Health is "<<logic->protagonist->getHealth();
-                logic->protagonist->setEnergy(100);
+                float newHealth = logic->getHealth()-closestEnemy.getValue();
+                logic->setHealth(newHealth);
+                qDebug()<<"Health is "<<logic->getHealth();
+                logic->setEnergy(100);
                 logic->setMoveCost(0.0f);
             }
             // Move the protagonist based on the calculated path
-            while(logic->route.size()){
-                auto tile = logic->route.pop();
-                protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
-                ui->graphicsView->viewport()->repaint();
-                float newEnergy = logic->protagonist->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
-                logic->protagonist->setEnergy(newEnergy);
-                updateStats();
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            }
+            logic->MoveProtagonist();
+//            while(logic->route.size()){
+//                auto tile = logic->route.pop();
+//                screen->setProtagonistPosition((tile->getXPos()),(tile->getYPos()));
+//                ui->graphicsView->viewport()->repaint();
+//                float newEnergy = logic->getEnergy()-1 - logic->getWeight()*(1-tile->getValue());
+//                logic->setEnergy(newEnergy);
+//            }
             qDebug()<<"Succeed to kill an enemy!";
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             logic->setStart(logic->xDest,logic->yDest);
         }else{  //Path not found
-            logic->setStart(logic->protagonist->getXPos(),logic->protagonist->getYPos());
+            logic->setStart(logic->getProtagonistX(),logic->getProtagonistY());
         }
     }
     logic->setDestination(0,0);
@@ -164,14 +153,7 @@ void MainWindow::refreshScene(){
     //scene->setSceneRect(scene->itemsBoundingRect());
 }
 
-void MainWindow::showProtagonist(){
-    QImage image(":/resources/Pixel-mario.png");
-    protagonistView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    protagonistView->setZValue(3);
-    protagonistView->setScale(1);
-    protagonistView->setPos(logic->protagonist->getXPos(),logic->protagonist->getYPos());
-    screen->scene->addItem(protagonistView);
-}
+
 
 void MainWindow::showHealthpacks(){
     for(auto& healthpack: logic->healthpacks){
@@ -210,10 +192,15 @@ void MainWindow::setView(view *pass)
     screen = pass;
 }
 
-void MainWindow::updateStats(){
-    ui->energyBar->setValue(logic->protagonist->getEnergy());
-    ui->healthBar->setValue(logic->protagonist->getHealth());
-    qDebug()<<"Energy is "<<logic->protagonist->getEnergy();
+void MainWindow::initconnectors()
+{
+
+}
+
+void MainWindow::updateStats(float energy, float health){
+    ui->energyBar->setValue(energy);
+    ui->healthBar->setValue(health);
+//    qDebug()<<"Energy is "<<logic->getEnergy();
 
 }
 
@@ -224,7 +211,7 @@ void MainWindow::OpenMap()
     //clear logic lists and refresh the scene
     logic->clearLists();
     refreshScene();
-
+    connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float)));
     //set path chosen by user
     QString path = QFileDialog::getOpenFileName(this,tr("Select map"));
 
@@ -235,7 +222,8 @@ void MainWindow::OpenMap()
     ui->graphicsView->fitInView(0,0,350*logic->xmax,350*logic->ymax,Qt::KeepAspectRatio);
 
     // render various items into view
-    showProtagonist();
+    screen->showProtagonist();
+    connect(logic->getProtagonist(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
     showHealthpacks();
     showEnemies();
 
@@ -247,7 +235,6 @@ void MainWindow::OpenMap()
 
     destView = screen->scene->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
 
-    updateStats();
     //indicateDestination(logic->xDest, logic->yDest);
     //item->setFlag(QGraphicsItem::ItemIsSelectable, true);
 
@@ -270,4 +257,11 @@ void MainWindow::ItemSelected()
     logic->yDest = y;
     indicateDestination(x,y);
 
+}
+
+void MainWindow::updatePosition(int x, int y)
+{
+    screen->setProtagonistPosition(x,y);
+    ui->graphicsView->viewport()->repaint();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }

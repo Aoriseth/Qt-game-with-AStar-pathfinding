@@ -14,10 +14,12 @@
 #include <QGraphicsItem>
 #include "mainwindow.h"
 #include "view.h"
+#include <QObject>
 
 
-class game
+class game: public QObject
 {
+    Q_OBJECT
 public:
     game();
     std::vector<std::unique_ptr<Tile>> tiles;
@@ -36,11 +38,10 @@ public:
     QSet<int> myIndexes;
     bool calcPath_BreadthFirst();
     bool calcPath_BestFirst();
-    bool calcPath_Dijkstra();
+    bool calcPath_AStar();
     QStack<std::shared_ptr<Tile>> route;
     void loadWorld(QString path,QGraphicsScene * scene);
     World *myWorld = new World();
-    std::unique_ptr<Protagonist> protagonist;
     void setStart(int x, int y);
     int xDest;
     int yDest;
@@ -58,13 +59,27 @@ public:
     float getMoveCost() const;
     void setMoveCost(float value);
 
+    void MoveProtagonist();
+    int getProtagonistX();
+    int getProtagonistY();
+    void setEnergy(float passEnergy);
+    void setHealth(float passHealth);
+    float getEnergy();
+    float getHealth();
+    Protagonist *getProtagonist();
+
 private:
+
+    std::unique_ptr<Protagonist> protagonist;
 
     static bool node_compare(node a, node b)
     {
         return (a.getDistance() < b.getDistance());
     }
     node getNodeWithMinDistance();
+
+signals:
+    void changeStats(float energy, float health);
 };
 
 #endif // GAME_H

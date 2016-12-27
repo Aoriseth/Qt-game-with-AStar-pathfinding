@@ -11,8 +11,10 @@
 #include <QFileDialog>
 #include "game.h"
 #include "view.h"
+#include <chrono>
 
 class game;
+class view;
 
 namespace Ui {
 class MainWindow;
@@ -34,15 +36,15 @@ public:
     std::vector<QGraphicsPixmapItem*> healthpackItems;
     void setLogic(game* pass);
     void setView(view* pass);
-    void updateStats();
-    void MoveProtagonist();
+    void initconnectors();
+
 
 private:
     QString path;
     game* logic;
     view* screen;
     void refreshScene();
-    QGraphicsPixmapItem* protagonistView;
+
     void showProtagonist();
     void showHealthpacks();
     void showEnemies();
@@ -61,10 +63,12 @@ private:
 //       };
 
 private slots:
+    void updateStats(float energy, float health);
     void play_clicked();
     void execute_strategy();
     void OpenMap();
     void ItemSelected();
+    void updatePosition(int x, int y);
 };
 
 #endif // MAINWINDOW_H
