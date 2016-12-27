@@ -414,26 +414,6 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     worldView->setScale(1);
     worldView->setPos(getProtagonistX(),getProtagonistY());
     screen->sceneView->addItem(worldView);
-
-
-
-//    for(auto& tile: tiles){
-//        int x = tile->getXPos();
-//        if (x>xmax){
-//            xmax=x;
-//        }
-//        int y = tile->getYPos();
-//        if (y>ymax){
-//            ymax=y;
-
-//        }
-//        float value = tile->getValue();
-//        if(std::isinf(value)) value= 255.0;
-//        else value = 255.0-value*255.0;
-//        auto item = scene->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
-//        item->setPos(256*x,256*y);
-//        item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-//    }
     qDebug()<<"ymax is "<<ymax;
     qDebug()<<"xmax is "<<xmax;
 }
@@ -457,8 +437,6 @@ void game::MoveProtagonist()
         auto tile = route.pop();
         protagonist->setXPos((tile->getXPos()));
         protagonist->setYPos((tile->getYPos()));
-//        screen->protagonistView->setPos(256*(tile->getXPos()),256*(tile->getYPos()));
-//        ui->graphicsView->viewport()->repaint();
         float newEnergy = protagonist->getEnergy()-1 - getWeight()*(1-tile->getValue());
         protagonist->setEnergy(newEnergy);
         emit changeStats(protagonist->getEnergy(),protagonist->getHealth());
