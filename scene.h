@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <math.h>
+#include <QGraphicsView>
+#include <typeinfo>
 
 class Scene: public QGraphicsScene
 {

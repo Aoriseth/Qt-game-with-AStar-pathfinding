@@ -33,12 +33,14 @@ void view::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
     item->setScale(0.00390625);
     item->setPos(x,y);
     item->setZValue(2);
+    item->setFlag(QGraphicsItem::ItemIsSelectable, true);
     sceneView->addItem(item);
 }
 
 void view::setLogic(game *pass)
 {
     logic = pass;
+    connect(logic, SIGNAL(enemyKilled(int)), this, SLOT(updateEnemy(int)));
 }
 
 void view::showEnemies()
@@ -79,6 +81,7 @@ void view::setProtagonistPosition(int x, int y)
     protagonistView->setPos(x,y);
 }
 
-void updatePath(){
-
+void view::updateEnemy(int pos){
+    enemyItems[pos]->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
+    qDebug()<< "enemy at pos: " << pos;
 }

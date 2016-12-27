@@ -146,7 +146,7 @@ bool game::bestFirst(int x, int y)
     return false;
 }
 
-bool game::dijkstra(int x, int y)
+bool game::AStar(int x, int y)
 {
     do{
         node myNode = getNodeWithMinDistance();//get from SPT
@@ -219,7 +219,7 @@ bool game::dijkstra(int x, int y)
 std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
     float min_cost = 10000;
     auto result = enemies.begin();
-    for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
+    for(auto it = enemies.begin(); it != enemies.end(); ++it){
         if(!((*it)->getDefeated())){  //only check those undefeated enemies.
             setDestination((*it)->getXPos(),(*it)->getYPos());
             bool finished  = calcPath_AStar();
@@ -242,8 +242,9 @@ std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
 bool game::isAllDefeated()
 {
     bool flag = true;
-    for(std::vector<std::unique_ptr<Enemy>>::iterator it = enemies.begin(); it != enemies.end(); ++it){
-        if(!((*it)->getDefeated())){
+
+    for(auto& unit:enemies){
+        if(!unit->getDefeated()){
             flag = false;
         }
     }
@@ -274,6 +275,13 @@ Tile game::getClosestHealthpack()
     return healthpack;
 }
 
+void game::killEnemy(std::unique_ptr<Enemy>& destroyee)
+{
+    destroyee->setDefeated(true);
+    int pos = find(enemies.begin(), enemies.end(), destroyee) - enemies.begin();
+    emit enemyKilled(pos);
+}
+
 float game::getMoveCost() const
 {
     return moveCost;
@@ -295,13 +303,57 @@ node game::getNodeWithMinDistance(){
     return NodeWithMinDistance;
 }
 
-
 void game::clearLists()
 {
     currentNodes.clear();
     availableNodes.clear();
     route.clear();
     myIndexes.clear();
+}
+
+void game::strat()
+{
+
+    while(!isAllDefeated()){
+        std::vector<std::shared_ptr<Enemy>> list;
+        for(auto& unit:enemies){
+            if ((unit->getValue()<protagonist->getHealth())&&(!unit->getDefeated())){
+                list.push_back(std::move(unit));
+            }
+        }
+
+        std::shared_ptr<Enemy> target;
+        QStack<std::shared_ptr<Tile>> chosenRoute;
+        float lowest = std::numeric_limits<float>::infinity();
+        setWeight(1);
+
+        for(auto unit:list){
+            setDestination(unit->getXPos(),unit->getYPos());
+            if(calcPath_AStar()){
+                if(getMoveCost()<lowest){
+                    lowest = getMoveCost();
+                    chosenRoute = route;
+                    target=unit;
+                }
+                screen->clearPath();
+
+            }
+            else{
+                chosenRoute.clear();
+            }
+            setStart(protagonist->getXPos(),protagonist->getYPos());
+            setMoveCost(0.0f);
+        }
+        route = chosenRoute;
+        MoveProtagonist();
+        target->setDefeated(true);
+
+    }
+
+
+
+
+
 }
 
 int game::getWeight() const
@@ -384,7 +436,7 @@ bool game::calcPath_BestFirst()
 bool game::calcPath_AStar()
 {
 
-    if(dijkstra(xDest,yDest)){
+    if(AStar(xDest,yDest)){
         //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
@@ -404,6 +456,7 @@ bool game::calcPath_AStar()
 void game::loadWorld(QString path, QGraphicsScene * scene){
     tiles = myWorld->createWorld(path);
     enemies = myWorld->getEnemies(5);
+
     healthpacks = myWorld->getHealthPacks(5);
     protagonist = myWorld->getProtagonist();
     setHealth(100);
@@ -422,6 +475,11 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     screen->sceneView->addItem(worldView);
     qDebug()<<"ymax is "<<ymax;
     qDebug()<<"xmax is "<<xmax;
+//    for(auto& unit:enemies){
+//        int index = (unit->getYPos())*(xmax+1) + unit->getXPos();
+//        tiles[index]->setValue(std::numeric_limits<float>::infinity());
+//        qDebug()<< "index: "<<index;
+//   }
 }
 
 void game::setStart(int x, int y){
@@ -488,3 +546,5 @@ Protagonist* game::getProtagonist()
 {
     return protagonist.get();
 }
+
+
