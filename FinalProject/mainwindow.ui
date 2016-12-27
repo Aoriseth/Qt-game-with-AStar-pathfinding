@@ -68,7 +68,23 @@
     <item row="6" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QComboBox" name="comboBox">
+        <property name="maximumSize">
+         <size>
+          <width>275</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <item>
          <property name="text">
           <string>A*</string>
