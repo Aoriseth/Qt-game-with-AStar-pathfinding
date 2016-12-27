@@ -168,12 +168,10 @@ void MainWindow::mapLoad()
     refreshScene();
     connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
 
-
     //loads world into scene
     logic->loadWorld(path,screen->sceneView);
 
     //fit scene into view
-    ui->graphicsView->fitInView(0,0,350*logic->xmax,350*logic->ymax,Qt::KeepAspectRatio);
     ui->graphicsView->fitInView(logic->worldView,Qt::KeepAspectRatio);
 
     // render various items into view
@@ -210,7 +208,8 @@ void MainWindow::updatePosition(int x, int y)
 {
     screen->setProtagonistPosition(x,y);
     ui->graphicsView->viewport()->repaint();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    auto speed = ui->horizontalSlider->value();
+    std::this_thread::sleep_for(std::chrono::milliseconds(10+speed));
 }
 
 void MainWindow::ReloadMap()
