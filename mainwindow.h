@@ -32,6 +32,7 @@ public:
     void setLogic(game* pass);
     void setView(view* pass);
 
+
     void indicateDestination(int x, int y);
 
 protected:
@@ -52,6 +53,7 @@ private slots:
     void gotoDestination();
     void executeStrategy();
     void OpenMap();
+    void refreshWindow();
     void ItemSelected(int x, int y);
     void updatePosition(int x, int y);
     void ReloadMap();

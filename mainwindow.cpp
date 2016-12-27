@@ -126,6 +126,7 @@ void MainWindow::executeStrategy()
     logic->setDestination(0,0);
     indicateDestination(0,0);
     qDebug()<<"Game Win! All the enemies are defeated!";
+    screen->clearPath();
 
 }
 
@@ -152,6 +153,11 @@ void MainWindow::setView(view *pass)
     screen = pass;
 }
 
+void MainWindow::refreshWindow()
+{
+    ui->graphicsView->viewport()->repaint();
+}
+
 void MainWindow::updateStats(float energy, float health){
     ui->energyBar->setValue(energy);
     ui->healthBar->setValue(health);
@@ -167,6 +173,7 @@ void MainWindow::mapLoad()
     logic->clearLists();
     refreshScene();
     connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
+    connect(screen, SIGNAL(updatePath()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
     //loads world into scene
     logic->loadWorld(path,screen->sceneView);
@@ -186,8 +193,9 @@ void MainWindow::mapLoad()
     //set the destination for the algorithm and make the Tile red
     logic->setDestination(0,0);
 
-    screen->destView = screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
+    screen->destView = screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255)));
     screen->destView->setScale(0.00390625);
+    screen->destView->setOpacity(0.5);
 }
 
 void MainWindow::OpenMap()
@@ -199,6 +207,7 @@ void MainWindow::OpenMap()
 
 void MainWindow::ItemSelected(int x, int y)
 {
+    screen->clearPath();
     logic->xDest = x;
     logic->yDest = y;
     indicateDestination(x,y);
