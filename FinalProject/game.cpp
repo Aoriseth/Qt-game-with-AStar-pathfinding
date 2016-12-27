@@ -404,23 +404,36 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     setEnergy(100);
 
     xmax=0;ymax=0;
-    for(auto& tile: tiles){
-        int x = tile->getXPos();
-        if (x>xmax){
-            xmax=x;
-        }
-        int y = tile->getYPos();
-        if (y>ymax){
-            ymax=y;
 
-        }
-        float value = tile->getValue();
-        if(std::isinf(value)) value= 255.0;
-        else value = 255.0-value*255.0;
-        auto item = scene->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
-        item->setPos(256*x,256*y);
-        item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    }
+
+    QImage image(path);
+    worldView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    xmax = image.width()-1;
+    ymax = image.height()-1;
+    worldView->setZValue(0);
+    worldView->setScale(1);
+    worldView->setPos(getProtagonistX(),getProtagonistY());
+    screen->sceneView->addItem(worldView);
+
+
+
+//    for(auto& tile: tiles){
+//        int x = tile->getXPos();
+//        if (x>xmax){
+//            xmax=x;
+//        }
+//        int y = tile->getYPos();
+//        if (y>ymax){
+//            ymax=y;
+
+//        }
+//        float value = tile->getValue();
+//        if(std::isinf(value)) value= 255.0;
+//        else value = 255.0-value*255.0;
+//        auto item = scene->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 0,(int)value)));
+//        item->setPos(256*x,256*y);
+//        item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+//    }
     qDebug()<<"ymax is "<<ymax;
     qDebug()<<"xmax is "<<xmax;
 }

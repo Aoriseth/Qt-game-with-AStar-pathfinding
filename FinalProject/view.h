@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include "game.h"
+#include "scene.h"
 
 class game;
 
@@ -11,16 +12,21 @@ class view
 {
 public:
     view();
-    QGraphicsScene * scene;
+    Scene * sceneView;
     game* logic;
+    QGraphicsItem * destView;
+
     void addItemToScene(QGraphicsPixmapItem *item, int x, int y);
     void setLogic(game* pass);
-
+    void showEnemies();
+    void showHealthpacks();
     void showProtagonist();
     void setProtagonistPosition(int x, int y);
 
 private:
     QGraphicsPixmapItem* protagonistView;
+    std::vector<QGraphicsPixmapItem*> enemyItems;
+    std::vector<QGraphicsPixmapItem*> healthpackItems;
 };
 
 #endif // VIEW_H
