@@ -82,7 +82,6 @@ void MainWindow::executeStrategy()
 
 void MainWindow::refreshScene(){
     screen->sceneView = new Scene(this);
-
     ui->graphicsView->setScene(screen->sceneView);
 }
 
@@ -115,16 +114,14 @@ void MainWindow::updateStats(float energy, float health){
 void MainWindow::mapLoad()
 {
     mapLoaded = true;
-    //clear logic lists and refresh the scene
-    logic->clearLists();
-
-
+    // Create a new scene
     refreshScene();
     connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
     connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
     connect(screen, SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
-    //loads world into scene
+    //loads world into scene and cleanup data from the previous world
+    logic->clearLists();
     screen->clearLists();
     logic->loadWorld(path,screen->sceneView);
 
@@ -133,15 +130,13 @@ void MainWindow::mapLoad()
 
     // render various items into view
     screen->showProtagonist();
-    connect(logic->getProtagonist(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
     screen->showHealthpacks();
     screen->showEnemies();
 
+    connect(logic->getProtagonist(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
+
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
-
-    //set the destination for the algorithm and make the Tile red
-    logic->setDestination(0,0);
 
     screen->destView = screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255)));
     screen->destView->setScale(0.00390625);
@@ -151,7 +146,10 @@ void MainWindow::mapLoad()
 void MainWindow::OpenMap()
 {
     path = QFileDialog::getOpenFileName(this,tr("Select map"));
-    mapLoad();
+    if(!path.isEmpty()){
+        mapLoad();
+    }
+
 
 }
 
