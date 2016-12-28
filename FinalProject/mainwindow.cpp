@@ -57,21 +57,21 @@ void MainWindow::executeStrategy()
     logic->setWeight(weight);
     if(!mapLoaded){return;} // Don't play if there is no map loaded
     while(!logic->isAllDefeated()){ //check if all enemies are defeated
-        while((logic->isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
-
-            if(!logic->goForEnemy()){
-                if(!logic->goForHealthpack()){
-                    return; //quit the loop
-                }
+        while((!logic->isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
+            qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
+            if(logic->healthpacks.size()==0){
+                qDebug()<<"Quit: NO healthpack left!";
+                return;
             }
+            if(!logic->goForHealthpack()){
+                return; //quit the loop
+            }
+
         }
-        qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
-        if(logic->healthpacks.size()==0){
-            qDebug()<<"Quit: NO healthpack left!";
-            return;
-        }
-        if(!logic->goForHealthpack()){
-            return; //quit the loop
+        if(!logic->goForEnemy()){
+            if(!logic->goForHealthpack()){
+                return; //quit the loop
+            }
         }
 
     }
