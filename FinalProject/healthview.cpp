@@ -19,13 +19,12 @@ void HealthView::addToScene(){
     this->setFlag(QGraphicsItem::ItemIsSelectable, true);
     view->addItem(this);
 
-//    QGraphicsTextItem * io = new QGraphicsTextItem;
-//    this->setScale(0.00390625);
-//    this->setZValue(2);
-//    io->setPos(mHealth->getXPos(),mHealth->getYPos()+10);
-//    io->setPlainText("enemy");
-
-//    view->addItem(io);
+    QGraphicsTextItem * io = new QGraphicsTextItem;
+    io->setScale(0.00390625*2);
+    io->setZValue(2);
+    io->setPos(mHealth->getXPos(),mHealth->getYPos());
+    io->setPlainText(QString::number(mHealth->getValue()));
+    view->addItem(io);
 }
 
 void HealthView::healthUsed()

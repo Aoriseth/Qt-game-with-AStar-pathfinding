@@ -19,6 +19,13 @@ void EnemyView::addToScene(){
     this->setZValue(2);
     this->setFlag(QGraphicsItem::ItemIsSelectable, true);
     view->addItem(this);
+
+    QGraphicsTextItem * io = new QGraphicsTextItem;
+    io->setScale(0.00390625*2);
+    io->setZValue(2);
+    io->setPos(mEnemy->getXPos(),mEnemy->getYPos());
+    io->setPlainText(QString::number(mEnemy->getValue()));
+    view->addItem(io);
 }
 
 void EnemyView::updateVisual()
