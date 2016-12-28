@@ -16,7 +16,7 @@ void view::addPathStep(int x, int y)
    step->setPos(x,y);
 
    pathView.push_back(step);
-   emit updateViewport();
+//   emit updateViewport();
 }
 
 void view::clearPath()
