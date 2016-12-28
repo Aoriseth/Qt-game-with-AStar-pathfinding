@@ -16,7 +16,7 @@ void view::addPathStep(int x, int y)
    step->setPos(x,y);
 
    pathView.push_back(step);
-   emit updatePath();
+   emit updateViewport();
 }
 
 void view::clearPath()
@@ -25,7 +25,7 @@ void view::clearPath()
         delete step;
     }
     pathView.clear();
-    emit updatePath();
+    emit updateViewport();
 }
 
 void view::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
@@ -47,11 +47,10 @@ void view::setLogic(game *pass)
 void view::showEnemies()
 {
     for(auto& enemy: logic->enemies){
-        int x = enemy->getXPos();
-        int y = enemy->getYPos();
-        QImage image(":/resources/goomba.gif");
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-        addItemToScene(item, x, y);
+        EnemyView* item = new EnemyView(QPixmap(":/resources/goomba.gif"),sceneView,enemy);
+        item->addToScene();
+        connect(enemy.get(), SIGNAL(defeat()), item, SLOT(updateVisual()));
+        connect(enemy.get(), SIGNAL(defeat()), this, SIGNAL(updateViewport()));
         enemyItems.push_back(item);
     }
 }
@@ -88,7 +87,7 @@ void view::clearLists()
 }
 
 void view::updateEnemy(int pos){
-    enemyItems[pos]->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
+//    enemyItems[pos]->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
 }
 
 void view::removeHealthpack(int pos){

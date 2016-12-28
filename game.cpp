@@ -216,7 +216,7 @@ bool game::AStar(int x, int y)
     return false;//Not found if code goes outside of loop;
 }
 
-std::vector<std::unique_ptr<Enemy>>::iterator game::getClosestEnemy(){
+std::vector<std::shared_ptr<EnemyUnit>>::iterator game::getClosestEnemy(){
     float min_cost = 10000;
     auto result = enemies.begin();
     for(auto it = enemies.begin(); it != enemies.end(); ++it){
@@ -448,7 +448,10 @@ bool game::calcPath_AStar()
 
 void game::loadWorld(QString path, QGraphicsScene * scene){
     tiles = myWorld->createWorld(path);
-    enemies = myWorld->getEnemies(5);
+    auto tempenemies = myWorld->getEnemies(5);
+    for(auto& unit:tempenemies){
+        enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
+    }
 
     healthpacks = myWorld->getHealthPacks(5);
     protagonist = myWorld->getProtagonist();
@@ -579,9 +582,9 @@ bool game::goForHealthpack()
 
 bool game::isDefeatable()
 {
-    for(auto it = enemies.begin(); it != enemies.end(); ++it){
-        if(!(*it)->getDefeated()){  //when a enemy is not defeated
-            if((*it)->getValue() < getHealth()){ //when a enemy has a strength smaller than pro's health
+    for(auto& unit:enemies){
+        if(!unit->getDefeated()){  //when a enemy is not defeated
+            if(unit->getValue() < getHealth()){ //when a enemy has a strength smaller than pro's health
                 //qDebug()<<"At least one enemy is defeatable with strength: "<<(*it)->getValue();
                 return true;
             }
@@ -633,10 +636,8 @@ bool game::goForEnemy()
     }
 }
 
-void game::killEnemy(std::unique_ptr<Enemy>& destroyee)
+void game::killEnemy(std::shared_ptr<EnemyUnit> &destroyee)
 {
-    destroyee->setDefeated(true); //mark this enemy as defeated
-    int pos = find(enemies.begin(), enemies.end(), destroyee) - enemies.begin();
-    emit enemyKilled(pos);
+    destroyee->kill(); //mark this enemy as defeated
 }
 
