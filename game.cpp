@@ -397,7 +397,7 @@ bool game::calcPath_AStar()
         }
         return true;
     }else{
-        qDebug()<< "Dijkstra:Path is not found in the end!!!!!";
+        qDebug()<< "AStar:Path is not found in the end!!!!!";
         return false;
     }
 }
@@ -409,14 +409,19 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     worldView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
     xmax = image.width()-1;
     ymax = image.height()-1;
+    int objectNum = (xmax+ymax)/2;
+    if(((xmax+ymax)/2)>100){
+        objectNum = 1;
+    }
+
 
     tiles = myWorld->createWorld(path);
-    auto tempenemies = myWorld->getEnemies((xmax+ymax)/2);
+    auto tempenemies = myWorld->getEnemies(objectNum);
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
     }
 
-    auto temphealthpacks = myWorld->getHealthPacks((xmax+ymax)/3);
+    auto temphealthpacks = myWorld->getHealthPacks(objectNum);
     for(auto& pack:temphealthpacks){
         healthpacks.push_back(std::shared_ptr<HealthModel>(new HealthModel(pack->getXPos(), pack->getYPos(), pack->getValue())));
     }
@@ -575,7 +580,7 @@ bool game::goForEnemy()
             return false;
         }
         if(!goForHealthpack()){
-            return false; //quite the loop
+            return false; //quit the loop
         }
     }
     setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
@@ -585,6 +590,7 @@ bool game::goForEnemy()
         float requiredEnergy = getMoveCost();
         if(requiredEnergy>getEnergy()){
             qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
+            setStart(getProtagonistX(),getProtagonistY());
             return false; //quit the loop
         }else{
             float newHealth = getHealth()-closestEnemy.getValue();
