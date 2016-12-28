@@ -16,6 +16,7 @@
 #include "view.h"
 #include <QObject>
 #include <limits>
+#include "enemyunit.h"
 
 
 
@@ -28,7 +29,7 @@ public:
     std::vector<node> availableNodes;
     std::vector<node> sptNodes;//shortest path tree
     std::vector<std::unique_ptr<Tile>> tiles;
-    std::vector<std::unique_ptr<Enemy>> enemies;
+    std::vector<std::shared_ptr<EnemyUnit>> enemies;
     std::vector<std::unique_ptr<Tile>> healthpacks;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);
@@ -55,10 +56,10 @@ public:
     void setView(view* test);
     view* screen;
     std::shared_ptr<Tile> getTile(int x,int y);
-    std::vector<std::unique_ptr<Enemy>>::iterator getClosestEnemy();
+    std::vector<std::shared_ptr<EnemyUnit>>::iterator getClosestEnemy();
     bool isAllDefeated();
     std::vector<std::unique_ptr<Tile>>::iterator getClosestHealthpack();
-    void killEnemy(std::unique_ptr<Enemy> &destroyee);
+    void killEnemy(std::shared_ptr<EnemyUnit> &destroyee);
     float moveCost = 0.0f;
 
     float getMoveCost() const;

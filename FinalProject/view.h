@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include "game.h"
 #include "scene.h"
+#include "enemyview.h"
 #include <QObject>
 
 class game;
@@ -18,7 +19,6 @@ public:
     game* logic;
     QGraphicsItem * destView;
     std::vector<QGraphicsItem*> pathView;
-
     void addPathStep(int x,int y);
     void clearPath();
     void addItemToScene(QGraphicsPixmapItem *item, int x, int y);
@@ -31,10 +31,10 @@ public:
 
 private:
     QGraphicsPixmapItem* protagonistView;
-    std::vector<QGraphicsPixmapItem*> enemyItems;
+    std::vector<EnemyView*> enemyItems;
     std::vector<QGraphicsPixmapItem*> healthpackItems;
 signals:
-    void updatePath();
+    void updateViewport();
 private slots:
     void updateEnemy(int pos);
     void removeHealthpack(int pos);

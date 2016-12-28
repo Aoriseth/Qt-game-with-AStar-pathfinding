@@ -2,9 +2,6 @@
 #include "ui_mainwindow.h"
 
 
-
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -68,11 +65,11 @@ void MainWindow::executeStrategy()
                 return;
             }
             if(!logic->goForHealthpack()){
-                return; //quite the loop
+                return; //quit the loop
             }
         }
         if(!logic->goForEnemy()){
-            return; //quite the loop
+            return; //quit the loop
         }
 
     }
@@ -85,10 +82,8 @@ void MainWindow::executeStrategy()
 
 void MainWindow::refreshScene(){
     screen->sceneView = new Scene(this);
-    connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
-    ui->graphicsView->setScene(screen->sceneView);
 
-    //scene->setSceneRect(scene->itemsBoundingRect());
+    ui->graphicsView->setScene(screen->sceneView);
 }
 
 void MainWindow::indicateDestination(int x, int y){
@@ -114,8 +109,6 @@ void MainWindow::refreshWindow()
 void MainWindow::updateStats(float energy, float health){
     ui->energyBar->setValue(energy);
     ui->healthBar->setValue(health);
-//    qDebug()<<"Energy is "<<logic->getEnergy();
-
 }
 
 
@@ -125,9 +118,11 @@ void MainWindow::mapLoad()
     //clear logic lists and refresh the scene
     logic->clearLists();
 
+
     refreshScene();
+    connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
     connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
-    connect(screen, SIGNAL(updatePath()), this, SLOT(refreshWindow())); // connect signals to update path visuals
+    connect(screen, SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
     //loads world into scene
     screen->clearLists();
