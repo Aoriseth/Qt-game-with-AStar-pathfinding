@@ -87,7 +87,7 @@ bool game::bestFirst(int x, int y)
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode); //qDebug()<<"x+:Add new node with index:"<<index;
-                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        myIndexes.insert(index);//qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
                     }
@@ -103,7 +103,7 @@ bool game::bestFirst(int x, int y)
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode);//qDebug()<<"x-:Add new node with index:"<<index;
-                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        myIndexes.insert(index);//qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
                     }
@@ -119,7 +119,7 @@ bool game::bestFirst(int x, int y)
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode);//qDebug()<<"y+:Add new node with index"<<index;
-                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        myIndexes.insert(index);//qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
                     }
@@ -135,7 +135,7 @@ bool game::bestFirst(int x, int y)
                         double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
                         myxNode.setDistance(distance);
                         availableNodes.push_back(myxNode);//qDebug()<<"y-:Add new node with index"<<index;
-                        myIndexes.insert(index);qDebug()<<"Distance:"<<distance;
+                        myIndexes.insert(index);//qDebug()<<"Distance:"<<distance;
                         if(distance==0)
                             return true;
                     }
@@ -221,20 +221,18 @@ std::vector<std::shared_ptr<EnemyUnit>>::iterator game::getClosestEnemy(){
     float min_cost = 10000;
     auto result = defeatableEnemies.begin();
     for(auto it = defeatableEnemies.begin(); it != defeatableEnemies.end(); ++it){
-        //if(!((*it)->getDefeated())){  //only check those undefeated enemies.
-            setDestination((*it)->getXPos(),(*it)->getYPos());
-            bool finished  = calcPath_AStar();
-            if(finished){  //path found, enemy is reachable
-                float my_cost = getMoveCost();
-                if(my_cost<min_cost){
-                    min_cost = my_cost;
-                    result = it;
-                }
-                //clear memory created by finding the closet enemy
-                setStart(protagonist->getXPos(),protagonist->getYPos());
-                setMoveCost(0.0f);
+        setDestination((*it)->getXPos(),(*it)->getYPos());
+        bool finished  = calcPath_AStar();
+        if(finished){  //path found, enemy is reachable
+            float my_cost = getMoveCost();
+            if(my_cost<min_cost){
+                min_cost = my_cost;
+                result = it;
             }
-        //}
+            //clear memory created by finding the closet enemy
+            setStart(protagonist->getXPos(),protagonist->getYPos());
+            setMoveCost(0.0f);
+        }
         screen->clearPath();
     }
     return result;
@@ -384,7 +382,6 @@ bool game::calcPath_BestFirst()
 
 bool game::calcPath_AStar()
 {
-
     if(AStar(xDest,yDest)){
         //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
@@ -414,7 +411,6 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
         objectNum = 1;
     }
 
-
     tiles = myWorld->createWorld(path);
     auto tempenemies = myWorld->getEnemies(objectNum);
     for(auto& unit:tempenemies){
@@ -429,19 +425,13 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     setHealth(100);
     setEnergy(100);
 
-
-
     worldView->setZValue(0);
     worldView->setScale(1);
     worldView->setPos(getProtagonistX(),getProtagonistY());
     screen->sceneView->addItem(worldView);
     qDebug()<<"ymax is "<<ymax;
     qDebug()<<"xmax is "<<xmax;
-//    for(auto& unit:enemies){
-//        int index = (unit->getYPos())*(xmax+1) + unit->getXPos();
-//        tiles[index]->setValue(std::numeric_limits<float>::infinity());
-//        qDebug()<< "index: "<<index;
-//   }
+
 }
 
 void game::setStart(int x, int y){
