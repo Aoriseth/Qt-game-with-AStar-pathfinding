@@ -19,7 +19,5 @@ int main(int argc, char *argv[])
     w.setView(screen);
 
     w.show();
-
-
     return a.exec();
 }

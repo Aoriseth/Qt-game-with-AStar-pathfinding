@@ -17,6 +17,7 @@
 #include <QObject>
 #include <limits>
 #include "enemyunit.h"
+#include "healthmodel.h"
 
 
 
@@ -31,7 +32,7 @@ public:
     std::vector<std::unique_ptr<Tile>> tiles;
     std::vector<std::shared_ptr<EnemyUnit>> enemies;
     std::vector<std::shared_ptr<EnemyUnit>> defeatableEnemies;
-    std::vector<std::unique_ptr<Tile>> healthpacks;
+    std::vector<std::shared_ptr<HealthModel>> healthpacks;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);
     bool AStar(int x,int y);
@@ -59,7 +60,7 @@ public:
     std::shared_ptr<Tile> getTile(int x,int y);
     std::vector<std::shared_ptr<EnemyUnit>>::iterator getClosestEnemy();
     bool isAllDefeated();
-    std::vector<std::unique_ptr<Tile>>::iterator getClosestHealthpack();
+    std::shared_ptr<HealthModel> getClosestHealthpack();
     float moveCost = 0.0f;
 
     float getMoveCost() const;
@@ -74,7 +75,7 @@ public:
     float getHealth();
     Protagonist *getProtagonist();
     QGraphicsPixmapItem* worldView;
-    void removeHealthpack(std::unique_ptr<Tile> &healthpack);
+    void removeHealthpack(std::shared_ptr<HealthModel> healthpack);
     bool goForHealthpack();
     bool isDefeatable();
     bool goForEnemy();

@@ -9,7 +9,7 @@ class EnemyUnit: public QObject, public Enemy
     Q_OBJECT
 public:
     EnemyUnit(int xPosition, int yPosition, float strength);
-    void kill() { setDefeated(true);emit defeat();};
+    void kill() {setDefeated(true);emit defeat();};
 signals:
     void defeat();
 };
