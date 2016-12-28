@@ -30,6 +30,7 @@ public:
     std::vector<node> sptNodes;//shortest path tree
     std::vector<std::unique_ptr<Tile>> tiles;
     std::vector<std::shared_ptr<EnemyUnit>> enemies;
+    std::vector<std::shared_ptr<EnemyUnit>> defeatableEnemies;
     std::vector<std::unique_ptr<Tile>> healthpacks;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);

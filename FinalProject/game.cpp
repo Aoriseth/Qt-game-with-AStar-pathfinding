@@ -218,9 +218,9 @@ bool game::AStar(int x, int y)
 
 std::vector<std::shared_ptr<EnemyUnit>>::iterator game::getClosestEnemy(){
     float min_cost = 10000;
-    auto result = enemies.begin();
-    for(auto it = enemies.begin(); it != enemies.end(); ++it){
-        if(!((*it)->getDefeated())){  //only check those undefeated enemies.
+    auto result = defeatableEnemies.begin();
+    for(auto it = defeatableEnemies.begin(); it != defeatableEnemies.end(); ++it){
+        //if(!((*it)->getDefeated())){  //only check those undefeated enemies.
             setDestination((*it)->getXPos(),(*it)->getYPos());
             bool finished  = calcPath_AStar();
             if(finished){  //path found, enemy is reachable
@@ -233,7 +233,7 @@ std::vector<std::shared_ptr<EnemyUnit>>::iterator game::getClosestEnemy(){
                 setStart(protagonist->getXPos(),protagonist->getYPos());
                 setMoveCost(0.0f);
             }
-        }
+        //}
         screen->clearPath();
     }
     return result;
@@ -582,15 +582,21 @@ bool game::goForHealthpack()
 
 bool game::isDefeatable()
 {
+    defeatableEnemies.clear();
     for(auto& unit:enemies){
         if(!unit->getDefeated()){  //when a enemy is not defeated
             if(unit->getValue() < getHealth()){ //when a enemy has a strength smaller than pro's health
                 //qDebug()<<"At least one enemy is defeatable with strength: "<<(*it)->getValue();
-                return true;
+                defeatableEnemies.push_back(unit);
             }
         }
     } //qDebug()<<"NO enemy can be defeated!";
-    return false;
+    if(defeatableEnemies.size()>0){
+        return true;
+    }else{
+        return false;
+    }
+
 }
 
 bool game::goForEnemy()
