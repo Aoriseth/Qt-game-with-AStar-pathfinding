@@ -6,6 +6,7 @@
 #include <math.h>
 #include <QGraphicsView>
 #include <typeinfo>
+#include <QKeyEvent>
 
 class Scene: public QGraphicsScene
 {
@@ -13,10 +14,12 @@ class Scene: public QGraphicsScene
 public:
     explicit Scene(QObject *parent = 0);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 
 signals:
     void locationClicked(int x, int y);
+    void keyClicked(int x);
 };
 
 #endif // SCENE_H

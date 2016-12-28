@@ -14,6 +14,7 @@
 #include <chrono>
 #include <QElapsedTimer>
 
+
 class game;
 class view;
 
@@ -38,6 +39,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event);
+
 private:
     QString path;
     game* logic;
@@ -56,6 +58,7 @@ private slots:
     void OpenMap();
     void refreshWindow();
     void ItemSelected(int x, int y);
+    void movePro(int x);
     void updatePosition(int x, int y);
     void ReloadMap();
 };

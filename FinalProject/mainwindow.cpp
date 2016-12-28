@@ -119,6 +119,7 @@ void MainWindow::mapLoad()
     // Create a new scene
     refreshScene();
     connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
+    connect(screen->sceneView, SIGNAL(keyClicked(int)), this, SLOT(movePro(int)));
     connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
     connect(screen, SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
@@ -161,6 +162,28 @@ void MainWindow::ItemSelected(int x, int y)
     logic->xDest = x;
     logic->yDest = y;
     indicateDestination(x,y);
+}
+
+void MainWindow::movePro(int x)
+{
+    switch(x){
+    case 1:
+        logic->MoveProLeft();
+        break;
+    case 2:
+        logic->MoveProRight();
+        break;
+    case 3:
+        logic->MoveProUp();
+        break;
+    case 4:
+        logic->MoveProDown();
+        break;
+    default:
+        break;
+    }
+
+
 }
 
 void MainWindow::updatePosition(int x, int y)
