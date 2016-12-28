@@ -460,18 +460,63 @@ void game::setStart(int x, int y){
 
 void game::MoveProtagonist()
 {
-
     while(route.size()){
         auto tile = route.pop();
         protagonist->setXPos((tile->getXPos()));
         protagonist->setYPos((tile->getYPos()));
         float newEnergy = protagonist->getEnergy()-1 - getWeight()*(1-tile->getValue());
-        protagonist->setEnergy(newEnergy);
-        emit changeStats(protagonist->getEnergy(),protagonist->getHealth());
-
+        setEnergy(newEnergy);
     }
 }
 
+void game::checkAndSetPos(int xPos, int yPos){
+    int index = yPos*(xmax+1) + xPos;
+    if(!(std::isinf(tiles[index]->getValue()))){
+        protagonist->setPos(xPos,yPos);
+    }else{
+        qDebug()<<"The node is unpassable!";
+    }
+}
+void game::MoveProLeft(){
+    int xPos = protagonist->getXPos();
+    int yPos = protagonist->getYPos();
+    if(xPos > 0){
+        xPos--;
+        checkAndSetPos(xPos,yPos);
+    }else{
+        qDebug()<<"You have reached the boarder!";
+    }
+}
+void game::MoveProRight(){
+    int xPos = protagonist->getXPos();
+    int yPos = protagonist->getYPos();
+    if(xPos < xmax){
+        xPos++;
+        checkAndSetPos(xPos,yPos);
+    }else{
+        qDebug()<<"You have reached the boarder!";
+    }
+}
+void game::MoveProUp(){
+    int xPos = protagonist->getXPos();
+    int yPos = protagonist->getYPos();
+    if(yPos > 0){
+        yPos--;
+        checkAndSetPos(xPos,yPos);
+    }else{
+        qDebug()<<"You have reached the boarder!";
+    }
+}
+void game::MoveProDown(){
+    int xPos = protagonist->getXPos();
+    int yPos = protagonist->getYPos();
+    if(yPos < ymax){
+        yPos++;
+        checkAndSetPos(xPos,yPos);
+    }else{
+        qDebug()<<"You have reached the boarder!";
+    }
+}
 int game::getProtagonistX()
 {
     return protagonist->getXPos();

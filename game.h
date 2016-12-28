@@ -80,9 +80,14 @@ public:
     bool isDefeatable();
     bool goForEnemy();
 
+    void MoveProLeft();
+    void MoveProRight();
+    void MoveProUp();
+    void MoveProDown();
+
 private:
 
-
+    void checkAndSetPos(int xPos, int yPos);
     std::unique_ptr<Protagonist> protagonist;
 
     static bool node_compare(node a, node b)
