@@ -405,13 +405,18 @@ bool game::calcPath_AStar()
 void game::loadWorld(QString path, QGraphicsScene * scene){
     enemies.clear();
     healthpacks.clear();
+    QImage image(path);
+    worldView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    xmax = image.width()-1;
+    ymax = image.height()-1;
+
     tiles = myWorld->createWorld(path);
-    auto tempenemies = myWorld->getEnemies(5);
+    auto tempenemies = myWorld->getEnemies((xmax+ymax)/2);
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
     }
 
-    auto temphealthpacks = myWorld->getHealthPacks(5);
+    auto temphealthpacks = myWorld->getHealthPacks((xmax+ymax)/3);
     for(auto& pack:temphealthpacks){
         healthpacks.push_back(std::shared_ptr<HealthModel>(new HealthModel(pack->getXPos(), pack->getYPos(), pack->getValue())));
     }
@@ -419,13 +424,8 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
     setHealth(100);
     setEnergy(100);
 
-    xmax=0;ymax=0;
 
 
-    QImage image(path);
-    worldView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-    xmax = image.width()-1;
-    ymax = image.height()-1;
     worldView->setZValue(0);
     worldView->setScale(1);
     worldView->setPos(getProtagonistX(),getProtagonistY());

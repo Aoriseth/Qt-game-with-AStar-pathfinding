@@ -56,7 +56,6 @@ void MainWindow::executeStrategy()
     int weight = ui->lineEdit->text().toInt();
     logic->setWeight(weight);
     if(!mapLoaded){return;} // Don't play if there is no map loaded
-//    logic->strat();
     while(!logic->isAllDefeated()){ //check if all enemies are defeated
         while(!(logic->isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
             qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
