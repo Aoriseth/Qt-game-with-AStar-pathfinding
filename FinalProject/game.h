@@ -59,7 +59,6 @@ public:
     std::vector<std::shared_ptr<EnemyUnit>>::iterator getClosestEnemy();
     bool isAllDefeated();
     std::vector<std::unique_ptr<Tile>>::iterator getClosestHealthpack();
-    void killEnemy(std::shared_ptr<EnemyUnit> &destroyee);
     float moveCost = 0.0f;
 
     float getMoveCost() const;

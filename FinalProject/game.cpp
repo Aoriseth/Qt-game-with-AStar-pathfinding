@@ -625,7 +625,7 @@ bool game::goForEnemy()
         }
         // Move the protagonist based on the calculated path
         MoveProtagonist();
-        killEnemy(*it);
+        (*it)->kill();
         qDebug()<<"Succeed to kill an enemy!";
         qDebug()<<"New health is "<<getHealth();
         setStart(xDest,yDest);
@@ -634,10 +634,5 @@ bool game::goForEnemy()
         setStart(getProtagonistX(),getProtagonistY());
         return false;
     }
-}
-
-void game::killEnemy(std::shared_ptr<EnemyUnit> &destroyee)
-{
-    destroyee->kill(); //mark this enemy as defeated
 }
 
