@@ -252,18 +252,18 @@ bool game::isAllDefeated()
     return flag;
 }
 
-std::vector<std::unique_ptr<Tile>>::iterator game::getClosestHealthpack()
+std::shared_ptr<HealthModel> game::getClosestHealthpack()
 {
     float min_cost = 10000;
-    auto result = healthpacks.begin();
-    for(std::vector<std::unique_ptr<Tile>>::iterator it = healthpacks.begin(); it != healthpacks.end(); ++it){
-        setDestination((*it)->getXPos(),(*it)->getYPos());
+    auto result = healthpacks[0];
+    for(auto pack:healthpacks){
+        setDestination(pack->getXPos(),pack->getYPos());
         bool finished  = calcPath_AStar();
         if(finished){  //path found, health is reachable
             float my_cost = getMoveCost();
             if(my_cost<min_cost){
                 min_cost = my_cost;
-                result = it;
+                result = pack;
             }
             //clear memory created by finding the closet enemy
             setStart(protagonist->getXPos(),protagonist->getYPos());
@@ -303,51 +303,6 @@ void game::clearLists()
     availableNodes.clear();
     route.clear();
     myIndexes.clear();    
-}
-
-void game::strat()
-{
-
-    while(!isAllDefeated()){
-        std::vector<std::shared_ptr<Enemy>> list;
-        for(auto& unit:enemies){
-            if ((unit->getValue()<protagonist->getHealth())&&(!unit->getDefeated())){
-                list.push_back(std::move(unit));
-            }
-        }
-
-        std::shared_ptr<Enemy> target;
-        QStack<std::shared_ptr<Tile>> chosenRoute;
-        float lowest = std::numeric_limits<float>::infinity();
-        setWeight(1);
-
-        for(auto unit:list){
-            setDestination(unit->getXPos(),unit->getYPos());
-            if(calcPath_AStar()){
-                if(getMoveCost()<lowest){
-                    lowest = getMoveCost();
-                    chosenRoute = route;
-                    target=unit;
-                }
-                screen->clearPath();
-
-            }
-            else{
-                chosenRoute.clear();
-            }
-            setStart(protagonist->getXPos(),protagonist->getYPos());
-            setMoveCost(0.0f);
-        }
-        route = chosenRoute;
-        MoveProtagonist();
-        target->setDefeated(true);
-
-    }
-
-
-
-
-
 }
 
 int game::getWeight() const
@@ -449,13 +404,17 @@ bool game::calcPath_AStar()
 
 void game::loadWorld(QString path, QGraphicsScene * scene){
     enemies.clear();
+    healthpacks.clear();
     tiles = myWorld->createWorld(path);
     auto tempenemies = myWorld->getEnemies(5);
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
     }
 
-    healthpacks = myWorld->getHealthPacks(5);
+    auto temphealthpacks = myWorld->getHealthPacks(5);
+    for(auto& pack:temphealthpacks){
+        healthpacks.push_back(std::shared_ptr<HealthModel>(new HealthModel(pack->getXPos(), pack->getYPos(), pack->getValue())));
+    }
     protagonist = myWorld->getProtagonist();
     setHealth(100);
     setEnergy(100);
@@ -546,16 +505,17 @@ Protagonist* game::getProtagonist()
     return protagonist.get();
 }
 
-void game::removeHealthpack(std::unique_ptr<Tile>& healthpack)
+void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)
 {
+    healthpack->useHealthpack();
     int pos = find(healthpacks.begin(), healthpacks.end(), healthpack) - healthpacks.begin();
-    emit healthpackUsed(pos);
+    healthpacks.erase(healthpacks.begin()+pos);
 }
 
 bool game::goForHealthpack()
 {
-    std::vector<std::unique_ptr<Tile>>::iterator healthpack = getClosestHealthpack();
-    setDestination((*healthpack)->getXPos(),(*healthpack)->getYPos());
+    auto healthpack = getClosestHealthpack();
+    setDestination(healthpack->getXPos(),healthpack->getYPos());
     setWeight(weight);
     bool find = calcPath_AStar();
     if(find){
@@ -564,14 +524,14 @@ bool game::goForHealthpack()
             qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
             return false; //quit the loop
         }else{
-            float newHealth = getHealth()+5.0*(*healthpack)->getValue(); //multiply by a factor of 5
+            float newHealth = getHealth()+5.0*healthpack->getValue(); //multiply by a factor of 5
             if(newHealth > 100) newHealth = 100;
             setHealth(newHealth);
             setMoveCost(0.0f);
             // Move the protagonist based on the calculated path
             MoveProtagonist();
             qDebug()<<"Succeed to get a healthpack!";
-            removeHealthpack(*healthpack);
+            removeHealthpack(healthpack);
             qDebug()<<"New Health is "<<getHealth();
             setStart(xDest,yDest);
             return true;

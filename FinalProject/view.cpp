@@ -46,7 +46,7 @@ void view::setLogic(game *pass)
 
 void view::showEnemies()
 {
-    for(auto& enemy: logic->enemies){
+    for(auto enemy: logic->enemies){
         EnemyView* item = new EnemyView(QPixmap(":/resources/goomba.gif"),sceneView,enemy);
         item->addToScene();
         connect(enemy.get(), SIGNAL(defeat()), item, SLOT(updateVisual()));
@@ -57,11 +57,10 @@ void view::showEnemies()
 
 void view::showHealthpacks()
 {
-    for(auto& healthpack: logic->healthpacks){
-        int x = healthpack->getXPos();
-        int y = healthpack->getYPos();
-        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap(":/resources/Supermushroom.png"));
-        addItemToScene(item, x, y);
+    for(auto healthpack: logic->healthpacks){
+        HealthView* item = new HealthView(QPixmap(":/resources/Supermushroom.png"),sceneView,healthpack);
+        item->addToScene();
+        connect(healthpack.get(), SIGNAL(used()), item, SLOT(healthUsed()));
         healthpackItems.push_back(item);
     }
 }
@@ -91,5 +90,5 @@ void view::updateEnemy(int pos){
 }
 
 void view::removeHealthpack(int pos){
-    sceneView->removeItem(healthpackItems[pos]);
+//    sceneView->removeItem(healthpackItems[pos]);
 }
