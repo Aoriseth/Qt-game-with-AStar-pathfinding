@@ -4,6 +4,7 @@ game::game()
 {
     ymax = 0;
     xmax= 0;
+    setDestination(0,0);
 }
 
 bool game::breadthFirst(int x,int y){
@@ -301,7 +302,7 @@ void game::clearLists()
     currentNodes.clear();
     availableNodes.clear();
     route.clear();
-    myIndexes.clear();
+    myIndexes.clear();    
 }
 
 void game::strat()
@@ -447,6 +448,7 @@ bool game::calcPath_AStar()
 }
 
 void game::loadWorld(QString path, QGraphicsScene * scene){
+    enemies.clear();
     tiles = myWorld->createWorld(path);
     auto tempenemies = myWorld->getEnemies(5);
     for(auto& unit:tempenemies){
@@ -479,8 +481,9 @@ void game::loadWorld(QString path, QGraphicsScene * scene){
 }
 
 void game::setStart(int x, int y){
+    if(protagonist){
     protagonist->setXPos(x);
-    protagonist->setYPos(y);
+    protagonist->setYPos(y);}
 
     clearLists();
     auto pos1 = std::make_shared<Tile>(std::move(*(protagonist)));
