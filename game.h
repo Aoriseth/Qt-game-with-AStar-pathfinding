@@ -47,7 +47,7 @@ public:
     bool calcPath_BestFirst();
     bool calcPath_AStar();
     QStack<std::shared_ptr<Tile>> route;
-    void loadWorld(QString path,QGraphicsScene * scene);
+    void loadWorld(QString path);
     World *myWorld = new World();
     void setStart(int x, int y);
     int xDest;
@@ -86,9 +86,11 @@ public:
     void MoveProDown();
 
 private:
-
-    void checkAndSetPos(int xPos, int yPos);
     std::unique_ptr<Protagonist> protagonist;
+    void checkAndSetPos(int xPos, int yPos);    
+    void breadth_addNode(int index, std::shared_ptr<node> pre);
+    bool best_addNode(int x, int y, int index, std::shared_ptr<node> pre);
+    void aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis);
 
     static bool node_compare(node a, node b)
     {

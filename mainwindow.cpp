@@ -126,7 +126,7 @@ void MainWindow::mapLoad()
     //loads world into scene and cleanup data from the previous world
     logic->clearLists();
     screen->clearLists();
-    logic->loadWorld(path,screen->sceneView);
+    logic->loadWorld(path);
 
     //fit scene into view
     ui->graphicsView->fitInView(logic->worldView,Qt::KeepAspectRatio);
