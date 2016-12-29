@@ -32,7 +32,7 @@ public:
     Ui::MainWindow *ui;
 
     void setLogic(std::shared_ptr<game> pass);
-    void setView(view* pass);
+    void setView(std::shared_ptr<view> pass);
 
 
     void indicateDestination(int x, int y);
@@ -43,7 +43,7 @@ protected:
 private:
     QString path;
     std::shared_ptr<game> logic;
-    view* screen;
+    std::shared_ptr<view> screen;
     void refreshScene();
 
     bool mapLoaded=false;

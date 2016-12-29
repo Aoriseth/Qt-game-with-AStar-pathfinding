@@ -231,7 +231,7 @@ void game::setWeight(int value)
     weight = value;
 }
 
-void game::setView(view* test)
+void game::setView(std::shared_ptr<view> test)
 {
     screen = test;
 }

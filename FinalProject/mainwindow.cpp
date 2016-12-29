@@ -20,10 +20,10 @@ void MainWindow::gotoDestination()
     if(!mapLoaded){return;} // Don't play if there is no map loaded
     auto finished = false; // Set variable for checking if an algorithm successfully finished
     int weight = ui->lineEdit->text().toInt(); // read weight from textbox
-//    qDebug() << "weight is " << weight;
-    finished = logic->calcPath_AStar();
-    // Check the chosen algorithm
+    logic->setWeight(weight);
 
+    // Check the chosen algorithm
+    finished = logic->calcPath_AStar();
 
     // Move the protagonist based on the calculated path
     if(finished){
@@ -82,7 +82,7 @@ void MainWindow::setLogic(std::shared_ptr<game> test)
     logic = test;
 }
 
-void MainWindow::setView(view *pass)
+void MainWindow::setView(std::shared_ptr<view> pass)
 {
     screen = pass;
 }
@@ -106,7 +106,7 @@ void MainWindow::mapLoad()
     connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
     connect(screen->sceneView, SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
     connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
-    connect(screen, SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
+    connect(screen.get(), SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
     //loads world into scene and cleanup data from the previous world
     logic->clearLists();
@@ -166,7 +166,7 @@ void MainWindow::ReloadMap()
 
 void MainWindow::setWeight(int x)
 {
-    switch (ui->comboBox->currentIndex()) {
+    switch (x) {
     case 0:
         ui->lineEdit->setText(QString::number(1));
         break;
