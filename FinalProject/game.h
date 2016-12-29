@@ -35,7 +35,7 @@ public:
     std::vector<std::shared_ptr<HealthModel>> healthpacks;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);
-    bool AStar(int x,int y);
+    bool Dijkstra(int x,int y);
     void clearLists();
     void strat();
 
@@ -47,7 +47,7 @@ public:
     QSet<int> myIndexes;
     bool calcPath_BreadthFirst();
     bool calcPath_BestFirst();
-    bool calcPath_AStar();
+    bool calcPath_Dijkstra();
     QStack<std::shared_ptr<Tile>> route;
     void loadWorld(QString path);
     std::shared_ptr<World> myWorld = std::make_shared<World>();
@@ -94,7 +94,7 @@ private:
     void checkAndSetPos(int xPos, int yPos);    
     void breadth_addNode(int index, std::shared_ptr<node> pre);
     bool best_addNode(int x, int y, int index, std::shared_ptr<node> pre);
-    void aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis);
+    void Dijkstra_addNode(int index, std::shared_ptr<node> pre, double old_dis);
 
     static bool node_compare(node a, node b)
     {
