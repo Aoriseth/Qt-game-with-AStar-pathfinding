@@ -191,7 +191,7 @@ void MainWindow::updatePosition(int x, int y)
     screen->setProtagonistPosition(x,y);
     ui->graphicsView->viewport()->repaint();
     auto speed = ui->horizontalSlider->value();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10+speed));
+    std::this_thread::sleep_for(std::chrono::milliseconds(speed));
 }
 
 void MainWindow::ReloadMap()
