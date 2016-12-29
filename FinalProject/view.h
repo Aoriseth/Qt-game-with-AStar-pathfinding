@@ -18,7 +18,7 @@ public:
     std::shared_ptr<Scene> sceneView;
     std::shared_ptr<game> logic;
     std::shared_ptr<QGraphicsItem> destView;
-    std::vector<QGraphicsItem*> pathView;
+    std::vector<std::shared_ptr<QGraphicsItem>> pathView;
     void addPathStep(int x,int y);
     void clearPath();
     void setLogic(std::shared_ptr<game> pass);
