@@ -9,7 +9,7 @@ view::view()
 
 void view::addPathStep(int x, int y)
 {
-   auto step = sceneView->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255)));
+   auto step = std::shared_ptr<QGraphicsItem>(sceneView->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(255, 0, 0,255))));
    step->setZValue(1);
    step->setOpacity(0.5);
    step->setScale(0.00390625);
@@ -21,9 +21,6 @@ void view::addPathStep(int x, int y)
 
 void view::clearPath()
 {
-    for(QGraphicsItem* step: pathView){
-        delete step;
-    }
     pathView.clear();
     emit updateViewport();
 }
