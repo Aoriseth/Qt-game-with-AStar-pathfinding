@@ -18,10 +18,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     auto point = mouseEvent->scenePos();
     int x = floor(point.x());
     int y = floor(point.y());
-//    qDebug()<<"selected x: " << x << " y: " << y;
     emit locationClicked(x,y);
-    auto item = itemAt(mouseEvent->scenePos(),QTransform());
-    qDebug()<<item;
 
 
 }
