@@ -12,7 +12,6 @@ class HealthModel:public QObject, public Tile
     Q_OBJECT
 public:
     HealthModel(int xPosition, int yPosition, float tileWeight);
-    void setHealthView(HealthView *value);
     void useHealthpack();
 
 signals:
