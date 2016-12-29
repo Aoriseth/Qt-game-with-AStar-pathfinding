@@ -39,6 +39,8 @@ public:
     void clearLists();
     void strat();
 
+    bool goOn = true;
+
     int weight = 1;
     int ymax;
     int xmax;

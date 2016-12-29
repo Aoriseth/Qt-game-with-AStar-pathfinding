@@ -14,6 +14,7 @@
 #include <chrono>
 #include <QElapsedTimer>
 #include "scene.h"
+#include <QtConcurrent/QtConcurrent>
 
 
 class game;
@@ -57,6 +58,7 @@ private slots:
     void updatePosition(int x, int y);
     void ReloadMap();
     void setWeight(int x);
+    void StopCalc();
 };
 
 #endif // MAINWINDOW_H
