@@ -56,11 +56,11 @@ void view::showHealthpacks()
 
 void view::showProtagonist(){
     QImage image(":/resources/Pixel-mario.png");
-    protagonistView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    protagonistView = std::make_shared<QGraphicsPixmapItem>(QPixmap::fromImage(image));
     protagonistView->setZValue(3);
     protagonistView->setScale(0.00390625);
     protagonistView->setPos(logic->getProtagonistX(),logic->getProtagonistY());
-    sceneView->addItem(protagonistView);
+    sceneView->addItem(protagonistView.get());
 }
 
 void view::setProtagonistPosition(int x, int y)

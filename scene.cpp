@@ -3,6 +3,7 @@
 Scene::Scene(QObject *parent):
     QGraphicsScene(parent)
 {
+
     this->setBackgroundBrush(Qt::black);
 }
 

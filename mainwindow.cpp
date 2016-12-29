@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    screen->sceneView.reset();
     delete ui;
 }
 
@@ -128,7 +127,7 @@ void MainWindow::mapLoad()
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
 
-    screen->destView = screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255)));
+    screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
     screen->destView->setScale(0.00390625);
     screen->destView->setOpacity(0.5);
 }
