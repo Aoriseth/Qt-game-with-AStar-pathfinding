@@ -37,6 +37,8 @@ public:
 
 
 
+    void connectAll();
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
