@@ -34,23 +34,33 @@
        <widget class="QComboBox" name="comboBox">
         <property name="maximumSize">
          <size>
-          <width>300</width>
+          <width>333</width>
           <height>16777215</height>
          </size>
         </property>
         <item>
          <property name="text">
-          <string>Fair cost</string>
+          <string>A* Fair cost</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>High cost - near Dijkstra</string>
+          <string>A* High cost</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>No cost - near Best-First</string>
+          <string>A* No cost</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Breadth-First - only Goto</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Best-First - only Goto</string>
          </property>
         </item>
        </widget>
