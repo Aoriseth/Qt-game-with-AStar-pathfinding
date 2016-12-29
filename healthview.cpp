@@ -1,10 +1,5 @@
 #include "healthview.h"
 
-HealthView::HealthView()
-{
-
-}
-
 HealthView::HealthView(QPixmap pm, std::shared_ptr<Scene>vPass, std::shared_ptr<HealthModel> mPass):
     QGraphicsPixmapItem(pm)
 {
@@ -19,12 +14,12 @@ void HealthView::addToScene(){
     this->setFlag(QGraphicsItem::ItemIsSelectable, true);
     view->addItem(this);
 
-    QGraphicsTextItem * io = new QGraphicsTextItem;
-    io->setScale(0.00390625*2);
-    io->setZValue(2);
-    io->setPos(mHealth->getXPos(),mHealth->getYPos());
-    io->setPlainText(QString::number(mHealth->getValue()));
-    view->addItem(io);
+    text = std::make_shared<QGraphicsTextItem>();
+    text->setScale(0.00390625*2);
+    text->setZValue(2);
+    text->setPos(mHealth->getXPos(),mHealth->getYPos());
+    text->setPlainText(QString::number(mHealth->getValue()));
+    view->addItem(text.get());
 }
 
 void HealthView::healthUsed()

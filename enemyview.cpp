@@ -1,10 +1,5 @@
 #include "enemyview.h"
 
-EnemyView::EnemyView()
-{
-
-}
-
 EnemyView::EnemyView(QPixmap pm, std::shared_ptr<Scene> vPass, std::shared_ptr<EnemyUnit> mPass):
     QGraphicsPixmapItem(pm)
 {

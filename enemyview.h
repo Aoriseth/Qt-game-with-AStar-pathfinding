@@ -13,7 +13,6 @@ class EnemyView: public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    EnemyView();
     EnemyView(QPixmap pm, std::shared_ptr<Scene> vPass, std::shared_ptr<EnemyUnit> mPass);
     void addToScene();
 
