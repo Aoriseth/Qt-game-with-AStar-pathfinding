@@ -231,6 +231,8 @@ void game::clearLists()
 void game::strat()
 {
     while(!isAllDefeated()){ //check if all enemies are defeated
+        QCoreApplication::processEvents();
+        if(!goOn){return;}
         while((!isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
             qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
             if(healthpacks.size()==0){
@@ -347,7 +349,7 @@ bool game::calcPath_AStar()
             //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
 
-        qDebug() << "The run_strategy operation took" << timer.elapsed() << "milliseconds";
+//        qDebug() << "The run_strategy operation took" << timer.elapsed() << "milliseconds";
         return true;
     }else{
         qDebug()<< "AStar:Path is not found in the end!!!!!";

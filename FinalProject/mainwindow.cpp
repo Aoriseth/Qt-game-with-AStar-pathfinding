@@ -27,7 +27,7 @@ void MainWindow::gotoDestination()
 
 void MainWindow::executeStrategy()
 {
-
+    logic->goOn = true;
     int weight = ui->lineEdit->text().toInt();
     logic->setWeight(weight);
     if(!mapLoaded){return;} // Don't play if there is no map loaded
@@ -101,6 +101,7 @@ void MainWindow::mapLoad()
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
 
+    screen->destView.reset();
     screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
     screen->destView->setScale(0.00390625);
     screen->destView->setOpacity(0.5);
@@ -129,6 +130,7 @@ void MainWindow::updatePosition(int x, int y)
     ui->graphicsView->viewport()->repaint();
     auto speed = ui->horizontalSlider->value();
     std::this_thread::sleep_for(std::chrono::milliseconds(99-speed));
+
 }
 
 void MainWindow::ReloadMap()
@@ -154,6 +156,11 @@ void MainWindow::setWeight(int x)
         ui->lineEdit->setText(QString::number(5));
         break;
     }
+}
+
+void MainWindow::StopCalc()
+{
+    logic->goOn = false;
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
