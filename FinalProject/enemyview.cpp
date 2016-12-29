@@ -5,7 +5,7 @@ EnemyView::EnemyView()
 
 }
 
-EnemyView::EnemyView(QPixmap pm, Scene *vPass, std::shared_ptr<EnemyUnit> mPass):
+EnemyView::EnemyView(QPixmap pm, Scene* vPass, std::shared_ptr<EnemyUnit> mPass):
     QGraphicsPixmapItem(pm)
 {
     view = vPass;

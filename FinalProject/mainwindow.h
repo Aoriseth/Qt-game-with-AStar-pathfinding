@@ -31,7 +31,7 @@ public:
     ~MainWindow();
     Ui::MainWindow *ui;
 
-    void setLogic(game* pass);
+    void setLogic(std::shared_ptr<game> pass);
     void setView(view* pass);
 
 
@@ -42,7 +42,7 @@ protected:
 
 private:
     QString path;
-    game* logic;
+    std::shared_ptr<game> logic;
     view* screen;
     void refreshScene();
 

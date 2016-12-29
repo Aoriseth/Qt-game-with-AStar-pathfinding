@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    game* logic = new game();
+    std::shared_ptr<game> logic = std::make_shared<game>();
     view* screen = new view();
 
     logic->clearLists();
