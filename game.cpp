@@ -6,6 +6,7 @@ game::game()
     xmax= 0;
     setDestination(0,0);
 }
+
 void game::breadth_addNode(int index, std::shared_ptr<node> pre){
     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
@@ -16,6 +17,7 @@ void game::breadth_addNode(int index, std::shared_ptr<node> pre){
         }
     }
 }
+
 bool game::breadthFirst(int x,int y){
     QListIterator<node> i(currentNodes);
     while(i.hasNext()) {
@@ -46,6 +48,7 @@ bool game::breadthFirst(int x,int y){
     }
     return false;
 }
+
 bool game::best_addNode(int x, int y, int index, std::shared_ptr<node> pre){
     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
         if(!(std::isinf(tiles[index]->getValue()))){
@@ -61,6 +64,7 @@ bool game::best_addNode(int x, int y, int index, std::shared_ptr<node> pre){
     }
     return false;
 }
+
 bool game::bestFirst(int x, int y)
 {
     do{
@@ -92,6 +96,7 @@ bool game::bestFirst(int x, int y)
 
     return false;
 }
+
 void game::aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis){
     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
@@ -104,6 +109,7 @@ void game::aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis){
         myIndexes.insert(index);
     }
 }
+
 bool game::AStar(int x, int y)
 {
 
@@ -135,6 +141,7 @@ bool game::AStar(int x, int y)
     }while(availableNodes.size()!=0);
     return false;//Not found if code goes outside of loop;
 }
+
 std::shared_ptr<EnemyUnit> game::getClosestEnemy(){
     float min_cost = std::numeric_limits<float>::infinity();
     auto result = defeatableEnemies[0];
@@ -350,8 +357,6 @@ bool game::calcPath_AStar()
 
 }
 
-
-
 void game::loadWorld(QString path){
     //clear enemy and healthpack vectors
     clearLists();
@@ -424,6 +429,7 @@ void game::checkAndSetPos(int xPos, int yPos){
         protagonist->setPos(xPos,yPos);
     }
 }
+
 void game::MoveProLeft(){
     int xPos = protagonist->getXPos();
     int yPos = protagonist->getYPos();
@@ -432,6 +438,7 @@ void game::MoveProLeft(){
         checkAndSetPos(xPos,yPos);
     }
 }
+
 void game::MoveProRight(){
     int xPos = protagonist->getXPos();
     int yPos = protagonist->getYPos();
@@ -440,6 +447,7 @@ void game::MoveProRight(){
         checkAndSetPos(xPos,yPos);
     }
 }
+
 void game::MoveProUp(){
     int xPos = protagonist->getXPos();
     int yPos = protagonist->getYPos();
@@ -448,6 +456,7 @@ void game::MoveProUp(){
         checkAndSetPos(xPos,yPos);
     }
 }
+
 void game::MoveProDown(){
     int xPos = protagonist->getXPos();
     int yPos = protagonist->getYPos();
@@ -526,16 +535,16 @@ bool game::goForHealthpack()
             qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
             return false; //quit the loop
         }else{
+            MoveProtagonist();
             float newHealth = getHealth()+5.0*healthpack->getValue(); //multiply by a factor of 5
             if(newHealth > 100) newHealth = 100;
             setHealth(newHealth);
             setMoveCost(0.0f);
             // Move the protagonist based on the calculated path
-            MoveProtagonist();
+
             qDebug()<<"Succeed to get a healthpack!";
             removeHealthpack(healthpack);
             qDebug()<<"New Health is "<<getHealth();
-            setStart(xDest,yDest);
             return true;
         }
 
@@ -589,17 +598,19 @@ bool game::goForEnemy()
             setStart(getProtagonistX(),getProtagonistY());
             return false; //quit the loop
         }else{
+            MoveProtagonist();
+            unit->kill();
             float newHealth = getHealth()-unit->getValue();
             setHealth(newHealth);
             setEnergy(100);
             setMoveCost(0.0f);
+            return true;
         }
         // Move the protagonist based on the calculated path
-        MoveProtagonist();
-        unit->kill();
+
+
         qDebug()<<"Succeed to kill an enemy!";
         qDebug()<<"New health is "<<getHealth();
-        setStart(xDest,yDest);
         return true;
     }else{  //Path not found
         setStart(getProtagonistX(),getProtagonistY());

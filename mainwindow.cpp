@@ -122,10 +122,9 @@ void MainWindow::ItemSelected(int x, int y)
     logic->setDestination(x,y);
 }
 
-
-
 void MainWindow::updatePosition(int x, int y)
 {
+    // updates the position of the protagonist with a chosen speed
     screen->setProtagonistPosition(x,y);
     ui->graphicsView->viewport()->repaint();
     auto speed = ui->horizontalSlider->value();
