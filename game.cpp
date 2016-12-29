@@ -541,10 +541,7 @@ bool game::goForHealthpack()
             setHealth(newHealth);
             setMoveCost(0.0f);
             // Move the protagonist based on the calculated path
-
-            qDebug()<<"Succeed to get a healthpack!";
             removeHealthpack(healthpack);
-            qDebug()<<"New Health is "<<getHealth();
             return true;
         }
 
@@ -598,19 +595,15 @@ bool game::goForEnemy()
             setStart(getProtagonistX(),getProtagonistY());
             return false; //quit the loop
         }else{
+            // Move the protagonist based on the calculated path
             MoveProtagonist();
             unit->kill();
             float newHealth = getHealth()-unit->getValue();
             setHealth(newHealth);
             setEnergy(100);
             setMoveCost(0.0f);
-            return true;
         }
-        // Move the protagonist based on the calculated path
 
-
-        qDebug()<<"Succeed to kill an enemy!";
-        qDebug()<<"New health is "<<getHealth();
         return true;
     }else{  //Path not found
         setStart(getProtagonistX(),getProtagonistY());
