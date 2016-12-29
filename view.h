@@ -27,8 +27,11 @@ public:
     void showProtagonist();
     void setProtagonistPosition(int x, int y);
     void clearLists();
+    std::shared_ptr<QGraphicsPixmapItem> getWorldView() const;
+    void displayWorld(QImage image);
 
 private:
+    std::shared_ptr<QGraphicsPixmapItem> worldView;
     std::shared_ptr<QGraphicsPixmapItem> protagonistView;
     std::vector<EnemyView*> enemyItems;
     std::vector<QGraphicsPixmapItem*> healthpackItems;
