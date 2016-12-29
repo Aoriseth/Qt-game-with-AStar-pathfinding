@@ -48,7 +48,7 @@ public:
     bool calcPath_AStar();
     QStack<std::shared_ptr<Tile>> route;
     void loadWorld(QString path);
-    World *myWorld = new World();
+    std::shared_ptr<World> myWorld = std::make_shared<World>();
     void setStart(int x, int y);
     int xDest;
     int yDest;
