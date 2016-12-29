@@ -13,6 +13,7 @@
 #include "view.h"
 #include <chrono>
 #include <QElapsedTimer>
+#include "scene.h"
 
 
 class game;

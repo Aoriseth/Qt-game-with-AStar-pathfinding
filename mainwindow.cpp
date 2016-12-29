@@ -68,8 +68,8 @@ void MainWindow::executeStrategy()
 }
 
 void MainWindow::refreshScene(){
-    screen->sceneView = new Scene(this);
-    ui->graphicsView->setScene(screen->sceneView);
+    screen->sceneView = std::make_shared<Scene>(this);
+    ui->graphicsView->setScene(screen->sceneView.get());
 }
 
 void MainWindow::indicateDestination(int x, int y){
@@ -103,8 +103,8 @@ void MainWindow::mapLoad()
     mapLoaded = true;
     // Create a new scene
     refreshScene();
-    connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
-    connect(screen->sceneView, SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
+    connect(screen->sceneView.get(), SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
+    connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
     connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
     connect(screen.get(), SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
