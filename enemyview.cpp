@@ -15,15 +15,16 @@ void EnemyView::addToScene(){
     this->setFlag(QGraphicsItem::ItemIsSelectable, true);
     view->addItem(this);
 
-    QGraphicsTextItem * io = new QGraphicsTextItem;
-    io->setScale(0.00390625*2);
-    io->setZValue(2);
-    io->setPos(mEnemy->getXPos(),mEnemy->getYPos());
-    io->setPlainText(QString::number(mEnemy->getValue()));
-    view->addItem(io);
+    text = std::make_shared<QGraphicsTextItem>();
+    text->setScale(0.00390625*2);
+    text->setZValue(2);
+    text->setPos(mEnemy->getXPos(),mEnemy->getYPos());
+    text->setPlainText(QString::number(mEnemy->getValue()));
+    view->addItem(text.get());
 }
 
 void EnemyView::updateVisual()
 {
+    text.reset();
     this->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
 }
