@@ -12,7 +12,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     auto point = mouseEvent->scenePos();
     int x = floor(point.x());
     int y = floor(point.y());
-    qDebug()<<"selected x: " << x << " y: " << y;
+//    qDebug()<<"selected x: " << x << " y: " << y;
     emit locationClicked(x,y);
     auto item = itemAt(mouseEvent->scenePos(),QTransform());
     qDebug()<<item;
@@ -26,22 +26,22 @@ void Scene::keyPressEvent(QKeyEvent *event)
      if(event->key() == Qt::Key_Left)
         {
             emit keyClicked(1);
-            qDebug() << "Move Left";
+//            qDebug() << "Move Left";
         }
      if(event->key() == Qt::Key_Right)
         {
             emit keyClicked(2);
-            qDebug() << "Move Right";
+//            qDebug() << "Move Right";
         }
      if(event->key() == Qt::Key_Up)
         {
             emit keyClicked(3);
-            qDebug() << "Move Up";
+//            qDebug() << "Move Up";
         }
      if(event->key() == Qt::Key_Down)
         {
             emit keyClicked(4);
-            qDebug() << "Move Down";
+//            qDebug() << "Move Down";
         }
 
  }

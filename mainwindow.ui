@@ -75,6 +75,9 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="text">
+         <string>0.1</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -129,6 +132,9 @@
       </item>
       <item>
        <widget class="QSlider" name="horizontalSlider">
+        <property name="value">
+         <number>10</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
