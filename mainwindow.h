@@ -36,9 +36,6 @@ public:
     void setView(std::shared_ptr<view> pass);
 
 
-    void indicateDestination(int x, int y);
-
-
 
 protected:
     void resizeEvent(QResizeEvent *event);

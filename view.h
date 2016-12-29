@@ -37,6 +37,8 @@ private:
     std::vector<QGraphicsPixmapItem*> healthpackItems;
 signals:
     void updateViewport();
+protected slots:
+    void indicateDestination(int x, int y);
 };
 
 #endif // VIEW_H

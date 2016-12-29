@@ -242,7 +242,7 @@ void game::strat()
         }
 
     }
-
+    setDestination(0,0);
 
 }
 
@@ -272,6 +272,7 @@ std::shared_ptr<Tile> game::getTile(int x, int y)
 void game::setDestination(int x, int y){
     xDest = x;
     yDest = y;
+    emit destinationChanged(x,y);
 
 }
 
