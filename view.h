@@ -37,7 +37,6 @@ signals:
     void updateViewport();
 private slots:
     void updateEnemy(int pos);
-    void removeHealthpack(int pos);
 };
 
 #endif // VIEW_H

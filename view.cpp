@@ -41,7 +41,6 @@ void view::setLogic(game *pass)
 {
     logic = pass;
     connect(logic, SIGNAL(enemyKilled(int)), this, SLOT(updateEnemy(int)));
-    connect(logic, SIGNAL(healthpackUsed(int)), this, SLOT(removeHealthpack(int)));
 }
 
 void view::showEnemies()
@@ -87,8 +86,4 @@ void view::clearLists()
 
 void view::updateEnemy(int pos){
 //    enemyItems[pos]->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
-}
-
-void view::removeHealthpack(int pos){
-//    sceneView->removeItem(healthpackItems[pos]);
 }
