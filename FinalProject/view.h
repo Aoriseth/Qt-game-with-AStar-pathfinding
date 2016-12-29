@@ -25,8 +25,8 @@ public:
     void showEnemies();
     void showHealthpacks();
     void showProtagonist();
-    void setProtagonistPosition(int x, int y);
     void clearLists();
+    void setProtagonistPosition(int x, int y);
     std::shared_ptr<QGraphicsPixmapItem> getWorldView() const;
     void displayWorld(QImage image);
 
@@ -39,6 +39,7 @@ signals:
     void updateViewport();
 protected slots:
     void indicateDestination(int x, int y);
+
 };
 
 #endif // VIEW_H
