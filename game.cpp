@@ -135,17 +135,17 @@ bool game::AStar(int x, int y)
     return false;//Not found if code goes outside of loop;
 }
 
-std::vector<std::shared_ptr<EnemyUnit>>::iterator game::getClosestEnemy(){
-    float min_cost = 10000;
-    auto result = defeatableEnemies.begin();
-    for(auto it = defeatableEnemies.begin(); it != defeatableEnemies.end(); ++it){
-        setDestination((*it)->getXPos(),(*it)->getYPos());
+std::shared_ptr<EnemyUnit> game::getClosestEnemy(){
+    float min_cost = std::numeric_limits<float>::infinity();
+    auto result = defeatableEnemies[0];
+    for(auto unit:defeatableEnemies){
+        setDestination(unit->getXPos(),unit->getYPos());
         bool finished  = calcPath_AStar();
         if(finished){  //path found, enemy is reachable
             float my_cost = getMoveCost();
             if(my_cost<min_cost){
                 min_cost = my_cost;
-                result = it;
+                result = unit;
             }
             //clear memory created by finding the closet enemy
             setStart(protagonist->getXPos(),protagonist->getYPos());
@@ -522,11 +522,10 @@ bool game::isDefeatable()
 
 bool game::goForEnemy()
 {
-    auto it = getClosestEnemy();  //calculate the path and get the closest enemy
-    Enemy closestEnemy = **it;
+    auto unit = getClosestEnemy();  //calculate the path and get the closest enemy
     //After the check that there is at least one defeatable enemy, which reduce the calls of getClosestEnemy();
     //the closestEnemy could still be undefeatable
-    while(closestEnemy.getValue()>getHealth()){
+    while(unit->getValue()>getHealth()){
         qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
         if(healthpacks.size()==0){
             qDebug()<<"Quit: NO healthpack left!";
@@ -536,7 +535,7 @@ bool game::goForEnemy()
             return false; //quit the loop
         }
     }
-    setDestination(closestEnemy.getXPos(),closestEnemy.getYPos());
+    setDestination(unit->getXPos(),unit->getYPos());
     bool finished = false;
     finished = calcPath_AStar();
     if(finished){  //Path found
@@ -546,14 +545,14 @@ bool game::goForEnemy()
             setStart(getProtagonistX(),getProtagonistY());
             return false; //quit the loop
         }else{
-            float newHealth = getHealth()-closestEnemy.getValue();
+            float newHealth = getHealth()-unit->getValue();
             setHealth(newHealth);
             setEnergy(100);
             setMoveCost(0.0f);
         }
         // Move the protagonist based on the calculated path
         MoveProtagonist();
-        (*it)->kill();
+        unit->kill();
         qDebug()<<"Succeed to kill an enemy!";
         qDebug()<<"New health is "<<getHealth();
         setStart(xDest,yDest);
