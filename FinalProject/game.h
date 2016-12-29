@@ -102,6 +102,9 @@ signals:
     void enemyKilled(int pos);
     void healthpackUsed(int pos);
     void changeStats(float energy, float health);
+
+protected slots:
+    void movePro(int x);
 };
 
 #endif // GAME_H

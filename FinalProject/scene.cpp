@@ -46,6 +46,3 @@ void Scene::keyPressEvent(QKeyEvent *event)
 
  }
 
-void locationClicked(int x, int y){
-
-}

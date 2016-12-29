@@ -381,8 +381,6 @@ void game::checkAndSetPos(int xPos, int yPos){
     int index = yPos*(xmax+1) + xPos;
     if(!(std::isinf(tiles[index]->getValue()))){
         protagonist->setPos(xPos,yPos);
-    }else{
-        qDebug()<<"The node is unpassable!";
     }
 }
 void game::MoveProLeft(){
@@ -391,8 +389,6 @@ void game::MoveProLeft(){
     if(xPos > 0){
         xPos--;
         checkAndSetPos(xPos,yPos);
-    }else{
-        qDebug()<<"You have reached the boarder!";
     }
 }
 void game::MoveProRight(){
@@ -401,8 +397,6 @@ void game::MoveProRight(){
     if(xPos < xmax){
         xPos++;
         checkAndSetPos(xPos,yPos);
-    }else{
-        qDebug()<<"You have reached the boarder!";
     }
 }
 void game::MoveProUp(){
@@ -411,8 +405,6 @@ void game::MoveProUp(){
     if(yPos > 0){
         yPos--;
         checkAndSetPos(xPos,yPos);
-    }else{
-        qDebug()<<"You have reached the boarder!";
     }
 }
 void game::MoveProDown(){
@@ -421,8 +413,6 @@ void game::MoveProDown(){
     if(yPos < ymax){
         yPos++;
         checkAndSetPos(xPos,yPos);
-    }else{
-        qDebug()<<"You have reached the boarder!";
     }
 }
 int game::getProtagonistX()
@@ -563,3 +553,22 @@ bool game::goForEnemy()
     }
 }
 
+void game::movePro(int x)
+{
+    switch(x){
+    case 1:
+        MoveProLeft();
+        break;
+    case 2:
+        MoveProRight();
+        break;
+    case 3:
+        MoveProUp();
+        break;
+    case 4:
+        MoveProDown();
+        break;
+    default:
+        break;
+    }
+}
