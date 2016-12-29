@@ -22,7 +22,7 @@ void MainWindow::gotoDestination()
     logic->setWeight(weight);
 
     // calculate path and move protagonist
-    logic->go();
+    logic->go(ui->comboBox->currentIndex());
 }
 
 void MainWindow::executeStrategy()

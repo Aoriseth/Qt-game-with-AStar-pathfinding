@@ -512,10 +512,22 @@ void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)
     healthpacks.erase(healthpacks.begin()+pos);
 }
 
-void game::go()
+void game::go(int i)
 {
+    auto finished = false;
+    switch (i) {
+    case 3:
+        finished = calcPath_BreadthFirst();
+        break;
+    case 4:
+        finished = calcPath_BestFirst();
+        break;
+    default:
+        finished = calcPath_Dijkstra();
+        break;
+    }
     // Calculate the path
-    auto finished = calcPath_Dijkstra();
+
     // Move the protagonist based on the calculated path
     if(finished){
             MoveProtagonist();
@@ -533,7 +545,6 @@ bool game::goForHealthpack()
     if(find){
         float requiredEnergy = getMoveCost();
         if(requiredEnergy>getEnergy()){
-            qDebug()<<"Game failed! Not enough energy to closest healthpack!Energy required: "<<requiredEnergy;
             return false; //quit the loop
         }else{
             MoveProtagonist();
