@@ -60,7 +60,7 @@ void view::showProtagonist(){
     protagonistView = std::make_shared<QGraphicsPixmapItem>(QPixmap::fromImage(image));
     protagonistView->setZValue(3);
     protagonistView->setScale(0.00390625);
-    protagonistView->setPos(logic->getProtagonistX(),logic->getProtagonistY());
+    protagonistView->setPos(logic->protagonist->getXPos(),logic->protagonist->getYPos());
     sceneView->addItem(protagonistView.get());
 }
 

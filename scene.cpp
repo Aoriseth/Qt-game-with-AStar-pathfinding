@@ -9,7 +9,6 @@ Scene::Scene(QObject *parent):
 
 Scene::~Scene()
 {
-    qDebug()<<"Scene destroyed";
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)

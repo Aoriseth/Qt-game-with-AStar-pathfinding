@@ -71,9 +71,11 @@ void MainWindow::connectAll()
 {
     connect(logic.get(), SIGNAL(destinationChanged(int,int)), screen.get(), SLOT(indicateDestination(int,int)));
     connect(screen->sceneView.get(), SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
-    connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
-    connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
+    connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic->protagonist.get(), SLOT(movePro(int)));
+    connect(logic->protagonist.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
     connect(screen.get(), SIGNAL(updateViewport()), this, SLOT(refreshWindow()));
+    connect(logic->protagonist.get(), SIGNAL(moveIt(int,int)), logic.get(), SLOT(checkMove(int,int)));
+    connect(logic->protagonist.get(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
 }
 
 void MainWindow::mapLoad()
@@ -96,7 +98,7 @@ void MainWindow::mapLoad()
     screen->showHealthpacks();
     screen->showEnemies();
     connectAll();
-    connect(logic->getProtagonist().get(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
+
 
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
