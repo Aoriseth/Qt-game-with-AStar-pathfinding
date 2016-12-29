@@ -53,6 +53,8 @@ public slots:
 
 signals:
     void dead();
+    void poisonLevelUpdated(int value);
+
 private:
     float poisonLevel;
 };
