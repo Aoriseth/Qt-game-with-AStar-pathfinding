@@ -58,7 +58,7 @@ public:
     void setView(view* test);
     view* screen;
     std::shared_ptr<Tile> getTile(int x,int y);
-    std::vector<std::shared_ptr<EnemyUnit>>::iterator getClosestEnemy();
+    std::shared_ptr<EnemyUnit> getClosestEnemy();
     bool isAllDefeated();
     std::shared_ptr<HealthModel> getClosestHealthpack();
     float moveCost = 0.0f;
