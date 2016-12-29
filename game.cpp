@@ -97,7 +97,7 @@ bool game::bestFirst(int x, int y)
     return false;
 }
 
-void game::aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis){
+void game::Dijkstra_addNode(int index, std::shared_ptr<node> pre, double old_dis){
     if(!myIndexes.contains(index)) {/* myIndexes doesn't contain index */
         auto pos = std::make_shared<Tile>(std::move(*tiles[index]));
         node myxNode(pos,pre);
@@ -110,7 +110,7 @@ void game::aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis){
     }
 }
 
-bool game::AStar(int x, int y)
+bool game::Dijkstra(int x, int y)
 {
 
     do{
@@ -123,19 +123,19 @@ bool game::AStar(int x, int y)
             return true; //stop loop if found only in sptSet!
         if(myTile->getXPos()<xmax){
             int index = (xmax+1)*(myTile->getYPos()) + myTile->getXPos() + 1;
-            aStar_addNode(index,pre, distance);
+            Dijkstra_addNode(index,pre, distance);
         }
         if(myTile->getXPos()>0){
             int index = (xmax+1)*(myTile->getYPos()) + myTile->getXPos() - 1;
-            aStar_addNode(index,pre, distance);
+            Dijkstra_addNode(index,pre, distance);
         }
         if(myTile->getYPos()<ymax){
             int index = (myTile->getYPos() +1)*(xmax+1) + myTile->getXPos();
-            aStar_addNode(index,pre, distance);
+            Dijkstra_addNode(index,pre, distance);
         }
         if(myTile->getYPos()>0){
             int index = (myTile->getYPos() -1)*(xmax+1) + myTile->getXPos();
-            aStar_addNode(index,pre, distance);
+            Dijkstra_addNode(index,pre, distance);
         }
         //qDebug()<<"AvailableNodes Size:"<<availableNodes.size();
     }while(availableNodes.size()!=0);
@@ -147,7 +147,7 @@ std::shared_ptr<EnemyUnit> game::getClosestEnemy(){
     auto result = defeatableEnemies[0];
     for(auto unit:defeatableEnemies){
         setDestination(unit->getXPos(),unit->getYPos());
-        bool finished  = calcPath_AStar();
+        bool finished  = calcPath_Dijkstra();
         if(finished){  //path found, enemy is reachable
             float my_cost = getMoveCost();
             if(my_cost<min_cost){
@@ -181,7 +181,7 @@ std::shared_ptr<HealthModel> game::getClosestHealthpack()
     auto result = healthpacks[0];
     for(auto pack:healthpacks){
         setDestination(pack->getXPos(),pack->getYPos());
-        bool finished  = calcPath_AStar();
+        bool finished  = calcPath_Dijkstra();
         if(finished){  //path found, health is reachable
             float my_cost = getMoveCost();
             if(my_cost<min_cost){
@@ -234,7 +234,6 @@ void game::strat()
         QCoreApplication::processEvents();
         if(!goOn){return;}
         while((!isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
-            qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
             if(healthpacks.size()==0){
                 qDebug()<<"Quit: NO healthpack left!";
                 return;
@@ -333,12 +332,12 @@ bool game::calcPath_BestFirst()
     }
 }
 
-bool game::calcPath_AStar()
+bool game::calcPath_Dijkstra()
 {
     QElapsedTimer timer;
     timer.start();
 
-    if(AStar(xDest,yDest)){
+    if(Dijkstra(xDest,yDest)){
         //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
@@ -516,7 +515,7 @@ void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)
 void game::go()
 {
     // Calculate the path
-    auto finished = calcPath_AStar();
+    auto finished = calcPath_Dijkstra();
     // Move the protagonist based on the calculated path
     if(finished){
             MoveProtagonist();
@@ -530,7 +529,7 @@ bool game::goForHealthpack()
     auto healthpack = getClosestHealthpack();
     setDestination(healthpack->getXPos(),healthpack->getYPos());
     setWeight(weight);
-    bool find = calcPath_AStar();
+    bool find = calcPath_Dijkstra();
     if(find){
         float requiredEnergy = getMoveCost();
         if(requiredEnergy>getEnergy()){
@@ -589,7 +588,7 @@ bool game::goForEnemy()
     }
     setDestination(unit->getXPos(),unit->getYPos());
     bool finished = false;
-    finished = calcPath_AStar();
+    finished = calcPath_Dijkstra();
     if(finished){  //Path found
         float requiredEnergy = getMoveCost();
         if(requiredEnergy>getEnergy()){

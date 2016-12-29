@@ -40,17 +40,17 @@
         </property>
         <item>
          <property name="text">
-          <string>A* Fair cost</string>
+          <string>Fair cost</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>A* High cost - Dijkstra</string>
+          <string>High cost - near Dijkstra</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>A* No cost - Best-First</string>
+          <string>No cost - near Best-First</string>
          </property>
         </item>
        </widget>
