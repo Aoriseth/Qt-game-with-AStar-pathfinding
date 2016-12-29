@@ -77,7 +77,7 @@ void MainWindow::indicateDestination(int x, int y){
     ui->graphicsView->viewport()->repaint();
 }
 
-void MainWindow::setLogic(game *test)
+void MainWindow::setLogic(std::shared_ptr<game> test)
 {
     logic = test;
 }
@@ -104,8 +104,8 @@ void MainWindow::mapLoad()
     // Create a new scene
     refreshScene();
     connect(screen->sceneView, SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
-    connect(screen->sceneView, SIGNAL(keyClicked(int)), logic, SLOT(movePro(int)));
-    connect(logic, SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
+    connect(screen->sceneView, SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
+    connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
     connect(screen, SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
     //loads world into scene and cleanup data from the previous world

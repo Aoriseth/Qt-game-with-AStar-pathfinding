@@ -37,16 +37,16 @@ void view::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
     sceneView->addItem(item);
 }
 
-void view::setLogic(game *pass)
+void view::setLogic(std::shared_ptr<game> pass)
 {
     logic = pass;
-    connect(logic, SIGNAL(enemyKilled(int)), this, SLOT(updateEnemy(int)));
+    connect(logic.get(), SIGNAL(enemyKilled(int)), this, SLOT(updateEnemy(int)));
 }
 
 void view::showEnemies()
 {
     for(auto enemy: logic->enemies){
-        EnemyView* item = new EnemyView(QPixmap(":/resources/goomba.gif"),sceneView,enemy);
+        auto item = new EnemyView(QPixmap(":/resources/goomba.gif"),sceneView,enemy);
         item->addToScene();
         connect(enemy.get(), SIGNAL(defeat()), item, SLOT(updateVisual()));
         connect(enemy.get(), SIGNAL(defeat()), this, SIGNAL(updateViewport()));

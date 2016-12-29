@@ -14,11 +14,11 @@ class EnemyView: public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     EnemyView();
-    EnemyView(QPixmap pm, Scene *vPass, std::shared_ptr<EnemyUnit> mPass);
+    EnemyView(QPixmap pm, Scene* vPass, std::shared_ptr<EnemyUnit> mPass);
     void addToScene();
 
 private:
-    Scene *view;
+    Scene* view;
     std::shared_ptr<EnemyUnit> mEnemy;
 protected slots:
     void updateVisual();
