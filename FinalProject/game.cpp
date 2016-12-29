@@ -321,7 +321,7 @@ void game::loadWorld(QString path){
     enemies.clear();
     healthpacks.clear();
     QImage image(path);
-    worldView = new QGraphicsPixmapItem(QPixmap::fromImage(image));
+    worldView = std::make_shared<QGraphicsPixmapItem>(QPixmap::fromImage(image));
     xmax = image.width()-1;
     ymax = image.height()-1;
     int objectNum = (xmax+ymax)/2;
@@ -346,7 +346,7 @@ void game::loadWorld(QString path){
     worldView->setZValue(0);
     worldView->setScale(1);
     worldView->setPos(getProtagonistX(),getProtagonistY());
-    screen->sceneView->addItem(worldView);
+    screen->sceneView->addItem(worldView.get());
     qDebug()<<"ymax is "<<ymax;
     qDebug()<<"xmax is "<<xmax;
 
@@ -448,9 +448,9 @@ float game::getHealth()
     return protagonist->getHealth();
 }
 
-Protagonist* game::getProtagonist()
+std::shared_ptr<Protagonist> game::getProtagonist()
 {
-    return protagonist.get();
+    return protagonist;
 }
 
 void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)

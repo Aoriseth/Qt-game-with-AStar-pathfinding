@@ -73,8 +73,8 @@ public:
     void setHealth(float passHealth);
     float getEnergy();
     float getHealth();
-    Protagonist *getProtagonist();
-    QGraphicsPixmapItem* worldView;
+    std::shared_ptr<Protagonist> getProtagonist();
+    std::shared_ptr<QGraphicsPixmapItem> worldView;
     void removeHealthpack(std::shared_ptr<HealthModel> healthpack);
     bool goForHealthpack();
     bool isDefeatable();
@@ -86,7 +86,7 @@ public:
     void MoveProDown();
 
 private:
-    std::unique_ptr<Protagonist> protagonist;
+    std::shared_ptr<Protagonist> protagonist;
     void checkAndSetPos(int xPos, int yPos);    
     void breadth_addNode(int index, std::shared_ptr<node> pre);
     bool best_addNode(int x, int y, int index, std::shared_ptr<node> pre);

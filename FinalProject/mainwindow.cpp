@@ -114,14 +114,14 @@ void MainWindow::mapLoad()
     logic->loadWorld(path);
 
     //fit scene into view
-    ui->graphicsView->fitInView(logic->worldView,Qt::KeepAspectRatio);
+    ui->graphicsView->fitInView(logic->worldView.get(),Qt::KeepAspectRatio);
 
     // render various items into view
     screen->showProtagonist();
     screen->showHealthpacks();
     screen->showEnemies();
 
-    connect(logic->getProtagonist(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
+    connect(logic->getProtagonist().get(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
 
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
@@ -187,5 +187,5 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 {
    QMainWindow::resizeEvent(event);
    if(!mapLoaded){return;}
-   ui->graphicsView->fitInView(logic->worldView,Qt::KeepAspectRatio);
+   ui->graphicsView->fitInView(logic->worldView.get(),Qt::KeepAspectRatio);
 }
