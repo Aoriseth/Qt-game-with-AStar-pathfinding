@@ -76,7 +76,7 @@
          </size>
         </property>
         <property name="text">
-         <string>0.1</string>
+         <string>1</string>
         </property>
        </widget>
       </item>
@@ -84,23 +84,23 @@
        <widget class="QComboBox" name="comboBox">
         <property name="maximumSize">
          <size>
-          <width>275</width>
+          <width>300</width>
           <height>16777215</height>
          </size>
         </property>
         <item>
          <property name="text">
-          <string>A*</string>
+          <string>A* Fair cost</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Breadth-First</string>
+          <string>A* High cost - Dijkstra</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Best-First</string>
+          <string>A* No cost - Best-First</string>
          </property>
         </item>
        </widget>
@@ -228,8 +228,8 @@
    <slot>gotoDestination()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>959</y>
+     <x>777</x>
+     <y>942</y>
     </hint>
     <hint type="destinationlabel">
      <x>601</x>
@@ -261,7 +261,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>1148</x>
-     <y>986</y>
+     <y>942</y>
     </hint>
     <hint type="destinationlabel">
      <x>752</x>
@@ -285,6 +285,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>comboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setWeight(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>912</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>890</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>gotoDestination()</slot>
@@ -292,5 +308,6 @@
   <slot>ItemSelected()</slot>
   <slot>executeStrategy()</slot>
   <slot>ReloadMap()</slot>
+  <slot>setWeight(int)</slot>
  </slots>
 </ui>
