@@ -106,6 +106,7 @@ void game::aStar_addNode(int index, std::shared_ptr<node> pre, double old_dis){
 }
 bool game::AStar(int x, int y)
 {
+
     do{
         node myNode = getNodeWithMinDistance();//get from SPT
         auto pre = std::make_shared<node>(myNode);
@@ -134,7 +135,6 @@ bool game::AStar(int x, int y)
     }while(availableNodes.size()!=0);
     return false;//Not found if code goes outside of loop;
 }
-
 std::shared_ptr<EnemyUnit> game::getClosestEnemy(){
     float min_cost = std::numeric_limits<float>::infinity();
     auto result = defeatableEnemies[0];
@@ -218,7 +218,32 @@ void game::clearLists()
     currentNodes.clear();
     availableNodes.clear();
     route.clear();
-    myIndexes.clear();    
+    myIndexes.clear();
+}
+
+void game::strat()
+{
+    while(!isAllDefeated()){ //check if all enemies are defeated
+        while((!isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
+            qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
+            if(healthpacks.size()==0){
+                qDebug()<<"Quit: NO healthpack left!";
+                return;
+            }
+            if(!goForHealthpack()){
+                return; //quit the loop
+            }
+
+        }
+        if(!goForEnemy()){
+            if(!goForHealthpack()){
+                return; //quit the loop
+            }
+        }
+
+    }
+
+
 }
 
 int game::getWeight() const
@@ -300,6 +325,9 @@ bool game::calcPath_BestFirst()
 
 bool game::calcPath_AStar()
 {
+    QElapsedTimer timer;
+    timer.start();
+
     if(AStar(xDest,yDest)){
         //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
@@ -310,11 +338,15 @@ bool game::calcPath_AStar()
             destination=*(destination.getPre());
             //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
+
+        qDebug() << "The run_strategy operation took" << timer.elapsed() << "milliseconds";
         return true;
     }else{
         qDebug()<< "AStar:Path is not found in the end!!!!!";
+        clearLists();
         return false;
     }
+
 }
 
 
@@ -380,6 +412,9 @@ void game::MoveProtagonist()
         float newEnergy = protagonist->getEnergy()-1 - getWeight()*(1-tile->getValue());
         setEnergy(newEnergy);
     }
+    clearLists();
+    setMoveCost(0.0f);
+    setStart(xDest,yDest);
 }
 
 void game::checkAndSetPos(int xPos, int yPos){
@@ -472,8 +507,7 @@ void game::go()
     auto finished = calcPath_AStar();
     // Move the protagonist based on the calculated path
     if(finished){
-        MoveProtagonist();
-        setStart(xDest,yDest);
+            MoveProtagonist();
     }else{
         setStart(getProtagonistX(),getProtagonistY());
     }

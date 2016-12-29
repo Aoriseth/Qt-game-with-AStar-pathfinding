@@ -21,41 +21,22 @@ void MainWindow::gotoDestination()
     int weight = ui->lineEdit->text().toInt(); // read weight from textbox
     logic->setWeight(weight);
 
-    // move
+    // calculate path and move protagonist
     logic->go();
 }
 
 void MainWindow::executeStrategy()
 {
-    QElapsedTimer timer;
-    timer.start();
+
     int weight = ui->lineEdit->text().toInt();
     logic->setWeight(weight);
     if(!mapLoaded){return;} // Don't play if there is no map loaded
-    while(!logic->isAllDefeated()){ //check if all enemies are defeated
-        while((!logic->isDefeatable())){//check if there is a defeatable enemy before calculate the path for closest enemy
-            qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
-            if(logic->healthpacks.size()==0){
-                qDebug()<<"Quit: NO healthpack left!";
-                return;
-            }
-            if(!logic->goForHealthpack()){
-                return; //quit the loop
-            }
 
-        }
-        if(!logic->goForEnemy()){
-            if(!logic->goForHealthpack()){
-                return; //quit the loop
-            }
-        }
-
-    }
+    logic->strat();
     logic->setDestination(0,0);
     indicateDestination(0,0);
-    qDebug()<<"Game Win! All the enemies are defeated!";
     screen->clearPath();
-    qDebug() << "The run_strategy operation took" << timer.elapsed() << "milliseconds";
+
 }
 
 void MainWindow::refreshScene(){
