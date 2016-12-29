@@ -38,6 +38,7 @@ void MainWindow::executeStrategy()
 }
 
 void MainWindow::refreshScene(){
+    // make a new scene and render it to view
     screen->sceneView.reset();
     screen->sceneView = std::make_shared<Scene>(this);
     ui->graphicsView->setScene(screen->sceneView.get());
@@ -60,6 +61,7 @@ void MainWindow::refreshWindow()
 }
 
 void MainWindow::updateStats(float energy, float health){
+    // update the energy and health visualistions
     ui->energyBar->setValue(energy);
     ui->healthBar->setValue(health);
 }
@@ -80,7 +82,7 @@ void MainWindow::mapLoad()
 
     // Create a new scene and connect signals
     refreshScene();
-    connectAll();
+
 
     //loads world into scene and cleanup data from the previous world
     screen->clearLists();
@@ -93,7 +95,7 @@ void MainWindow::mapLoad()
     screen->showProtagonist();
     screen->showHealthpacks();
     screen->showEnemies();
-
+    connectAll();
     connect(logic->getProtagonist().get(), SIGNAL(posChanged(int,int)), this, SLOT(updatePosition(int, int)));
 
     // set the starting position of the protagonist/algorithm
@@ -137,9 +139,10 @@ void MainWindow::ReloadMap()
 
 void MainWindow::setWeight(int x)
 {
+    // set weight depending on the chosen algorithm (all use A*)
     switch (x) {
     case 0:
-        ui->lineEdit->setText(QString::number(1));
+        ui->lineEdit->setText(QString::number(5));
         break;
     case 1:
         ui->lineEdit->setText(QString::number(100));
@@ -149,13 +152,14 @@ void MainWindow::setWeight(int x)
         break;
     default:
         // default to astar, should never happen
-        ui->lineEdit->setText(QString::number(0.1));
+        ui->lineEdit->setText(QString::number(5));
         break;
     }
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
+   // change the view size of the map to match the window
    QMainWindow::resizeEvent(event);
    if(!mapLoaded){return;}
    ui->graphicsView->fitInView(screen->getWorldView().get(),Qt::KeepAspectRatio);
