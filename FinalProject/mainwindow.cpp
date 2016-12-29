@@ -21,24 +21,9 @@ void MainWindow::gotoDestination()
     auto finished = false; // Set variable for checking if an algorithm successfully finished
     int weight = ui->lineEdit->text().toInt(); // read weight from textbox
 //    qDebug() << "weight is " << weight;
-
+    finished = logic->calcPath_AStar();
     // Check the chosen algorithm
-    switch (ui->comboBox->currentIndex()) {
-    case 0:
-        logic->setWeight(weight);
-        finished = logic->calcPath_AStar();
-        break;
-    case 1:
-        finished = logic->calcPath_BreadthFirst();
-        break;
-    case 2:
-        finished = logic->calcPath_BestFirst();
-        break;
-    default:
-        logic->setWeight(weight);
-        finished = logic->calcPath_AStar(); // default to AStar, should never happen
-        break;
-    }
+
 
     // Move the protagonist based on the calculated path
     if(finished){
@@ -177,6 +162,25 @@ void MainWindow::updatePosition(int x, int y)
 void MainWindow::ReloadMap()
 {
     mapLoad();
+}
+
+void MainWindow::setWeight(int x)
+{
+    switch (ui->comboBox->currentIndex()) {
+    case 0:
+        ui->lineEdit->setText(QString::number(1));
+        break;
+    case 1:
+        ui->lineEdit->setText(QString::number(100));
+        break;
+    case 2:
+        ui->lineEdit->setText(QString::number(0));
+        break;
+    default:
+        // default to astar, should never happen
+        ui->lineEdit->setText(QString::number(0.1));
+        break;
+    }
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)

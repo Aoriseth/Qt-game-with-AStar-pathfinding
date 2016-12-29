@@ -60,6 +60,7 @@ private slots:
     void ItemSelected(int x, int y);
     void updatePosition(int x, int y);
     void ReloadMap();
+    void setWeight(int x);
 };
 
 #endif // MAINWINDOW_H
