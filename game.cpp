@@ -321,6 +321,7 @@ bool game::calcPath_AStar()
 
 void game::loadWorld(QString path){
     //clear enemy and healthpack vectors
+    clearLists();
     enemies.clear();
     healthpacks.clear();
 
@@ -348,20 +349,18 @@ void game::loadWorld(QString path){
         healthpacks.push_back(std::shared_ptr<HealthModel>(new HealthModel(pack->getXPos(), pack->getYPos(), pack->getValue())));
     }
 
-
+    // Load protagonist and update mainwindow to display stats
     protagonist = myWorld->getProtagonist();
     emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
-// setHealth(100);
-//    setEnergy(100);
 
+    // Display the world into a graphicsscene
     screen->displayWorld(image);
 
 }
 
 void game::setStart(int x, int y){
-    if(protagonist){
     protagonist->setXPos(x);
-    protagonist->setYPos(y);}
+    protagonist->setYPos(y);
 
     clearLists();
     auto pos1 = std::make_shared<Tile>(std::move(*(protagonist)));
@@ -421,6 +420,7 @@ void game::MoveProDown(){
         checkAndSetPos(xPos,yPos);
     }
 }
+
 int game::getProtagonistX()
 {
     return protagonist->getXPos();
@@ -464,6 +464,19 @@ void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)
     healthpack->useHealthpack();
     int pos = find(healthpacks.begin(), healthpacks.end(), healthpack) - healthpacks.begin();
     healthpacks.erase(healthpacks.begin()+pos);
+}
+
+void game::go()
+{
+    // Calculate the path
+    auto finished = calcPath_AStar();
+    // Move the protagonist based on the calculated path
+    if(finished){
+        MoveProtagonist();
+        setStart(xDest,yDest);
+    }else{
+        setStart(getProtagonistX(),getProtagonistY());
+    }
 }
 
 bool game::goForHealthpack()

@@ -84,7 +84,7 @@ public:
     void MoveProRight();
     void MoveProUp();
     void MoveProDown();
-
+    void go();
 
 
 private:
