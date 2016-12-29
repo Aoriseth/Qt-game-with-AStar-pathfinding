@@ -71,3 +71,16 @@ void view::clearLists()
     healthpackItems.clear();
 }
 
+std::shared_ptr<QGraphicsPixmapItem> view::getWorldView() const
+{
+    return worldView;
+}
+
+void view::displayWorld(QImage image)
+{
+    worldView = std::make_shared<QGraphicsPixmapItem>(QPixmap::fromImage(image));
+    worldView->setZValue(0);
+    worldView->setScale(1);
+    worldView->setPos(0,0);
+    sceneView->addItem(worldView.get());
+}

@@ -74,7 +74,7 @@ public:
     float getEnergy();
     float getHealth();
     std::shared_ptr<Protagonist> getProtagonist();
-    std::shared_ptr<QGraphicsPixmapItem> worldView;
+
     void removeHealthpack(std::shared_ptr<HealthModel> healthpack);
     bool goForHealthpack();
     bool isDefeatable();
@@ -84,6 +84,8 @@ public:
     void MoveProRight();
     void MoveProUp();
     void MoveProDown();
+
+
 
 private:
     std::shared_ptr<Protagonist> protagonist;

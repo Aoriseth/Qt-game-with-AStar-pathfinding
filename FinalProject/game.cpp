@@ -317,11 +317,13 @@ bool game::calcPath_AStar()
     }
 }
 
+
+
 void game::loadWorld(QString path){
     enemies.clear();
     healthpacks.clear();
     QImage image(path);
-    worldView = std::make_shared<QGraphicsPixmapItem>(QPixmap::fromImage(image));
+
     xmax = image.width()-1;
     ymax = image.height()-1;
     int objectNum = (xmax+ymax)/2;
@@ -343,12 +345,7 @@ void game::loadWorld(QString path){
     setHealth(100);
     setEnergy(100);
 
-    worldView->setZValue(0);
-    worldView->setScale(1);
-    worldView->setPos(getProtagonistX(),getProtagonistY());
-    screen->sceneView->addItem(worldView.get());
-    qDebug()<<"ymax is "<<ymax;
-    qDebug()<<"xmax is "<<xmax;
+    screen->displayWorld(image);
 
 }
 

@@ -114,7 +114,7 @@ void MainWindow::mapLoad()
     logic->loadWorld(path);
 
     //fit scene into view
-    ui->graphicsView->fitInView(logic->worldView.get(),Qt::KeepAspectRatio);
+    ui->graphicsView->fitInView(screen->getWorldView().get(),Qt::KeepAspectRatio);
 
     // render various items into view
     screen->showProtagonist();
@@ -187,5 +187,5 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 {
    QMainWindow::resizeEvent(event);
    if(!mapLoaded){return;}
-   ui->graphicsView->fitInView(logic->worldView.get(),Qt::KeepAspectRatio);
+   ui->graphicsView->fitInView(screen->getWorldView().get(),Qt::KeepAspectRatio);
 }
