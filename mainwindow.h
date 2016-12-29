@@ -58,7 +58,6 @@ private slots:
     void OpenMap();
     void refreshWindow();
     void ItemSelected(int x, int y);
-    void movePro(int x);
     void updatePosition(int x, int y);
     void ReloadMap();
 };
