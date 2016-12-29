@@ -84,3 +84,9 @@ void view::displayWorld(QImage image)
     worldView->setPos(0,0);
     sceneView->addItem(worldView.get());
 }
+
+void view::indicateDestination(int x, int y)
+{
+    destView->setPos(x,y);
+    emit updateViewport();
+}

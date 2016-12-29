@@ -101,6 +101,7 @@ private:
     node getNodeWithMinDistance();
 
 signals:
+    void destinationChanged(int x, int y);
     void enemyKilled(int pos);
     void healthpackUsed(int pos);
     void changeStats(float energy, float health);

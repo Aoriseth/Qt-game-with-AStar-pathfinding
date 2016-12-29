@@ -33,8 +33,6 @@ void MainWindow::executeStrategy()
     if(!mapLoaded){return;} // Don't play if there is no map loaded
 
     logic->strat();
-    logic->setDestination(0,0);
-    indicateDestination(0,0);
     screen->clearPath();
 
 }
@@ -45,10 +43,6 @@ void MainWindow::refreshScene(){
     ui->graphicsView->setScene(screen->sceneView.get());
 }
 
-void MainWindow::indicateDestination(int x, int y){
-    screen->destView->setPos(x,y);
-    ui->graphicsView->viewport()->repaint();
-}
 
 void MainWindow::setLogic(std::shared_ptr<game> test)
 {
@@ -77,6 +71,7 @@ void MainWindow::mapLoad()
 
     // Create a new scene and connect signals
     refreshScene();
+    connect(logic.get(), SIGNAL(destinationChanged(int,int)), screen.get(), SLOT(indicateDestination(int,int)));
     connect(screen->sceneView.get(), SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
     connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
     connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
@@ -117,9 +112,7 @@ void MainWindow::OpenMap()
 void MainWindow::ItemSelected(int x, int y)
 {
     screen->clearPath();
-    logic->xDest = x;
-    logic->yDest = y;
-    indicateDestination(x,y);
+    logic->setDestination(x,y);
 }
 
 
