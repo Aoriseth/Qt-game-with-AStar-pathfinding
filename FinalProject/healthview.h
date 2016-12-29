@@ -13,10 +13,10 @@ class HealthView: public QObject,public QGraphicsPixmapItem
     Q_OBJECT
 public:
     HealthView();
-    HealthView(QPixmap pm, Scene *vPass, std::shared_ptr<HealthModel> mPass);
+    HealthView(QPixmap pm, std::shared_ptr<Scene>vPass, std::shared_ptr<HealthModel> mPass);
     void addToScene();
 private:
-    Scene *view;
+    std::shared_ptr<Scene>view;
     std::shared_ptr<HealthModel> mHealth;
 protected slots:
     void healthUsed();

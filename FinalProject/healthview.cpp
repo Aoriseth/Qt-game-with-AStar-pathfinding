@@ -5,7 +5,7 @@ HealthView::HealthView()
 
 }
 
-HealthView::HealthView(QPixmap pm, Scene *vPass, std::shared_ptr<HealthModel> mPass):
+HealthView::HealthView(QPixmap pm, std::shared_ptr<Scene>vPass, std::shared_ptr<HealthModel> mPass):
     QGraphicsPixmapItem(pm)
 {
     view = vPass;

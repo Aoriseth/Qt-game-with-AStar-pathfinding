@@ -15,7 +15,7 @@ class view: public QObject
     Q_OBJECT
 public:
     view();
-    Scene* sceneView;
+    std::shared_ptr<Scene> sceneView;
     std::shared_ptr<game> logic;
     QGraphicsItem * destView;
     std::vector<QGraphicsItem*> pathView;
