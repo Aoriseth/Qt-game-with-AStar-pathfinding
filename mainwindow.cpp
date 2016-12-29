@@ -65,17 +65,22 @@ void MainWindow::updateStats(float energy, float health){
 }
 
 
+void MainWindow::connectAll()
+{
+    connect(logic.get(), SIGNAL(destinationChanged(int,int)), screen.get(), SLOT(indicateDestination(int,int)));
+    connect(screen->sceneView.get(), SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
+    connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
+    connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
+    connect(screen.get(), SIGNAL(updateViewport()), this, SLOT(refreshWindow()));
+}
+
 void MainWindow::mapLoad()
 {
     mapLoaded = true;
 
     // Create a new scene and connect signals
     refreshScene();
-    connect(logic.get(), SIGNAL(destinationChanged(int,int)), screen.get(), SLOT(indicateDestination(int,int)));
-    connect(screen->sceneView.get(), SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
-    connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
-    connect(logic.get(), SIGNAL(changeStats(float, float)), this, SLOT(updateStats(float,float))); // connect signals to update protagonist stats
-    connect(screen.get(), SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
+    connectAll();
 
     //loads world into scene and cleanup data from the previous world
     screen->clearLists();
