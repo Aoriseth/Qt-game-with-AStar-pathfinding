@@ -6,6 +6,11 @@ Scene::Scene(QObject *parent):
     this->setBackgroundBrush(Qt::black);
 }
 
+Scene::~Scene()
+{
+    qDebug()<<"Scene destroyed";
+}
+
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QGraphicsScene::mousePressEvent(mouseEvent);

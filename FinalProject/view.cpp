@@ -28,15 +28,6 @@ void view::clearPath()
     emit updateViewport();
 }
 
-void view::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
-    //auto item = std::make_shared<QGraphicsPixmapItem>(new QGraphicsPixmapItem(QPixmap::fromImage(image)));
-    item->setScale(0.00390625);
-    item->setPos(x,y);
-    item->setZValue(2);
-    item->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    sceneView->addItem(item);
-}
-
 void view::setLogic(std::shared_ptr<game> pass)
 {
     logic = pass;
