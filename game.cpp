@@ -320,30 +320,39 @@ bool game::calcPath_AStar()
 
 
 void game::loadWorld(QString path){
+    //clear enemy and healthpack vectors
     enemies.clear();
     healthpacks.clear();
-    QImage image(path);
 
+    //load image and determine size
+    QImage image(path);
     xmax = image.width()-1;
     ymax = image.height()-1;
+
+    //modify number of enemies and healthpacks based on world size. If world is huge, don't generate objects
     int objectNum = (xmax+ymax)/2;
     if(((xmax+ymax)/2)>100){
         objectNum = 1;
     }
 
+    //Convert enemies to custom EnemyUnit
     tiles = myWorld->createWorld(path);
     auto tempenemies = myWorld->getEnemies(objectNum);
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
     }
 
+    //Convert Healthpacks to custom HealthModel
     auto temphealthpacks = myWorld->getHealthPacks(objectNum);
     for(auto& pack:temphealthpacks){
         healthpacks.push_back(std::shared_ptr<HealthModel>(new HealthModel(pack->getXPos(), pack->getYPos(), pack->getValue())));
     }
+
+
     protagonist = myWorld->getProtagonist();
-    setHealth(100);
-    setEnergy(100);
+    emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
+// setHealth(100);
+//    setEnergy(100);
 
     screen->displayWorld(image);
 
