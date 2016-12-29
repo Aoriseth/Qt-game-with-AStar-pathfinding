@@ -38,6 +38,8 @@ public:
 
     void indicateDestination(int x, int y);
 
+
+
 protected:
     void resizeEvent(QResizeEvent *event);
 

@@ -17,20 +17,12 @@ MainWindow::~MainWindow()
 void MainWindow::gotoDestination()
 {
     if(!mapLoaded){return;} // Don't play if there is no map loaded
-    auto finished = false; // Set variable for checking if an algorithm successfully finished
+
     int weight = ui->lineEdit->text().toInt(); // read weight from textbox
     logic->setWeight(weight);
 
-    // Check the chosen algorithm
-    finished = logic->calcPath_AStar();
-
-    // Move the protagonist based on the calculated path
-    if(finished){
-        logic->MoveProtagonist();
-        logic->setStart(logic->xDest,logic->yDest);
-    }else{
-        logic->setStart(logic->getProtagonistX(),logic->getProtagonistY());
-    }
+    // move
+    logic->go();
 }
 
 void MainWindow::executeStrategy()
@@ -101,7 +93,8 @@ void MainWindow::updateStats(float energy, float health){
 void MainWindow::mapLoad()
 {
     mapLoaded = true;
-    // Create a new scene
+
+    // Create a new scene and connect signals
     refreshScene();
     connect(screen->sceneView.get(), SIGNAL(locationClicked(int,int)), this, SLOT(ItemSelected(int,int)));
     connect(screen->sceneView.get(), SIGNAL(keyClicked(int)), logic.get(), SLOT(movePro(int)));
@@ -109,7 +102,6 @@ void MainWindow::mapLoad()
     connect(screen.get(), SIGNAL(updateViewport()), this, SLOT(refreshWindow())); // connect signals to update path visuals
 
     //loads world into scene and cleanup data from the previous world
-    logic->clearLists();
     screen->clearLists();
     logic->loadWorld(path);
 
