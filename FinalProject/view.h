@@ -17,7 +17,7 @@ public:
     view();
     std::shared_ptr<Scene> sceneView;
     std::shared_ptr<game> logic;
-    QGraphicsItem * destView;
+    std::shared_ptr<QGraphicsItem> destView;
     std::vector<QGraphicsItem*> pathView;
     void addPathStep(int x,int y);
     void clearPath();
@@ -29,7 +29,7 @@ public:
     void clearLists();
 
 private:
-    QGraphicsPixmapItem* protagonistView;
+    std::shared_ptr<QGraphicsPixmapItem> protagonistView;
     std::vector<EnemyView*> enemyItems;
     std::vector<QGraphicsPixmapItem*> healthpackItems;
 signals:
