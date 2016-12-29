@@ -389,8 +389,8 @@ void game::loadWorld(QString path){
     }
 
     // Load protagonist and update mainwindow to display stats
-    protagonist = myWorld->getProtagonist();
-    emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
+//    auto tempagonist = myWorld->getProtagonist();
+    protagonist = std::shared_ptr<Hero>(new Hero());
 
     // Display the world into a graphicsscene
     screen->displayWorld(image);
@@ -417,76 +417,20 @@ void game::MoveProtagonist()
         protagonist->setXPos((tile->getXPos()));
         protagonist->setYPos((tile->getYPos()));
         float newEnergy = protagonist->getEnergy()-1 - getWeight()*(1-tile->getValue());
-        setEnergy(newEnergy);
+        protagonist->updateEnergy(newEnergy);
     }
     clearLists();
     setMoveCost(0.0f);
     setStart(xDest,yDest);
 }
 
-void game::checkAndSetPos(int xPos, int yPos){
-    int index = yPos*(xmax+1) + xPos;
-    if(!(std::isinf(tiles[index]->getValue()))){
-        protagonist->setPos(xPos,yPos);
+void game::checkMove(int xPos, int yPos){
+    if(xPos>=0 && xPos<=xmax && yPos>=0 && yPos<=ymax){
+        int index = yPos*(xmax+1) + xPos;
+        if(!(std::isinf(tiles[index]->getValue()))){
+            protagonist->setPos(xPos,yPos);
+        }
     }
-}
-
-void game::MoveProLeft(){
-    int xPos = protagonist->getXPos();
-    int yPos = protagonist->getYPos();
-    if(xPos > 0){
-        xPos--;
-        checkAndSetPos(xPos,yPos);
-    }
-}
-
-void game::MoveProRight(){
-    int xPos = protagonist->getXPos();
-    int yPos = protagonist->getYPos();
-    if(xPos < xmax){
-        xPos++;
-        checkAndSetPos(xPos,yPos);
-    }
-}
-
-void game::MoveProUp(){
-    int xPos = protagonist->getXPos();
-    int yPos = protagonist->getYPos();
-    if(yPos > 0){
-        yPos--;
-        checkAndSetPos(xPos,yPos);
-    }
-}
-
-void game::MoveProDown(){
-    int xPos = protagonist->getXPos();
-    int yPos = protagonist->getYPos();
-    if(yPos < ymax){
-        yPos++;
-        checkAndSetPos(xPos,yPos);
-    }
-}
-
-int game::getProtagonistX()
-{
-    return protagonist->getXPos();
-}
-
-int game::getProtagonistY()
-{
-    return protagonist->getYPos();
-}
-
-void game::setEnergy(float passEnergy)
-{
-    protagonist->setEnergy(passEnergy);
-    emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
-}
-
-void game::setHealth(float passHealth)
-{
-    protagonist->setHealth(passHealth);
-    emit changeStats(protagonist->getEnergy(), protagonist->getHealth());
 
 }
 
@@ -498,11 +442,6 @@ float game::getEnergy()
 float game::getHealth()
 {
     return protagonist->getHealth();
-}
-
-std::shared_ptr<Protagonist> game::getProtagonist()
-{
-    return protagonist;
 }
 
 void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)
@@ -532,7 +471,7 @@ void game::go(int i)
     if(finished){
             MoveProtagonist();
     }else{
-        setStart(getProtagonistX(),getProtagonistY());
+        setStart(protagonist->getXPos(),protagonist->getYPos());
     }
 }
 
@@ -550,7 +489,7 @@ bool game::goForHealthpack()
             MoveProtagonist();
             float newHealth = getHealth()+5.0*healthpack->getValue(); //multiply by a factor of 5
             if(newHealth > 100) newHealth = 100;
-            setHealth(newHealth);
+            protagonist->updateHealth(newHealth);
             setMoveCost(0.0f);
             // Move the protagonist based on the calculated path
             removeHealthpack(healthpack);
@@ -604,41 +543,23 @@ bool game::goForEnemy()
         float requiredEnergy = getMoveCost();
         if(requiredEnergy>getEnergy()){
             qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
-            setStart(getProtagonistX(),getProtagonistY());
+            setStart(protagonist->getXPos(),protagonist->getYPos());
             return false; //quit the loop
         }else{
             // Move the protagonist based on the calculated path
             MoveProtagonist();
             unit->kill();
             float newHealth = getHealth()-unit->getValue();
-            setHealth(newHealth);
-            setEnergy(100);
+            protagonist->updateHealth(newHealth);
+            protagonist->updateEnergy(100);
             setMoveCost(0.0f);
         }
 
         return true;
     }else{  //Path not found
-        setStart(getProtagonistX(),getProtagonistY());
+        setStart(protagonist->getXPos(),protagonist->getYPos());
         return false;
     }
 }
 
-void game::movePro(int x)
-{
-    switch(x){
-    case 1:
-        MoveProLeft();
-        break;
-    case 2:
-        MoveProRight();
-        break;
-    case 3:
-        MoveProUp();
-        break;
-    case 4:
-        MoveProDown();
-        break;
-    default:
-        break;
-    }
-}
+

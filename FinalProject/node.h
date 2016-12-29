@@ -16,7 +16,6 @@ public:
     std::shared_ptr<Tile> getTile() const;
     void setTile(const std::shared_ptr<Tile> &value);
 
-
     double getDistance() const;
     void setDistance(double value);
 
