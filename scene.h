@@ -5,7 +5,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <math.h>
 #include <QGraphicsView>
-#include <typeinfo>
 #include <QKeyEvent>
 #include <QObject>
 

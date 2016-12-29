@@ -434,16 +434,6 @@ void game::checkMove(int xPos, int yPos){
 
 }
 
-float game::getEnergy()
-{
-    return protagonist->getEnergy();
-}
-
-float game::getHealth()
-{
-    return protagonist->getHealth();
-}
-
 void game::removeHealthpack(std::shared_ptr<HealthModel> healthpack)
 {
     healthpack->useHealthpack();
@@ -483,11 +473,11 @@ bool game::goForHealthpack()
     bool find = calcPath_Dijkstra();
     if(find){
         float requiredEnergy = getMoveCost();
-        if(requiredEnergy>getEnergy()){
+        if(requiredEnergy>protagonist->getEnergy()){
             return false; //quit the loop
         }else{
             MoveProtagonist();
-            float newHealth = getHealth()+5.0*healthpack->getValue(); //multiply by a factor of 5
+            float newHealth = protagonist->getHealth()+5.0*healthpack->getValue(); //multiply by a factor of 5
             if(newHealth > 100) newHealth = 100;
             protagonist->updateHealth(newHealth);
             setMoveCost(0.0f);
@@ -507,7 +497,7 @@ bool game::isDefeatable()
     defeatableEnemies.clear();
     for(auto& unit:enemies){
         if(!unit->getDefeated()){  //when a enemy is not defeated
-            if(unit->getValue() < getHealth()){ //when a enemy has a strength smaller than pro's health
+            if(unit->getValue() < protagonist->getHealth()){ //when a enemy has a strength smaller than pro's health
                 //qDebug()<<"At least one enemy is defeatable with strength: "<<(*it)->getValue();
                 defeatableEnemies.push_back(unit);
             }
@@ -526,7 +516,7 @@ bool game::goForEnemy()
     auto unit = getClosestEnemy();  //calculate the path and get the closest enemy
     //After the check that there is at least one defeatable enemy, which reduce the calls of getClosestEnemy();
     //the closestEnemy could still be undefeatable
-    while(unit->getValue()>getHealth()){
+    while(unit->getValue()>protagonist->getHealth()){
         qDebug()<<"Health is not enough to defeat an enemy, go for healthpack";
         if(healthpacks.size()==0){
             qDebug()<<"Quit: NO healthpack left!";
@@ -541,7 +531,7 @@ bool game::goForEnemy()
     finished = calcPath_Dijkstra();
     if(finished){  //Path found
         float requiredEnergy = getMoveCost();
-        if(requiredEnergy>getEnergy()){
+        if(requiredEnergy>protagonist->getEnergy()){
             qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
             setStart(protagonist->getXPos(),protagonist->getYPos());
             return false; //quit the loop
@@ -549,7 +539,7 @@ bool game::goForEnemy()
             // Move the protagonist based on the calculated path
             MoveProtagonist();
             unit->kill();
-            float newHealth = getHealth()-unit->getValue();
+            float newHealth = protagonist->getHealth()-unit->getValue();
             protagonist->updateHealth(newHealth);
             protagonist->updateEnergy(100);
             setMoveCost(0.0f);

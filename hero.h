@@ -15,7 +15,6 @@ public:
     void MoveProUp();
     void MoveProDown();
 
-
 signals:
     void changeStats(float energy, float health);
     void moveIt(int x, int y);
