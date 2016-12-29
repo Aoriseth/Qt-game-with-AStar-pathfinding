@@ -1,26 +1,27 @@
 #ifndef GAME_H
 #define GAME_H
-#include <vector>
-#include <memory>
-#include "world.h"
-#include "world_global.h"
 #include <QQueue>
-#include "node.h"
-#include <QSet>
-#include <math.h>
 #include <QDebug>
 #include <QStack>
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include "mainwindow.h"
-#include "view.h"
+#include <QSet>
 #include <QObject>
+#include <QElapsedTimer>
+#include <QCoreApplication>
+
+#include <math.h>
 #include <limits>
+#include <vector>
+#include <memory>
+
+#include "world.h"
+#include "world_global.h"
+#include "node.h"
 #include "enemyunit.h"
 #include "healthmodel.h"
 #include "hero.h"
+#include "view.h"
 
-
+class view;
 
 class game: public QObject
 {
@@ -80,10 +81,6 @@ public:
     void setWeight(int value);
 
     void MoveProtagonist();
-    void setEnergy(float passEnergy);
-    void setHealth(float passHealth);
-    float getEnergy();
-    float getHealth();
 
     bool isDefeatable();
     bool goForHealthpack();
@@ -92,9 +89,6 @@ public:
 
 private:
     float moveCost = 0.0f;
-
-
-
     node getNodeWithMinDistance();
 
     void breadth_addNode(int index, std::shared_ptr<node> pre);

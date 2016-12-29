@@ -31,16 +31,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
     std::shared_ptr<Ui::MainWindow> ui;
     void setLogic(std::shared_ptr<game> pass);
     void setView(std::shared_ptr<view> pass);
-    void connectAll();
 
 protected:
     void resizeEvent(QResizeEvent *event);
 
 private:
+    void connectAll();
     std::shared_ptr<game> logic;
     std::shared_ptr<view> screen;
     QString path;
