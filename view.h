@@ -21,7 +21,6 @@ public:
     std::vector<QGraphicsItem*> pathView;
     void addPathStep(int x,int y);
     void clearPath();
-    void addItemToScene(QGraphicsPixmapItem *item, int x, int y);
     void setLogic(std::shared_ptr<game> pass);
     void showEnemies();
     void showHealthpacks();

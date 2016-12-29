@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    screen->sceneView.reset();
     delete ui;
 }
 
@@ -68,6 +69,7 @@ void MainWindow::executeStrategy()
 }
 
 void MainWindow::refreshScene(){
+    screen->sceneView.reset();
     screen->sceneView = std::make_shared<Scene>(this);
     ui->graphicsView->setScene(screen->sceneView.get());
 }

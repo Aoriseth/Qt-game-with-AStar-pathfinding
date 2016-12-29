@@ -7,12 +7,14 @@
 #include <QGraphicsView>
 #include <typeinfo>
 #include <QKeyEvent>
+#include <QObject>
 
 class Scene: public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit Scene(QObject *parent = 0);
+    Scene(QObject *parent = 0);
+    ~Scene();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
     virtual void keyPressEvent(QKeyEvent *event);
 
