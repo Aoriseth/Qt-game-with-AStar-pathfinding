@@ -40,7 +40,6 @@ void view::addItemToScene(QGraphicsPixmapItem* item, int x, int y){
 void view::setLogic(std::shared_ptr<game> pass)
 {
     logic = pass;
-    connect(logic.get(), SIGNAL(enemyKilled(int)), this, SLOT(updateEnemy(int)));
 }
 
 void view::showEnemies()
@@ -84,6 +83,3 @@ void view::clearLists()
     healthpackItems.clear();
 }
 
-void view::updateEnemy(int pos){
-//    enemyItems[pos]->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
-}

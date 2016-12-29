@@ -35,8 +35,6 @@ private:
     std::vector<QGraphicsPixmapItem*> healthpackItems;
 signals:
     void updateViewport();
-private slots:
-    void updateEnemy(int pos);
 };
 
 #endif // VIEW_H

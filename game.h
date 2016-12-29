@@ -55,8 +55,8 @@ public:
     void setDestination(int x, int y);
     int getWeight() const;
     void setWeight(int value);
-    void setView(view* test);
-    view* screen;
+    void setView(std::shared_ptr<view> test);
+    std::shared_ptr<view> screen;
     std::shared_ptr<Tile> getTile(int x,int y);
     std::shared_ptr<EnemyUnit> getClosestEnemy();
     bool isAllDefeated();
