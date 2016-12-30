@@ -195,6 +195,7 @@ bool pathfinder::Dijkstra(int x, int y)
             int index = (myTile->getYPos() -1)*(xmax+1) + myTile->getXPos();
             Dijkstra_addNode(index,pre, distance);
         }
+
         //qDebug()<<"AvailableNodes Size:"<<availableNodes.size();
     }while(availableNodes.size()!=0);
     return false;//Not found if code goes outside of loop;

@@ -120,6 +120,8 @@ void game::loadWorld(QString path){
     auto tempenemies = myWorld->getEnemies((int)(objectNum*4/5)); //set ratio enemies/healthpacks = 4/5
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
+//        int pos = (pathfinding->getXmax()+1)*unit->getYPos() + unit->getXPos(); // set enemies impassable
+//        pathfinding->tiles[pos]->setValue(std::numeric_limits<float>::infinity());
     }
 
     //Convert Healthpacks to custom HealthModel
@@ -270,7 +272,6 @@ bool game::goForEnemy()
     if(finished){  //Path found
         float requiredEnergy = pathfinding->getMoveCost();
         if(requiredEnergy>protagonist->getEnergy()){
-            qDebug()<<"Game failed! Not enough energy to next enemy!Energy required: "<<requiredEnergy;
             setStart(protagonist->getXPos(),protagonist->getYPos());
             return false; //quit the loop
         }else{

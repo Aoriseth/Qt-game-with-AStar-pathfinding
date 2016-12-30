@@ -13,7 +13,7 @@ class Scene: public QGraphicsScene
     Q_OBJECT
 public:
     Scene(QObject* parent = 0);
-    ~Scene();
+    virtual ~Scene() = default;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent);
     virtual void keyPressEvent(QKeyEvent *event);
 
