@@ -28,6 +28,8 @@ public:
     std::shared_ptr<Hero> protagonist;
     std::shared_ptr<World> myWorld = std::make_shared<World>();
     bool goOn = true;
+    int xDes = 0;
+    int yDes = 0;
 
     void strat();    
     void loadWorld(QString path);       

@@ -26,9 +26,9 @@ public:
     std::shared_ptr<view> screen;
 
     void clearLists();
-    bool calcPath_BreadthFirst();
-    bool calcPath_BestFirst();
-    bool calcPath_Dijkstra();
+    bool calcPath_BreadthFirst(int xDes, int yDes);
+    bool calcPath_BestFirst(int xDes, int yDes);
+    bool calcPath_Dijkstra(int xDes, int yDes);
 
     int getWeight() const;
     void setWeight(int value);
@@ -42,18 +42,10 @@ public:
     float getMoveCost() const;
     void setMoveCost(float value);
 
-    void setXDest(int value);
-    void setYDest(int value);
-
-    int getXDest() const;
-    int getYDest() const;
-
 private:
     int weight = 1;
     int ymax = 0;
     int xmax = 0;
-    int xDest = 0;
-    int yDest = 0;
     float moveCost = 0.0f;
     bool breadthFirst(int x,int y);
     bool bestFirst(int x,int y);

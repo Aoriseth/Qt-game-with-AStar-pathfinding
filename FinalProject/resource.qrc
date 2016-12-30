@@ -32,5 +32,8 @@
         <file>resources/RGBNoise.png</file>
         <file>resources/SlurryMaze_30_30.png</file>
         <file>resources/Sphere_30_30.png</file>
+        <file>resources/goombaPoisoned_dead.gif</file>
+        <file>resources/goombaPoisoned_intermediate.gif</file>
+        <file>resources/goombaPoisoned.gif</file>
     </qresource>
 </RCC>
