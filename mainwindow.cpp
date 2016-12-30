@@ -104,7 +104,7 @@ void MainWindow::mapLoad()
     logic->setStart(0,0);
 
     screen->destView.reset();
-    screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->pathfinding->getXDest(), 256*logic->pathfinding->getYDest(), 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
+    screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->xDes, 256*logic->yDes, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
     screen->destView->setScale(0.00390625);
     screen->destView->setOpacity(0.5);
 }

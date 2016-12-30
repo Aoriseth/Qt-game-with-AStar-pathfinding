@@ -45,25 +45,6 @@ void pathfinder::setMoveCost(float value)
     moveCost = value;
 }
 
-void pathfinder::setXDest(int value)
-{
-    xDest = value;
-}
-
-void pathfinder::setYDest(int value)
-{
-    yDest = value;
-}
-
-int pathfinder::getXDest() const
-{
-    return xDest;
-}
-
-int pathfinder::getYDest() const
-{
-    return yDest;
-}
 
 std::shared_ptr<Tile> pathfinder::getTile(int x, int y)
 {
@@ -219,12 +200,12 @@ bool pathfinder::Dijkstra(int x, int y)
     return false;//Not found if code goes outside of loop;
 }
 
-bool pathfinder::calcPath_BreadthFirst(){
+bool pathfinder::calcPath_BreadthFirst(int xDes, int yDes){
 
     /* as long as algorithm didn't reach destination and there are still nodes print path not found yet*/
-    while((!breadthFirst(xDest,yDest)) &&(currentNodes.size())){
+    while((!breadthFirst(xDes,yDes)) &&(currentNodes.size())){
         //currentNodes.dequeue();
-        qDebug()<< "Path not found yet!"<<" Queue Size = "<<currentNodes.size();
+        //qDebug()<< "Path not found yet!"<<" Queue Size = "<<currentNodes.size();
     }
 
     /* if there are no nodes left -> a path is found
@@ -242,15 +223,15 @@ bool pathfinder::calcPath_BreadthFirst(){
 
         }
     }else{
-        qDebug()<< "Path is not found in the end!!!!!";
+        qDebug()<< "BreadthFirst: Path is not found in the end!!!!!";
         return false;
     }
     return true;
 }
 
-bool pathfinder::calcPath_BestFirst()
+bool pathfinder::calcPath_BestFirst(int xDes, int yDes)
 {
-    if(bestFirst(xDest,yDest)){
+    if(bestFirst(xDes,yDes)){
         //qDebug()<< "Path found !!!!!";
         node destination = availableNodes[availableNodes.size()-1];
         for(;destination.getPre()!=nullptr;){
@@ -267,12 +248,12 @@ bool pathfinder::calcPath_BestFirst()
     }
 }
 
-bool pathfinder::calcPath_Dijkstra()
+bool pathfinder::calcPath_Dijkstra(int xDes, int yDes)
 {
     QElapsedTimer timer;
     timer.start();
 
-    if(Dijkstra(xDest,yDest)){
+    if(Dijkstra(xDes,yDes)){
         //qDebug()<< "Path found !!!!!";
         node destination = sptNodes[sptNodes.size()-1];
         for(;destination.getPre()!=nullptr;){

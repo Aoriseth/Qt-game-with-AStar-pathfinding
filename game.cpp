@@ -11,7 +11,7 @@ std::shared_ptr<EnemyUnit> game::getClosestEnemy(){
     auto result = defeatableEnemies[0];
     for(auto unit:defeatableEnemies){
         setDestination(unit->getXPos(),unit->getYPos());
-        bool finished  = pathfinding->calcPath_Dijkstra();
+        bool finished  = pathfinding->calcPath_Dijkstra(xDes,yDes);
         if(finished){  //path found, enemy is reachable
             float my_cost = pathfinding->getMoveCost();
             if(my_cost<min_cost){
@@ -45,7 +45,7 @@ std::shared_ptr<HealthModel> game::getClosestHealthpack()
     auto result = healthpacks[0];
     for(auto pack:healthpacks){
         setDestination(pack->getXPos(),pack->getYPos());
-        bool finished  = pathfinding->calcPath_Dijkstra();
+        bool finished  = pathfinding->calcPath_Dijkstra(xDes,yDes);
         if(finished){  //path found, health is reachable
             float my_cost = pathfinding->getMoveCost();
             if(my_cost<min_cost){
@@ -93,8 +93,8 @@ void game::setView(std::shared_ptr<view> test)
 }
 
 void game::setDestination(int x, int y){
-    pathfinding->setXDest(x);
-    pathfinding->setYDest(y);
+    xDes = x;
+    yDes = y;
     emit destinationChanged(x,y);
 }
 
@@ -185,13 +185,13 @@ void game::go(int i)
     auto finished = false;
     switch (i) {
     case 3:
-        finished = pathfinding->calcPath_BreadthFirst();
+        finished = pathfinding->calcPath_BreadthFirst(xDes,yDes);
         break;
     case 4:
-        finished = pathfinding->calcPath_BestFirst();
+        finished = pathfinding->calcPath_BestFirst(xDes,yDes);
         break;
     default:
-        finished = pathfinding->calcPath_Dijkstra();
+        finished = pathfinding->calcPath_Dijkstra(xDes,yDes);
         break;
     }
     // Calculate the path
@@ -209,14 +209,14 @@ bool game::goForHealthpack()
     auto healthpack = getClosestHealthpack();
     setDestination(healthpack->getXPos(),healthpack->getYPos());
     //pathfinding->setWeight(weight);
-    bool find = pathfinding->calcPath_Dijkstra();
+    bool find = pathfinding->calcPath_Dijkstra(xDes,yDes);
     if(find){
         float requiredEnergy = pathfinding->getMoveCost();
         if(requiredEnergy>protagonist->getEnergy()){
             return false; //quit the loop
         }else{
             MoveProtagonist();
-            float newHealth = protagonist->getHealth()+5.0*healthpack->getValue(); //multiply by a factor of 5
+            float newHealth = protagonist->getHealth()+healthpack->getValue(); //multiply by a factor of 5
             if(newHealth > 100) newHealth = 100;
             protagonist->updateHealth(newHealth);
             pathfinding->setMoveCost(0.0f);
@@ -266,7 +266,7 @@ bool game::goForEnemy()
     }
     setDestination(unit->getXPos(),unit->getYPos());
     bool finished = false;
-    finished = pathfinding->calcPath_Dijkstra();
+    finished = pathfinding->calcPath_Dijkstra(xDes,yDes);
     if(finished){  //Path found
         float requiredEnergy = pathfinding->getMoveCost();
         if(requiredEnergy>protagonist->getEnergy()){
