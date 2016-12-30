@@ -26,9 +26,24 @@ void EnemyView::addToScene(){
     view->addItem(text.get());
 }
 
-void EnemyView::updateVisual()
+void EnemyView::updateVisual(bool poisoned)
 {
     // update the view to a dead enemy
     text.reset();
-    this->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
+    if(poisoned){
+        this->setPixmap(QPixmap(":/resources/goombaPoisoned.gif"));
+    }else{
+        this->setPixmap(QPixmap(":/resources/goomba_dead.gif"));
+    }
+}
+
+void EnemyView::affectArea()
+{
+    this->setPixmap(QPixmap(":/resources/goombaPoisoned_intermediate.gif"));
+    for(auto x=-1;x<=1;x++){
+        for(auto y=-1;y<=1;y++){
+            view->addRect(mEnemy->getXPos()+x, mEnemy->getYPos()+y, 1, 1, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 255, 0,50)));
+        }
+    }
+    qDebug()<<"Poisoning";
 }

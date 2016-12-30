@@ -3,8 +3,7 @@
 Scene::Scene(QObject *parent):
     QGraphicsScene(parent)
 {
-
-//    this->setBackgroundBrush(Qt::black);
+  this->setBackgroundBrush(Qt::black);
 }
 
 

@@ -37,8 +37,9 @@ void view::showEnemies()
     for(auto enemy: logic->enemies){
         auto item = new EnemyView(QPixmap(":/resources/goomba.gif"),sceneView,enemy);
         item->addToScene();
-        connect(enemy.get(), SIGNAL(defeat()), item, SLOT(updateVisual()));
-        connect(enemy.get(), SIGNAL(defeat()), this, SIGNAL(updateViewport()));
+        connect(enemy.get(), SIGNAL(defeat(bool)), item, SLOT(updateVisual(bool)));
+        connect(enemy.get(), SIGNAL(poisoning()), item, SLOT(affectArea()));
+        connect(enemy.get(), SIGNAL(defeat(bool)), this, SIGNAL(updateViewport()));
         enemyItems.push_back(item);
     }
 }
