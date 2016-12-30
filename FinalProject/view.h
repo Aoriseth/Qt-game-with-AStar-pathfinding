@@ -26,6 +26,7 @@ public:
     void showHealthpacks();
     void showProtagonist();
     void clearLists();
+    void initDestination();
     void setProtagonistPosition(int x, int y);
     std::shared_ptr<QGraphicsPixmapItem> getWorldView() const;
     void displayWorld(QImage image);

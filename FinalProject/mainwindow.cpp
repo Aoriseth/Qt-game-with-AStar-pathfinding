@@ -103,11 +103,7 @@ void MainWindow::mapLoad()
     // set the starting position of the protagonist/algorithm
     logic->setStart(0,0);
     updateStats(100,100);
-
-    screen->destView.reset();
-    screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->xDes, 256*logic->yDes, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
-    screen->destView->setScale(0.00390625);
-    screen->destView->setOpacity(0.5);
+    screen->initDestination();
 }
 
 void MainWindow::OpenMap()

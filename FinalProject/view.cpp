@@ -75,6 +75,14 @@ void view::clearLists()
     healthpackItems.clear();
 }
 
+void view::initDestination()
+{
+    destView.reset();
+    destView = std::shared_ptr<QGraphicsItem>(sceneView->addRect(0, 0, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
+    destView->setScale(0.00390625);
+    destView->setOpacity(0.5);
+}
+
 std::shared_ptr<QGraphicsPixmapItem> view::getWorldView() const
 {
     return worldView;
@@ -82,6 +90,7 @@ std::shared_ptr<QGraphicsPixmapItem> view::getWorldView() const
 
 void view::displayWorld(QImage image)
 {
+    destView.reset();
     worldView = std::make_shared<QGraphicsPixmapItem>(QPixmap::fromImage(image));
     worldView->setZValue(0);
     worldView->setScale(1);
