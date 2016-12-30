@@ -45,5 +45,4 @@ void EnemyView::affectArea()
             view->addRect(mEnemy->getXPos()+x, mEnemy->getYPos()+y, 1, 1, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 255, 0,50)));
         }
     }
-    qDebug()<<"Poisoning";
 }

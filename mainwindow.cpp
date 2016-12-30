@@ -111,6 +111,7 @@ void MainWindow::OpenMap()
     path = QFileDialog::getOpenFileName(this,tr("Select map"));
     if(!path.isEmpty()){
         mapLoad();
+
     }
 
 
