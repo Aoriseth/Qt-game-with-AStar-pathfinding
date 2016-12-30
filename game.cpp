@@ -117,7 +117,7 @@ void game::loadWorld(QString path){
 
     //Convert enemies to custom EnemyUnit
     pathfinding->tiles = myWorld->createWorld(path);
-    auto tempenemies = myWorld->getEnemies(objectNum);
+    auto tempenemies = myWorld->getEnemies((int)(objectNum*4/5)); //set ratio enemies/healthpacks = 4/5
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
     }

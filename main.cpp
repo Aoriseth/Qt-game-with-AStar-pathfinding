@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
     std::shared_ptr<game> logic = std::make_shared<game>();
     std::shared_ptr<view> screen = std::make_shared<view>();
 
-    //logic->clearLists();
     screen->setLogic(logic);
     logic->setView(screen);
     w->setLogic(logic);
