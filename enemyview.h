@@ -21,7 +21,8 @@ private:
     std::shared_ptr<EnemyUnit> mEnemy;
     std::shared_ptr<QGraphicsTextItem> text;
 protected slots:
-    void updateVisual();
+    void updateVisual(bool poisoned);
+    void affectArea();
 };
 
 #endif // ENEMYVIEW_H

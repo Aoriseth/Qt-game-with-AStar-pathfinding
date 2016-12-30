@@ -3,15 +3,24 @@
 #include "world.h"
 #include "enemyview.h"
 #include <QObject>
+#include <QTimer>
 
 class EnemyUnit: public QObject, public Enemy
 {
     Q_OBJECT
 public:
     EnemyUnit(int xPosition, int yPosition, float strength);
-    void kill() {setDefeated(true);emit defeat();}
+    void kill();
+
+public slots:
+    bool poison();
+
 signals:
-    void defeat();
+    void defeat(bool poisoned);
+    void poisoning();
+
+private:
+    int poisonLeft = 3;
 };
 
 #endif // ENEMYUNIT_H
