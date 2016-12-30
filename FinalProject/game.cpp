@@ -112,12 +112,12 @@ void game::loadWorld(QString path){
     //modify number of enemies and healthpacks based on world size. If world is huge, don't generate objects
     int objectNum = (pathfinding->getXmax()+pathfinding->getYmax())/2;
     if(objectNum > 100){
-        objectNum = 1;
+        objectNum = 2;
     }
 
     //Convert enemies to custom EnemyUnit
     pathfinding->tiles = myWorld->createWorld(path);
-    auto tempenemies = myWorld->getEnemies((int)(objectNum*4/5)); //set ratio enemies/healthpacks = 4/5
+    auto tempenemies = myWorld->getEnemies(objectNum*4/5); //set ratio enemies/healthpacks = 4/5
     for(auto& unit:tempenemies){
         enemies.push_back(std::shared_ptr<EnemyUnit>(new EnemyUnit(unit->getXPos(), unit->getYPos(), unit->getValue())));
 //        int pos = (pathfinding->getXmax()+1)*unit->getYPos() + unit->getXPos(); // set enemies impassable
