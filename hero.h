@@ -10,6 +10,8 @@ public:
     Hero();
     void updateEnergy(float value);
     void updateHealth(float value);
+
+private:
     void MoveProLeft();
     void MoveProRight();
     void MoveProUp();

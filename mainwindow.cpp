@@ -19,7 +19,7 @@ void MainWindow::gotoDestination()
     if(!mapLoaded){return;} // Don't play if there is no map loaded
 
     int weight = ui->lineEdit->text().toInt(); // read weight from textbox
-    logic->setWeight(weight);
+    logic->pathfinding->setWeight(weight);
 
     // calculate path and move protagonist
     logic->go(ui->comboBox->currentIndex());
@@ -29,7 +29,7 @@ void MainWindow::executeStrategy()
 {
     logic->goOn = true;
     int weight = ui->lineEdit->text().toInt();
-    logic->setWeight(weight);
+    logic->pathfinding->setWeight(weight);
     if(!mapLoaded){return;} // Don't play if there is no map loaded
 
     logic->strat();
@@ -104,7 +104,7 @@ void MainWindow::mapLoad()
     logic->setStart(0,0);
 
     screen->destView.reset();
-    screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->xDest, 256*logic->yDest, 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
+    screen->destView = std::shared_ptr<QGraphicsItem>(screen->sceneView->addRect(256*logic->pathfinding->getXDest(), 256*logic->pathfinding->getYDest(), 256, 256, QPen(QColor(0, 0, 0,0)), QBrush(QColor(0, 0, 255,255))));
     screen->destView->setScale(0.00390625);
     screen->destView->setOpacity(0.5);
 }

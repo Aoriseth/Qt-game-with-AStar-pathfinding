@@ -15,5 +15,22 @@
         <file>resources/map_10_10.png</file>
         <file>resources/map_20_20.png</file>
         <file>resources/goomba_dead.gif</file>
+        <file>resources/2020to3030.png</file>
+        <file>resources/BlurMountains_30_30.png</file>
+        <file>resources/Checkerboard_30_30.png</file>
+        <file>resources/FatMaze_30_30.png</file>
+        <file>resources/grain_10_10.png</file>
+        <file>resources/ImageNotFound_30_30.png</file>
+        <file>resources/Its_a_trap_10_10.png</file>
+        <file>resources/map_20_20_noWeight.png</file>
+        <file>resources/map_20_20_Weight.png</file>
+        <file>resources/maze_30_30.png</file>
+        <file>resources/MountainMaze_30_30.png</file>
+        <file>resources/OilMountains.png</file>
+        <file>resources/PixelMountains_30_30.png</file>
+        <file>resources/plugged_10_10.png</file>
+        <file>resources/RGBNoise.png</file>
+        <file>resources/SlurryMaze_30_30.png</file>
+        <file>resources/Sphere_30_30.png</file>
     </qresource>
 </RCC>
