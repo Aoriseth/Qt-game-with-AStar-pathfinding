@@ -105,8 +105,8 @@ bool pathfinder::best_addNode(int x, int y, int index, std::shared_ptr<node> pre
             node myxNode(pos,pre);
             double distance =pow(pos->getXPos()-x,2)+pow(pos->getYPos()-y,2);
             myxNode.setDistance(distance);
-            availableNodes.push_back(myxNode); //qDebug()<<"Add new node with index:"<<index;
-            myIndexes.insert(index);//qDebug()<<"Distance:"<<distance;
+            availableNodes.push_back(myxNode); 
+            myIndexes.insert(index);
             if(distance==0)
                 return true;
         }
@@ -149,7 +149,6 @@ bool pathfinder::bestFirst(int x, int y)
             bool isFinish = best_addNode(x, y, index, pre);
             if(isFinish) {return true;}
         }
-        //qDebug()<<"Size:"<<availableNodes.size();
     }while(availableNodes.size()!=0);
 
     return false;
@@ -163,7 +162,7 @@ void pathfinder::Dijkstra_addNode(int index, std::shared_ptr<node> pre, double o
             double distance = old_dis + 1 + weight*(1-pos->getValue()); //pos->getValue() varies from 0 to 1
             myxNode.setDistance(distance);
         }//else distance is infinity by default
-        availableNodes.push_back(myxNode); //qDebug()<<"Add new node with index:"<<index;
+        availableNodes.push_back(myxNode); 
         myIndexes.insert(index);
     }
 }
@@ -196,7 +195,6 @@ bool pathfinder::Dijkstra(int x, int y)
             Dijkstra_addNode(index,pre, distance);
         }
 
-        //qDebug()<<"AvailableNodes Size:"<<availableNodes.size();
     }while(availableNodes.size()!=0);
     return false;//Not found if code goes outside of loop;
 }
@@ -205,8 +203,6 @@ bool pathfinder::calcPath_BreadthFirst(int xDes, int yDes){
 
     /* as long as algorithm didn't reach destination and there are still nodes print path not found yet*/
     while((!breadthFirst(xDes,yDes)) &&(currentNodes.size())){
-        //currentNodes.dequeue();
-        //qDebug()<< "Path not found yet!"<<" Queue Size = "<<currentNodes.size();
     }
 
     /* if there are no nodes left -> a path is found
@@ -219,9 +215,6 @@ bool pathfinder::calcPath_BreadthFirst(int xDes, int yDes){
             route.push(destination.getTile());
             screen->addPathStep(destination.getTile()->getXPos(),destination.getTile()->getYPos());
             destination=*(destination.getPre());
-            //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
-
-
         }
     }else{
         qDebug()<< "BreadthFirst: Path is not found in the end!!!!!";
@@ -240,7 +233,6 @@ bool pathfinder::calcPath_BestFirst(int xDes, int yDes)
             route.push(destination.getTile());
             screen->addPathStep(destination.getTile()->getXPos(),destination.getTile()->getYPos());
             destination=*(destination.getPre());
-            //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
         return true;
     }else{
@@ -262,7 +254,6 @@ bool pathfinder::calcPath_Dijkstra(int xDes, int yDes)
             route.push(destination.getTile());
             screen->addPathStep(destination.getTile()->getXPos(),destination.getTile()->getYPos());
             destination=*(destination.getPre());
-            //qDebug()<< "X: "<<destination.getTile()->getXPos()<<"Y: "<<destination.getTile()->getYPos();
         }
 
 //        qDebug() << "The run_strategy operation took" << timer.elapsed() << "milliseconds";
